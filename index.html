@@ -172,7 +172,7 @@
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
-let currentUser = ""; let currentPassword = ""; let currentJornada = 0; let equiposTotalesInfo = [];
+let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
 let ligasDelUsuario = [];
 let intervalCountdown = null;
 let globalHistorialData = [];
@@ -197,7 +197,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
-            currentUser = usr; currentPassword = pwd; currentJornada = data.jornada; equiposTotalesInfo = data.equipos; ligasDelUsuario = data.ligas;
+            currentUser = usr; currentPassword = pwd; equiposTotalesInfo = data.equipos; ligasDelUsuario = data.ligas;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
 
             let htmlPartidos = "";
@@ -205,10 +205,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let equiposCerrados = 0;
             
             data.equipos.forEach(eq => {
-                // AQUÍ ESTÁ LA MAGIA DEL FILTRO: Si "eq.mostrar" es false (Ocultar), lo ignoramos por completo
-                if (eq.permitido && eq.mostrar) {
+                if (eq.permitido) {
                     equiposPermitidos++;
-                    let valJornada = String(eq.jornadaEquipo || "").trim();
+                    let valJornada = String(eq.jornada_eq || "").trim();
                     let infoJornadaEq = "";
                     if(valJornada) {
                         infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
@@ -223,13 +222,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
                         <div class="p-3 mb-3 partido-activo" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
+                            <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
-                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
-                            <div class="row inputs-eq" id="inputs_eq_${eq.id}">
+                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
+                            <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
-                                    <select class="form-control" id="e${eq.id}_sets" required>
+                                    <select class="form-control" id="e${eq.id_partido}_sets" required>
                                         <option value="">Elige...</option>
                                         <option value="3-0">Victoria 3-0</option>
                                         <option value="3-1">Victoria 3-1</option>
@@ -241,11 +240,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Puntos Dif.</label>
-                                    <input type="number" class="form-control" id="e${eq.id}_puntos" placeholder="Ej: 12" min="0" required>
+                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Signo</label>
-                                    <select class="form-control" id="e${eq.id}_signo" required>
+                                    <select class="form-control" id="e${eq.id_partido}_signo" required>
                                         <option value="">Elige...</option>
                                         <option value="A favor">A favor (+)</option>
                                         <option value="En contra">En contra (-)</option>
@@ -257,7 +256,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         equiposCerrados++;
                         htmlPartidos += `
                         <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
+                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
@@ -324,7 +323,7 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 15 * 60 * 1000; // Bloquear exactamente 15 minutos antes
+            const limite = 15 * 60 * 1000; // BLOQUEO EXACTO 15 MIN ANTES
 
             if (diff <= limite && diff > -14400000) { 
                 el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
@@ -337,7 +336,7 @@ function iniciarRelojes() {
                 el.innerHTML = "🏁 Partido en curso o Finalizado";
                 el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
             } else {
-                let diffToClose = diff - limite; // Mostramos cuánto falta PARA QUE SE CIERRE
+                let diffToClose = diff - limite;
                 let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
                 let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
@@ -350,17 +349,16 @@ function iniciarRelojes() {
 }
 
 function cargarDatosAntiguos() {
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword, jornada: currentJornada }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
             const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
-            for(let i=1; i<=equiposTotalesInfo.length; i++) {
-                if(data.data.predicciones[i]) {
-                    setVal(`e${i}_sets`, data.data.predicciones[i].sets);
-                    setVal(`e${i}_puntos`, data.data.predicciones[i].puntos);
-                    setVal(`e${i}_signo`, data.data.predicciones[i].signo);
-                }
+            var preds = data.data.predicciones;
+            for(var idPart in preds) {
+                setVal(`e${idPart}_sets`, preds[idPart].sets);
+                setVal(`e${idPart}_puntos`, preds[idPart].puntos);
+                setVal(`e${idPart}_signo`, preds[idPart].signo);
             }
         }
     });
@@ -373,14 +371,14 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
 
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
-    for(let i=1; i<=equiposTotalesInfo.length; i++) {
-        const elSet = document.getElementById(`e${i}_sets`);
+    equiposTotalesInfo.forEach(eq => {
+        const elSet = document.getElementById(`e${eq.id_partido}_sets`);
         if(elSet && !elSet.disabled) {
-            prediccionesList[i] = { sets: getVal(`e${i}_sets`), puntos: getVal(`e${i}_puntos`), signo: getVal(`e${i}_signo`) };
+            prediccionesList[eq.id_partido] = { sets: getVal(`e${eq.id_partido}_sets`), puntos: getVal(`e${eq.id_partido}_puntos`), signo: getVal(`e${eq.id_partido}_signo`) };
         }
-    }
+    });
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornada, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         msgBox.style.display = "block";
@@ -428,87 +426,79 @@ function renderizarHistorial() {
     let sortedHistory = [...globalHistorialData];
     
     sortedHistory.sort((a, b) => {
-        return isSortDesc ? parseInt(b.jornada) - parseInt(a.jornada) : parseInt(a.jornada) - parseInt(b.jornada);
+        return isSortDesc ? parseInt(b.ronda) - parseInt(a.ronda) : parseInt(a.ronda) - parseInt(b.ronda);
     });
 
     let checkedLigas = Array.from(document.querySelectorAll('.chk-liga:checked')).map(cb => cb.value);
 
     let histHtml = "";
     
-    sortedHistory.forEach(row => {
-        let esActual = (row.jornada == currentJornada);
+    sortedHistory.forEach(ronda => {
         let blockHtml = `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
-        blockHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Jornada ${row.jornada}</h4>`;
+        blockHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Ronda ${ronda.ronda}</h4>`;
         
         let hayDatosEnEsteBloque = false;
         
-        for(let i=1; i<=equiposTotalesInfo.length; i++) {
-            let p = row.predicciones[i];
-            let eqBase = equiposTotalesInfo[i-1];
+        ronda.partidos.forEach(p => {
+            let intersect = p.ligas.filter(l => checkedLigas.includes(l));
+            if (intersect.length === 0) return; 
             
-            let intersect = eqBase.ligas.filter(l => checkedLigas.includes(l));
-            if (intersect.length === 0) continue; 
+            hayDatosEnEsteBloque = true;
+            let eqName = p.equipo_local;
+            let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
             
-            if((p && p.sets) || (p && p.oficial_sets)) {
-                hayDatosEnEsteBloque = true;
-                let eqName = eqBase.nombre;
-                let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
+            let infoLocFecha = "";
+            let htmlReloj = "";
+            let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
+            if(iconoLoc || p.timestamp) {
+                infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
+            }
+            if(p.timestamp && p.estado === "ABIERTO") {
+                htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
+            }
+            
+            let puntosInfo = "";
+            if (p.oficial_sets && p.oficial_parciales) {
+                let pts = p.puntos_partido !== undefined ? p.puntos_partido : "?";
+                let mot = p.motivos || "Cálculo pendiente";
+                let bgColor = pts > 0 ? "#e8f5e9" : "#ffebee";
+                let textColor = pts > 0 ? "#2e7d32" : "#c62828";
+                if (mot === "No pronosticado") { bgColor = "#eeeeee"; textColor = "#666666"; }
                 
-                let infoLocFecha = "";
-                let htmlReloj = "";
-                if (esActual) {
-                    let iconoLoc = eqBase.ubicacion === "CASA" ? "🏠" : (eqBase.ubicacion === "FUERA" ? "✈️" : "");
-                    if(iconoLoc || eqBase.timestamp) {
-                        infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(eqBase.timestamp)}</span>`;
-                    }
-                    if(eqBase.timestamp) {
-                        htmlReloj = `<div class="reloj-partido" data-ts="${eqBase.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
-                    }
-                }
-                
-                let puntosInfo = "";
-                if (p.oficial_sets && p.oficial_parciales) {
-                    let pts = p.puntos_partido !== undefined ? p.puntos_partido : "?";
-                    let mot = p.motivos || "Cálculo pendiente";
-                    let bgColor = pts > 0 ? "#e8f5e9" : "#ffebee";
-                    let textColor = pts > 0 ? "#2e7d32" : "#c62828";
-                    if (mot === "No pronosticado") { bgColor = "#eeeeee"; textColor = "#666666"; }
-                    
-                    puntosInfo = `
-                    <div style="margin-top:10px; background:${bgColor}; border-radius:6px; padding:10px; text-align:center;">
-                        <div style="color:${textColor}; font-weight:bold; font-size:1.1rem;">+${pts} Puntos</div>
-                        <div style="color:#666; font-size:0.85rem; margin-top:2px;">${mot}</div>
-                    </div>`;
-                } else {
-                    puntosInfo = `
-                    <div style="margin-top:10px; background:#fff8e1; border-radius:6px; padding:10px; text-align:center;">
-                        <div style="color:#f57f17; font-weight:bold; font-size:0.9rem;">⏳ Partido sin puntuar aún</div>
-                    </div>`;
-                }
-
-                let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin porra</i>`;
-                let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
-
-                blockHtml += `
-                <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
-                    <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}${infoLocFecha}</div>
-                    ${htmlReloj}
-                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
-                        <div style="margin-right:15px; margin-bottom:8px;">
-                            <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Porra</span>
-                            <span style="font-weight:bold; color:var(--purple-dark); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
-                        </div>
-                        <div>
-                            <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span>
-                            ${ofText}
-                        </div>
-                    </div>
-                    ${puntosInfo}
+                puntosInfo = `
+                <div style="margin-top:10px; background:${bgColor}; border-radius:6px; padding:10px; text-align:center;">
+                    <div style="color:${textColor}; font-weight:bold; font-size:1.1rem;">+${pts} Puntos</div>
+                    <div style="color:#666; font-size:0.85rem; margin-top:2px;">${mot}</div>
+                </div>`;
+            } else {
+                puntosInfo = `
+                <div style="margin-top:10px; background:#fff8e1; border-radius:6px; padding:10px; text-align:center;">
+                    <div style="color:#f57f17; font-weight:bold; font-size:0.9rem;">⏳ Partido sin puntuar aún</div>
                 </div>`;
             }
-        }
-        blockHtml += `</div>`;
+
+            let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin porra</i>`;
+            let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
+
+            blockHtml += `
+            <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
+                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}${infoLocFecha}</div>
+                ${htmlReloj}
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
+                    <div style="margin-right:15px; margin-bottom:8px;">
+                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Porra</span>
+                        <span style="font-weight:bold; color:var(--purple-dark); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
+                    </div>
+                    <div>
+                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span>
+                        ${ofText}
+                    </div>
+                </div>
+                ${puntosInfo}
+            </div>`;
+        });
         
+        blockHtml += `</div>`;
         if(hayDatosEnEsteBloque) { histHtml += blockHtml; }
     });
     
