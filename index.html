@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Liga de Porras Voleibol 25/26</title>
+<title>Fantasy VCV 26/27</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
@@ -31,7 +31,7 @@
     .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
     /* Estilos del Login */
-    #loginSection { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    #loginSection { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 20px; flex-direction: column; }
     .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; }
     
     footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
@@ -41,8 +41,8 @@
 
 <header>
     <div class="header-content">
-        <h1 style="margin-bottom: 10px; line-height:1.2;">🏐 Liga de Porras</h1>
-        <p style="font-size:1.1rem; margin-bottom: 0;">Temporada 25/26</p>
+        <h1 style="margin-bottom: 10px; line-height:1.2;">🏐 Fantasy VCV 26/27</h1>
+        <p style="font-size:1.1rem; margin-bottom: 0;">La porra privada del club</p>
     </div>
 </header>
 
@@ -58,8 +58,18 @@
             <label>Contraseña</label>
             <input type="password" id="loginPassword" class="form-control" placeholder="Tu contraseña" required>
         </div>
-        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar a la Liga</button>
+        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar al Fantasy</button>
         <div id="loginMessage" class="alert-box mt-3"></div>
+
+        <!-- SECCIÓN DE AYUDA / FAQ -->
+        <hr style="margin: 30px 0 20px 0;">
+        <div style="font-size: 0.9rem; color: #555; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <strong style="color: #333;">❓ ¿Problemas para acceder?</strong><br>
+            <div style="margin-top: 8px; line-height: 1.4;">
+                Si aún no tienes cuenta en el Fantasy, o si no recuerdas tu contraseña, envíame un correo para que te lo solucione:<br>
+                <a href="mailto:TU_CORREO_AQUI@gmail.com" style="font-weight:bold; color:#1976d2; display:block; margin-top:5px;">TU_CORREO_AQUI@gmail.com</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -90,7 +100,7 @@
         </div>
     </section>
 
-    <!-- 2. SECCIÓN DE CLASIFICACIONES PRIVADAS (Se generan solas) -->
+    <!-- 2. SECCIÓN DE CLASIFICACIONES PRIVADAS -->
     <section class="section-alt" id="clasificacionesSection">
         <h2>Clasificaciones Privadas</h2>
         <div id="tablasClasificacionContainer">
@@ -119,12 +129,12 @@
 </div>
 
 <footer>
-    <p>© Liga de Voleibol 2025-2026</p>   
+    <p>© Fantasy VCV 2026-2027</p>   
 </footer>
 
 <script>
 // =========================================================
-// CONFIGURACIÓN (¡Los CSV públicos han desaparecido!)
+// CONFIGURACIÓN
 // =========================================================
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
@@ -223,7 +233,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
 
-            // B. DIBUJAR CLASIFICACIONES PRIVADAS (Automáticamente)
+            // B. DIBUJAR CLASIFICACIONES PRIVADAS
             let clasifHtml = "";
             if(data.ligas.length === 0) {
                 clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`;
@@ -264,7 +274,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         msgBox.style.display = "block";
     })
     .finally(() => {
-        btn.innerText = "Entrar a la Liga";
+        btn.innerText = "Entrar al Fantasy";
         btn.disabled = false;
     });
 });
