@@ -86,7 +86,7 @@
         <div class="faq-title">❓ Preguntas Frecuentes (FAQ)</div>
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
-            <div class="faq-content">Es la porra privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
+            <div class="faq-content">Es la competición privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
         </details>
         <details class="faq-details">
             <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
@@ -117,7 +117,7 @@
                 </div>
             </div>
             
-            <form id="porraForm">
+            <form id="prediccionForm">
                 <hr>
                 <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
                 <div id="contenedorPartidos"></div>
@@ -128,7 +128,6 @@
                     </p>
                 </div>
 
-                <!-- EL MENSAJE DE GUARDADO AHORA SALE AQUÍ -->
                 <div id="appMessage" class="alert-box"></div>
 
                 <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
@@ -204,7 +203,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentJornadaGlobal = data.jornada;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
 
-            // ORDENAR PARTIDOS POR FECHA (MÁS PRONTO PRIMERO)
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
                 let tsB = b.timestamp || Infinity;
@@ -367,7 +365,7 @@ function cargarDatosAntiguos() {
     });
 }
 
-document.getElementById('porraForm').addEventListener('submit', function(e) {
+document.getElementById('prediccionForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btnSubmit = document.getElementById('btnSubmit'); 
     const msgBox = document.getElementById('appMessage');
@@ -536,7 +534,7 @@ function renderizarHistorial() {
                 </div>`;
             }
 
-            let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin porra</i>`;
+            let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin predicción</i>`;
             let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
 
             blockHtml += `
@@ -545,7 +543,7 @@ function renderizarHistorial() {
                 ${htmlReloj}
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
                     <div style="margin-right:15px; margin-bottom:8px;">
-                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Porra</span>
+                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Predicción</span>
                         <span style="font-weight:bold; color:var(--purple-dark); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
                     </div>
                     <div>
