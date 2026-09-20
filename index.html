@@ -31,6 +31,7 @@
     #formMensaje { margin-top: 15px; display: none; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; }
     .alert-success { background: #d4edda; color: #155724; }
     .alert-danger { background: #f8d7da; color: #721c24; }
+    .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
     footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
 </style>
@@ -77,19 +78,59 @@
     </div>
 </section>
 
-<!-- ... (El resto de tu HTML con las tablas de clasificación se queda igual) ... -->
+<section class="section-alt">
+    <div id="messages"></div>
+    <h2>Clasificación General</h2>
+    <div class="table-responsive">
+        <table id="globalTable">
+            <thead>
+                <tr>
+                    <th>Posición y Jugador</th>
+                    <th>Puntos Totales</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+    
+<section>
+    <h2>Resultados por Jornada</h2>
+    <div style="margin-bottom:30px;">
+        <label for="jornadaSelect" style="font-weight:bold;">Filtrar por jornada: </label>
+        <select id="jornadaSelect" style="padding:8px 12px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="">-- Todas las jornadas --</option>
+        </select>
+    </div>
+    <div class="table-responsive">
+        <table id="weeklyTable">
+            <thead>
+                <tr>
+                    <th>Jornada</th>
+                    <th>Jugador</th>
+                    <th>Puntos</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <p>© Liga de Voleibol 2025-2026</p>   
+</footer>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
 // =========================================================
-// 1. PEGA AQUÍ TUS 3 ENLACES
+// 1. TUS TRES ENLACES
 // =========================================================
 const globalCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=603202484&single=true&output=csv"; 
 const weeklyCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=151036387&single=true&output=csv";
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 // =========================================================
-// CARGAR CARTELERA DINÁMICA
+// 2. CARGAR CARTELERA DINÁMICA
 // =========================================================
 fetch(scriptURL)
     .then(res => res.json())
@@ -140,16 +181,21 @@ fetch(scriptURL)
         document.getElementById('contenedorPartidos').innerHTML = html;
         document.getElementById('cargandoJornada').style.display = "none";
         document.getElementById('btnSubmit').style.display = "block";
+    })
+    .catch(err => {
+        document.getElementById('cargandoJornada').innerHTML = "⚠️ Error al cargar los partidos. Revisa el scriptURL.";
+        document.getElementById('cargandoJornada').style.color = "red";
     });
 
 // =========================================================
-// ENVÍO DE FORMULARIO A PRUEBA DE ERRORES
+// 3. ENVÍO DE FORMULARIO CON SISTEMA DE REEMPLAZO
 // =========================================================
-// Función segura para sacar valores aunque el equipo esté cerrado y el input no exista
 const getVal = (id) => {
     const el = document.getElementById(id);
     return el ? el.value.trim() : "";
 };
+
+let forceReplaceFlag = false; 
 
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -165,6 +211,7 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         usuario: document.getElementById('inputUsuario').value.trim(),
         password: document.getElementById('inputPassword').value.trim(),
         jornada: document.getElementById('inputJornada').value.trim(),
+        forceReplace: forceReplaceFlag,
         e1_sets: getVal('e1_sets'), e1_puntos: getVal('e1_puntos'), e1_signo: getVal('e1_signo'),
         e2_sets: getVal('e2_sets'), e2_puntos: getVal('e2_puntos'), e2_signo: getVal('e2_signo'),
         e3_sets: getVal('e3_sets'), e3_puntos: getVal('e3_puntos'), e3_signo: getVal('e3_signo'),
@@ -180,14 +227,44 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         msgBox.style.display = "block";
+        
         if (data.status === "success") {
             msgBox.className = "alert-success";
             msgBox.innerText = data.message;
-            // Solo reseteamos los campos manuales, no los generados
+            forceReplaceFlag = false; 
+            
             document.getElementById('inputUsuario').value = '';
             document.getElementById('inputPassword').value = '';
             document.querySelectorAll('select').forEach(s => s.value = '');
             document.querySelectorAll('input[type="number"]').forEach(i => { if(i.id !== 'inputJornada') i.value = ''; });
+            
+        } else if (data.status === "confirm_replace") {
+            msgBox.className = "alert-warning";
+            msgBox.innerHTML = `
+                <p style="margin-bottom:10px;">${data.message}</p>
+                <div style="background:#fff; padding:10px; border-radius:5px; font-family:monospace; text-align:left; font-size:0.85rem; line-height:1.5; margin-bottom:10px;">
+                    <strong>Tus resultados anteriores eran:</strong><br>
+                    ${data.oldSummary.replace(/\n/g, '<br>')}
+                </div>
+                <p style="margin-bottom:15px; font-weight:bold;">¿Quieres borrar tus resultados anteriores y subir los nuevos?</p>
+                <button id="btnConfirmReplace" class="btn btn-warning" style="font-weight:bold; margin-right:10px;">Sí, reemplazar</button>
+                <button id="btnCancelReplace" class="btn btn-secondary">Cancelar</button>
+            `;
+            
+            document.getElementById('btnConfirmReplace').addEventListener('click', function(e) {
+                e.preventDefault();
+                forceReplaceFlag = true; 
+                document.getElementById('btnSubmit').click(); 
+            });
+            
+            document.getElementById('btnCancelReplace').addEventListener('click', function(e) {
+                e.preventDefault();
+                forceReplaceFlag = false;
+                msgBox.style.display = "none";
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "Enviar Predicciones";
+            });
+            
         } else {
             msgBox.className = "alert-danger";
             msgBox.innerText = data.message;
@@ -199,133 +276,15 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         msgBox.innerText = "Error de conexión. Revisa que el enlace de Apps Script esté correcto.";
     })
     .finally(() => {
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Enviar Predicciones";
-    });
-});
-</script>
-
-<section class="section-alt">
-    <div id="messages"></div>
-    <h2>Clasificación General</h2>
-    <div class="table-responsive">
-        <table id="globalTable">
-            <thead>
-                <tr>
-                    <th>Posición y Jugador</th>
-                    <th>Puntos Totales</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</section>
-    
-<section>
-    <h2>Resultados por Jornada</h2>
-    <div style="margin-bottom:30px;">
-        <label for="jornadaSelect" style="font-weight:bold;">Filtrar por jornada: </label>
-        <select id="jornadaSelect" style="padding:8px 12px; border-radius: 5px; border: 1px solid #ccc;">
-            <option value="">-- Todas las jornadas --</option>
-        </select>
-    </div>
-    <div class="table-responsive">
-        <table id="weeklyTable">
-            <thead>
-                <tr>
-                    <th>Jornada</th>
-                    <th>Jugador</th>
-                    <th>Puntos</th>
-                    <th>Aciertos</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</section>
-
-<footer>
-    <p>© Liga de Voleibol 2025-2026</p>   
-</footer>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script>
-// =========================================================
-// 1. PEGA AQUÍ LOS TRES ENLACES IMPORTANTES
-// =========================================================
-const globalCSV = "ENLACE_CSV_CLASIFICACION_GENERAL_AQUI"; 
-const weeklyCSV = "ENLACE_CSV_JORNADAS_AQUI";
-const scriptURL = "ENLACE_DE_TU_APLICACION_WEB_DE_APPS_SCRIPT_AQUI";
-
-// =========================================================
-// LÓGICA DE ENVÍO DE FORMULARIO
-// =========================================================
-document.getElementById('porraForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const btnSubmit = document.getElementById('btnSubmit');
-    const msgBox = document.getElementById('formMensaje');
-    
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "Enviando, por favor espera...";
-    msgBox.style.display = "none";
-    
-    const formData = {
-        usuario: document.getElementById('inputUsuario').value.trim(),
-        password: document.getElementById('inputPassword').value.trim(),
-        jornada: document.getElementById('inputJornada').value.trim(),
-        
-        e1_sets: document.getElementById('e1_sets').value,
-        e1_puntos: document.getElementById('e1_puntos').value.trim(),
-        e1_signo: document.getElementById('e1_signo').value,
-        
-        e2_sets: document.getElementById('e2_sets').value,
-        e2_puntos: document.getElementById('e2_puntos').value.trim(),
-        e2_signo: document.getElementById('e2_signo').value,
-        
-        e3_sets: document.getElementById('e3_sets').value,
-        e3_puntos: document.getElementById('e3_puntos').value.trim(),
-        e3_signo: document.getElementById('e3_signo').value,
-        
-        e4_sets: document.getElementById('e4_sets').value,
-        e4_puntos: document.getElementById('e4_puntos').value.trim(),
-        e4_signo: document.getElementById('e4_signo').value,
-        
-        e5_sets: document.getElementById('e5_sets').value,
-        e5_puntos: document.getElementById('e5_puntos').value.trim(),
-        e5_signo: document.getElementById('e5_signo').value
-    };
-    
-    fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-    })
-    .then(response => response.json())
-    .then(data => {
-        msgBox.style.display = "block";
-        if (data.status === "success") {
-            msgBox.className = "alert-success";
-            msgBox.innerText = data.message;
-            document.getElementById('porraForm').reset();
-        } else {
-            msgBox.className = "alert-danger";
-            msgBox.innerText = data.message;
+        if(forceReplaceFlag === false) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Enviar Predicciones";
         }
-    })
-    .catch(error => {
-        msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Error de conexión. Inténtalo de nuevo.";
-    })
-    .finally(() => {
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Enviar Predicciones";
     });
 });
 
 // =========================================================
-// LÓGICA DE TABLAS (Sin cambios respecto al original)
+// 4. LÓGICA DE TABLAS DE CLASIFICACIÓN
 // =========================================================
 function showError(msg) {
     $("#messages").html(`<div style="padding:10px; margin:10px auto; max-width: 900px; background:#fee; color:#900; border:1px solid #c00; border-radius:6px; text-align:center;">⚠️ ${msg}</div>`);
@@ -368,8 +327,8 @@ function populateWeeklyTable(data) {
     for(let i = 1; i < lines.length; i++){
         const cols = lines[i].split(",");
         if(cols.length < 3) continue; 
-        const jornada = cols[0].trim(), jugador = cols[1].trim(), puntos = cols[2].trim(), aciertos = cols[3] ? cols[3].trim() : "-"; 
-        weeklyData.push({jornada, jugador, puntos, aciertos});
+        const jornada = cols[0].trim(), jugador = cols[1].trim(), puntos = cols[2].trim(); 
+        weeklyData.push({jornada, jugador, puntos});
         jornadasSet.add(jornada);
     }
     const select = $("#jornadaSelect");
@@ -394,7 +353,7 @@ function renderWeeklyTable(selectedJornada = "") {
         rowsToRender = [...weeklyData].sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
     }
     rowsToRender.forEach(row => {
-        tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td><td>${row.aciertos}</td></tr>`);
+        tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td></tr>`);
     });
 }
 
