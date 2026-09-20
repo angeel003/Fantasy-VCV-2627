@@ -116,7 +116,7 @@
                     <span style="font-size:1.3rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
                 </div>
             </div>
-            <div id="appMessage" class="alert-box"></div>
+            
             <form id="porraForm">
                 <hr>
                 <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
@@ -127,6 +127,9 @@
                         ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
                     </p>
                 </div>
+
+                <!-- EL MENSAJE DE GUARDADO AHORA SALE AQUÍ -->
+                <div id="appMessage" class="alert-box"></div>
 
                 <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
             </form>
@@ -197,9 +200,18 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
-            currentUser = usr; currentPassword = pwd; equiposTotalesInfo = data.equipos;
+            currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
+
+            // ORDENAR PARTIDOS POR FECHA (MÁS PRONTO PRIMERO)
+            data.equipos.sort((a, b) => {
+                let tsA = a.timestamp || Infinity; 
+                let tsB = b.timestamp || Infinity;
+                return tsA - tsB; 
+            });
+            
+            equiposTotalesInfo = data.equipos;
 
             let htmlPartidos = "";
             let equiposPermitidos = 0;
@@ -229,7 +241,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
-                                    <select class="form-control" id="e${eq.id_partido}_sets" required>
+                                    <select class="form-control" id="e${eq.id_partido}_sets">
                                         <option value="">Elige...</option>
                                         <option value="3-0">Victoria 3-0</option>
                                         <option value="3-1">Victoria 3-1</option>
@@ -241,11 +253,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Puntos Dif.</label>
-                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" required>
+                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Signo</label>
-                                    <select class="form-control" id="e${eq.id_partido}_signo" required>
+                                    <select class="form-control" id="e${eq.id_partido}_signo">
                                         <option value="">Elige...</option>
                                         <option value="A favor">A favor (+)</option>
                                         <option value="En contra">En contra (-)</option>
@@ -357,17 +369,42 @@ function cargarDatosAntiguos() {
 
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const btnSubmit = document.getElementById('btnSubmit'); const msgBox = document.getElementById('appMessage');
-    btnSubmit.disabled = true; btnSubmit.innerText = "Guardando..."; msgBox.style.display = "none";
+    const btnSubmit = document.getElementById('btnSubmit'); 
+    const msgBox = document.getElementById('appMessage');
+    msgBox.style.display = "none";
 
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
+    let validacionFallida = false;
+
     equiposTotalesInfo.forEach(eq => {
         const elSet = document.getElementById(`e${eq.id_partido}_sets`);
+        const elPuntos = document.getElementById(`e${eq.id_partido}_puntos`);
+        const elSigno = document.getElementById(`e${eq.id_partido}_signo`);
+
         if(elSet && !elSet.disabled) {
-            prediccionesList[eq.id_partido] = { sets: getVal(`e${eq.id_partido}_sets`), puntos: getVal(`e${eq.id_partido}_puntos`), signo: getVal(`e${eq.id_partido}_signo`) };
+            let vSet = getVal(`e${eq.id_partido}_sets`);
+            let vPuntos = getVal(`e${eq.id_partido}_puntos`);
+            let vSigno = getVal(`e${eq.id_partido}_signo`);
+
+            // REVISIÓN CONDICIONAL: Si ha rellenado algo, tiene que rellenar los 3 campos de ese partido
+            let numRellenos = (vSet !== "" ? 1 : 0) + (vPuntos !== "" ? 1 : 0) + (vSigno !== "" ? 1 : 0);
+            if (numRellenos > 0 && numRellenos < 3) {
+                validacionFallida = true;
+            }
+
+            prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
         }
     });
+
+    if (validacionFallida) {
+        msgBox.className = "alert-box alert-danger"; 
+        msgBox.innerText = "❌ Si predices un partido, debes rellenar sus 3 campos (Sets, Puntos y Signo). Puedes dejar partidos enteros en blanco si no quieres jugarlos hoy."; 
+        msgBox.style.display = "block";
+        return; // Frena el envío
+    }
+
+    btnSubmit.disabled = true; btnSubmit.innerText = "Guardando..."; 
 
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -405,7 +442,6 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
             } else {
                 globalHistorialData = data.history;
                 
-                // EXTRAER TODOS LOS EQUIPOS DEL HISTORIAL PARA DIBUJAR LOS CHECKBOXES
                 let equiposEnHistorial = new Set();
                 globalHistorialData.forEach(r => {
                     r.partidos.forEach(p => { equiposEnHistorial.add(p.equipo_local); });
@@ -418,7 +454,6 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                 });
                 document.getElementById('filterEquiposContainer').innerHTML = checksHtml;
 
-                // Añadir el evento de actualización a los checkboxes
                 document.querySelectorAll('.chk-equipo').forEach(chk => {
                     chk.addEventListener('change', renderizarHistorial);
                 });
@@ -433,23 +468,19 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
 
 function renderizarHistorial() {
     const container = document.getElementById('historyListContainer');
-    // Hacer una copia segura de los datos para que el ordenado no rompa el original
     let sortedHistory = JSON.parse(JSON.stringify(globalHistorialData));
     
-    // 1. Ordenar las rondas
     sortedHistory.sort((a, b) => {
         let numA = parseInt(a.ronda.replace(/\D/g, '')) || 0;
         let numB = parseInt(b.ronda.replace(/\D/g, '')) || 0;
         return isSortDesc ? numB - numA : numA - numB;
     });
 
-    // Leer qué equipos ha marcado el usuario en las casillas
     let checkedEquipos = Array.from(document.querySelectorAll('.chk-equipo:checked')).map(cb => cb.value);
 
     let histHtml = "";
     
     sortedHistory.forEach(ronda => {
-        // 2. Ordenar los partidos por fecha dentro de su propia ronda
         ronda.partidos.sort((a, b) => {
             let tA = a.timestamp || 0;
             let tB = b.timestamp || 0;
@@ -463,7 +494,6 @@ function renderizarHistorial() {
         let hayDatosEnEsteBloque = false;
         
         ronda.partidos.forEach(p => {
-            // SI ESTE EQUIPO NO ESTÁ MARCADO, LO SALTAMOS Y NO SE DIBUJA
             if (!checkedEquipos.includes(p.equipo_local)) return; 
             
             hayDatosEnEsteBloque = true;
@@ -533,7 +563,6 @@ function renderizarHistorial() {
         
         blockHtml += `</div>`;
         
-        // Solo dibujamos la caja de la Ronda si queda al menos un partido visible después del filtro
         if(hayDatosEnEsteBloque) { histHtml += blockHtml; }
     });
     
