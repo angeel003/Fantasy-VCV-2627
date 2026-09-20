@@ -8,11 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-    /* COLORES MORADOS VCV */
     :root {
-        --purple-dark: #4a148c; /* Morado oscuro */
-        --purple-light: #7b1fa2; /* Morado claro */
-        --purple-bg: #f3e5f5; /* Fondo suave */
+        --purple-dark: #4a148c; 
+        --purple-light: #7b1fa2; 
+        --purple-bg: #f3e5f5; 
     }
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; margin: 0; }
@@ -30,7 +29,6 @@
     .medal-2 { background: #f8f9fa; font-weight: bold; }
     .medal-3 { background: #fff4e6; font-weight: bold; }
 
-    /* Botones Morados */
     .btn-primary { background-color: var(--purple-light); border-color: var(--purple-light); }
     .btn-primary:hover { background-color: var(--purple-dark); border-color: var(--purple-dark); }
     .btn-success { background-color: #388e3c; border-color: #388e3c; }
@@ -42,7 +40,6 @@
     .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
-    /* Estilos del Login y FAQ */
     #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
     .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; }
     
@@ -67,9 +64,7 @@
     </div>
 </header>
 
-<!-- PANTALLA DE LOGIN Y FAQ -->
 <div id="loginSection">
-    
     <div class="login-card">
         <h3 style="color: var(--purple-dark); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
         <div class="form-group text-left">
@@ -84,66 +79,41 @@
         <div id="loginMessage" class="alert-box mt-3"></div>
     </div>
 
-    <!-- SECCIÓN FAQ INDEPENDIENTE Y DESPLEGABLE -->
     <div class="faq-container">
         <div class="faq-title">❓ Preguntas Frecuentes (FAQ)</div>
-        
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
-            <div class="faq-content">
-                Es la porra privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!
-            </div>
+            <div class="faq-content">Es la porra privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
         </details>
-
         <details class="faq-details">
             <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
-            <div class="faq-content">
-                El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.
-            </div>
+            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.</div>
         </details>
-
         <details class="faq-details">
             <summary class="faq-summary">Crear una liga privada</summary>
-            <div class="faq-content">
-                El Fantasy permite clasificaciones separadas (Club, Amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.
-            </div>
+            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, Amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.</div>
         </details>
-
         <details class="faq-details">
             <summary class="faq-summary">Aún no tengo cuenta</summary>
-            <div class="faq-content">
-                ¡Únete a la liga! Mándame un correo a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> indicando quién eres, a qué ligas quieres que se te añada, y los partidos de qué equipos quieres predecir.
-            </div>
+            <div class="faq-content">¡Únete a la liga! Mándame un correo a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> indicando quién eres, a qué ligas quieres que se te añada, y los partidos de qué equipos quieres predecir.</div>
         </details>
-
         <details class="faq-details">
             <summary class="faq-summary">He olvidado mi contraseña</summary>
-            <div class="faq-content">
-                No pasa nada. Escríbeme a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> para que te la restablezca lo antes posible.
-            </div>
+            <div class="faq-content">No pasa nada. Escríbeme a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> para que te la restablezca lo antes posible.</div>
         </details>
     </div>
-
 </div>
 
-<!-- APLICACIÓN PRINCIPAL (Oculta al inicio) -->
 <div id="appSection" style="display: none;">
-    
-    <!-- 1. SECCIÓN DE PREDICCIONES -->
     <section>
         <h2>Mis Predicciones</h2>
         <div class="form-container">
             <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
-                <div class="col-md-6">
-                    <span style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
-                </div>
-                <div class="col-md-6 text-right">
-                    <span style="background:white; color:var(--purple-dark); border: 2px solid var(--purple-light); padding:5px 15px; border-radius:20px; font-weight:bold;">Ronda Global: <span id="displayJornada"></span></span>
+                <div class="col-md-12 text-center">
+                    <span style="font-size:1.3rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
                 </div>
             </div>
-
             <div id="appMessage" class="alert-box"></div>
-
             <form id="porraForm">
                 <hr>
                 <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
@@ -153,66 +123,55 @@
         </div>
     </section>
 
-    <!-- 2. SECCIÓN DE CLASIFICACIONES PRIVADAS -->
     <section class="section-alt" id="clasificacionesSection">
         <h2>Clasificaciones Privadas</h2>
         <div id="tablasClasificacionContainer"></div>
     </section>
 
-    <!-- 3. SECCIÓN DE HISTORIAL PRIVADO MÓVIL (Nuevo Diseño) -->
+    <!-- NUEVA SECCIÓN: CLASIFICACIONES OFICIALES EXTERNAS -->
     <section>
+        <h2>📊 Clasificaciones Oficiales (Federación)</h2>
+        <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
+        <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Puedes añadir aquí tantos enlaces oficiales como necesites -->
+            <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
+            <a href="https://esvoley.es/voleibol/competicions-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
+            <!-- Ejemplo para añadir más: cambia la URL y el texto del botón -->
+        </div>
+    </section>
+
+    <section class="section-alt">
         <h2>Mi Historial Privado</h2>
-        <p>Consulta tus predicciones vs resultados oficiales pasados.</p>
+        <p>Consulta tus predicciones, los resultados oficiales y los puntos que ganaste.</p>
         <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">🔒 Cargar mi historial</button>
         <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
-        
-        <div id="historyListContainer" style="display:none; max-width:700px; margin: 0 auto; text-align:left;">
-            <!-- Aquí se inyectarán las tarjetas de historial -->
-        </div>
+        <div id="historyListContainer" style="display:none; max-width:700px; margin: 0 auto; text-align:left;"></div>
     </section>
 </div>
 
-<footer>
-    <p>© Fantasy VCV 2026-2027</p>   
-</footer>
+<footer><p>© Fantasy VCV 2026-2027</p></footer>
 
 <script>
-// =========================================================
-// ENLACES
-// =========================================================
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
-let currentUser = "";
-let currentPassword = "";
-let currentJornada = 0;
-let equiposTotalesInfo = [];
+let currentUser = ""; let currentPassword = ""; let currentJornada = 0; let equiposTotalesInfo = [];
 
-// =========================================================
-// 1. LOGIN Y CONSTRUCCIÓN DE LA WEB
-// =========================================================
 document.getElementById('btnLogin').addEventListener('click', function() {
     const usr = document.getElementById('loginUsuario').value.trim();
     const pwd = document.getElementById('loginPassword').value.trim();
     const msgBox = document.getElementById('loginMessage');
     const btn = this;
 
-    if(!usr || !pwd) {
-        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Rellena usuario y contraseña."; msgBox.style.display = "block"; return;
-    }
-
+    if(!usr || !pwd) { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Rellena usuario y contraseña."; msgBox.style.display = "block"; return; }
     btn.disabled = true; btn.innerText = "Verificando..."; msgBox.style.display = "none";
 
-    fetch(scriptURL, {
-        method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
+    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
             currentUser = usr; currentPassword = pwd; currentJornada = data.jornada; equiposTotalesInfo = data.equipos;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
-            document.getElementById('displayJornada').innerText = data.jornada;
 
-            // A. DIBUJAR PREDICCIONES (Con lógica de ABIERTO / CERRADO)
             let htmlPartidos = "";
             let equiposPermitidos = 0;
             let equiposCerrados = 0;
@@ -220,13 +179,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.rival !== "") {
                     equiposPermitidos++;
-                    // Mostrar la jornada específica del equipo si la hay
-                    let extraInfo = eq.jornadaEquipo ? ` <span style="color:#666; font-size:0.9rem;">(${eq.jornadaEquipo})</span>` : "";
-                    
+                    // Poner jornada del equipo entre paréntesis (ej: (Jornada 3))
+                    let infoJornadaEq = eq.jornadaEquipo ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${eq.jornadaEquipo})</span>` : "";
+
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
                         <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="margin-bottom: 15px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${extraInfo}</h5>
+                            <h5 style="margin-bottom: 15px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
@@ -258,7 +217,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         equiposCerrados++;
                         htmlPartidos += `
                         <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.nombre} vs ${eq.rival}${extraInfo}</h5>
+                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
                     }
@@ -268,17 +227,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             if (equiposPermitidos === 0) {
                 htmlPartidos = `<div class="alert-box alert-warning" style="display:block;">No tienes partidos asignados para esta semana.</div>`;
                 document.getElementById('btnSubmit').style.display = "none";
-            } else if (equiposPermitidos === equiposCerrados) {
-                 document.getElementById('btnSubmit').style.display = "none"; // Todos sus partidos permitidos están cerrados
-            }
+            } else if (equiposPermitidos === equiposCerrados) { document.getElementById('btnSubmit').style.display = "none"; }
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
 
-            // B. CLASIFICACIONES PRIVADAS
             let clasifHtml = "";
-            if(data.ligas.length === 0) {
-                clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`;
-            } else {
+            if(data.ligas.length === 0) { clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; } 
+            else {
                 data.ligas.forEach(liga => {
                     clasifHtml += `<h4 style="margin-top:40px; color:var(--purple-dark);">🏆 Liga: ${liga}</h4>`;
                     clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:white; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
@@ -307,9 +262,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .finally(() => { btn.innerText = "Entrar al Fantasy"; btn.disabled = false; });
 });
 
-// =========================================================
-// 2. AUTO-CARGAR
-// =========================================================
 function cargarDatosAntiguos() {
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword, jornada: currentJornada }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -327,9 +279,6 @@ function cargarDatosAntiguos() {
     });
 }
 
-// =========================================================
-// 3. GUARDAR
-// =========================================================
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btnSubmit = document.getElementById('btnSubmit'); const msgBox = document.getElementById('appMessage');
@@ -354,9 +303,6 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
 });
 
-// =========================================================
-// 4. HISTORIAL PRIVADO (Adaptado para Móvil)
-// =========================================================
 document.getElementById('btnHistory').addEventListener('click', function(e) {
     e.preventDefault();
     const msgBox = document.getElementById('historyMessage');
@@ -377,7 +323,6 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                 
                 sortedHistory.forEach(row => {
                     histHtml += `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
-                    histHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Ronda Global: ${row.jornada}</h4>`;
                     
                     let hayDatos = false;
                     for(let i=1; i<=equiposTotalesInfo.length; i++) {
@@ -386,11 +331,26 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                         
                         if(p && p.sets) {
                             hayDatos = true;
-                            // Mostrar resultado oficial si existe, o indicar "Pendiente"
-                            let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse / anotarse</i>`;
+                            let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
                             
+                            let puntosInfo = "";
+                            if (p.oficial_sets && p.oficial_parciales) {
+                                let bgColor = p.puntos_partido > 0 ? "#e8f5e9" : "#ffebee";
+                                let textColor = p.puntos_partido > 0 ? "#2e7d32" : "#c62828";
+                                puntosInfo = `
+                                <div style="margin-top:10px; background:${bgColor}; border-radius:6px; padding:10px; text-align:center;">
+                                    <div style="color:${textColor}; font-weight:bold; font-size:1.1rem;">+${p.puntos_partido} Puntos</div>
+                                    <div style="color:#666; font-size:0.85rem; margin-top:2px;">${p.motivos}</div>
+                                </div>`;
+                            } else {
+                                puntosInfo = `
+                                <div style="margin-top:10px; background:#fff8e1; border-radius:6px; padding:10px; text-align:center;">
+                                    <div style="color:#f57f17; font-weight:bold; font-size:0.9rem;">⏳ Partido sin puntuar aún</div>
+                                </div>`;
+                            }
+
                             histHtml += `
-                            <div style="margin-top:16px; font-size:0.95rem;">
+                            <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
                                 <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}</div>
                                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light);">
                                     <div style="margin-right:15px; margin-bottom:8px;">
@@ -402,10 +362,11 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                                         ${ofText}
                                     </div>
                                 </div>
+                                ${puntosInfo}
                             </div>`;
                         }
                     }
-                    if(!hayDatos) { histHtml += `<p style="color:#999; font-style:italic; margin-top:15px;">No predeciste ningún partido en esta ronda.</p>`; }
+                    if(!hayDatos) { histHtml += `<p style="color:#999; font-style:italic;">No predeciste ningún partido aquí.</p>`; }
                     histHtml += `</div>`;
                 });
                 
