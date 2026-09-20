@@ -236,15 +236,22 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         } else if (data.status === "confirm_replace") {
             msgBox.className = "alert-warning";
             msgBox.innerHTML = `
-                <p style="margin-bottom:10px;">${data.message}</p>
-                <div style="background:#fff; padding:10px; border-radius:5px; font-family:monospace; text-align:left; font-size:0.85rem; line-height:1.5; margin-bottom:10px;">
-                    <strong>Tus resultados anteriores eran:</strong><br>
-                    ${data.oldSummary.replace(/\n/g, '<br>')}
-                </div>
-                <p style="margin-bottom:15px; font-weight:bold;">¿Quieres borrar tus resultados anteriores y subir los nuevos?</p>
-                <button id="btnConfirmReplace" class="btn btn-warning" style="font-weight:bold; margin-right:10px;">Sí, reemplazar</button>
+                <p style="margin-bottom:15px;">${data.message}</p>
+                <button id="btnConfirmReplace" class="btn btn-warning" style="font-weight:bold; margin-right:10px;">Confirmar y Sobrescribir</button>
                 <button id="btnCancelReplace" class="btn btn-secondary">Cancelar</button>
             `;
+            
+            // Rellenar las casillas automáticamente con los datos anteriores
+            if (data.oldData) {
+                const od = data.oldData;
+                const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== "") el.value = val; };
+                
+                setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
+                setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
+                setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
+                setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
+                setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
+            }
             
             document.getElementById('btnConfirmReplace').addEventListener('click', function(e) {
                 e.preventDefault();
