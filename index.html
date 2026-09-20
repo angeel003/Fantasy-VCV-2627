@@ -59,8 +59,8 @@
 
 <header>
     <div class="header-content">
-        <h1 style="margin-bottom: 10px; line-height:1.2;">Fantasy VCV 26/27</h1>
-        <p style="font-size:1.1rem; margin-bottom: 0;">🏐🏐🏐</p>
+        <h1 style="margin-bottom: 10px; line-height:1.2;">🏐 Fantasy VCV 26/27</h1>
+        <p style="font-size:1.1rem; margin-bottom: 0;">La porra privada del club</p>
     </div>
 </header>
 
@@ -91,7 +91,7 @@
         </details>
         <details class="faq-details">
             <summary class="faq-summary">Crear una liga privada</summary>
-            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, tu equipo, amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.</div>
+            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, Amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.</div>
         </details>
         <details class="faq-details">
             <summary class="faq-summary">Aún no tengo cuenta</summary>
@@ -128,17 +128,12 @@
         <div id="tablasClasificacionContainer"></div>
     </section>
 
-    <!-- NUEVA SECCIÓN: CLASIFICACIONES OFICIALES EXTERNAS -->
     <section>
         <h2>📊 Clasificaciones Oficiales (Federación)</h2>
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
-            <!-- Puedes añadir aquí tantos enlaces oficiales como necesites -->
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
-            <!-- Ejemplo para añadir más: cambia la URL y el texto del botón -->
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
         </div>
     </section>
 
@@ -157,6 +152,14 @@
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 let currentUser = ""; let currentPassword = ""; let currentJornada = 0; let equiposTotalesInfo = [];
+let countdownInterval = null;
+
+// Función para formatear fechas a texto
+function formatFecha(ts) {
+    if(!ts) return "";
+    let d = new Date(ts);
+    return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
 
 document.getElementById('btnLogin').addEventListener('click', function() {
     const usr = document.getElementById('loginUsuario').value.trim();
@@ -181,14 +184,22 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.rival !== "") {
                     equiposPermitidos++;
-                    // Poner jornada del equipo entre paréntesis (ej: (Jornada 3))
                     let infoJornadaEq = eq.jornadaEquipo ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${eq.jornadaEquipo})</span>` : "";
+                    let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
+                    let infoUbicacionYFecha = "";
+                    if(eq.timestamp || iconoLoc) {
+                        let fStr = formatFecha(eq.timestamp);
+                        infoUbicacionYFecha = `<div style="color:#555; font-size:0.9rem; margin-bottom:10px;">${iconoLoc} ${fStr}</div>`;
+                    }
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
-                        <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="margin-bottom: 15px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
-                            <div class="row">
+                        <div class="p-3 mb-3 partido-card" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
+                            ${infoUbicacionYFecha}
+                            <div class="countdown-timer" data-ts="${eq.timestamp}" data-eq="${eq.id}" style="color:#d32f2f; font-weight:bold; font-size:0.85rem; margin-bottom:15px; background:#ffebee; padding:5px 10px; border-radius:5px; display:inline-block;">Cargando tiempo...</div>
+                            
+                            <div class="row inputs-partido" id="inputs_eq_${eq.id}">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
                                     <select class="form-control" id="e${eq.id}_sets" required>
@@ -220,6 +231,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         htmlPartidos += `
                         <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
                             <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
+                            ${infoUbicacionYFecha}
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
                     }
@@ -232,6 +244,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             } else if (equiposPermitidos === equiposCerrados) { document.getElementById('btnSubmit').style.display = "none"; }
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
+            iniciarCountdowns(); // Iniciar cuenta atrás
 
             let clasifHtml = "";
             if(data.ligas.length === 0) { clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; } 
@@ -264,6 +277,42 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .finally(() => { btn.innerText = "Entrar al Fantasy"; btn.disabled = false; });
 });
 
+// MOTOR DE CUENTA ATRÁS Y BLOQUEO AUTOMÁTICO
+function iniciarCountdowns() {
+    if(countdownInterval) clearInterval(countdownInterval);
+    
+    countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        document.querySelectorAll('.countdown-timer').forEach(el => {
+            const ts = parseInt(el.getAttribute('data-ts'));
+            const eqId = el.getAttribute('data-eq');
+            if(!ts) { el.style.display = 'none'; return; }
+            
+            const diff = ts - now;
+            const treintaMinutos = 30 * 60 * 1000;
+            
+            if (diff <= treintaMinutos) {
+                el.innerHTML = "🔒 CERRADO AUTOMÁTICAMENTE (Inicia en menos de 30 min)";
+                el.style.backgroundColor = "#e0e0e0";
+                el.style.color = "#424242";
+                
+                // Deshabilitar inputs
+                const inputsDiv = document.getElementById(`inputs_eq_${eqId}`);
+                if(inputsDiv) {
+                    const inputs = inputsDiv.querySelectorAll('input, select');
+                    inputs.forEach(input => input.disabled = true);
+                }
+            } else {
+                let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                let s = Math.floor((diff % (1000 * 60)) / 1000);
+                el.innerHTML = `⏳ Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
+            }
+        });
+    }, 1000);
+}
+
 function cargarDatosAntiguos() {
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword, jornada: currentJornada }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -289,7 +338,9 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
     for(let i=1; i<=equiposTotalesInfo.length; i++) {
-        if(document.getElementById(`e${i}_sets`)) {
+        // Solo guardamos si el input existe y NO está disabled (bloqueado por tiempo)
+        const selectSet = document.getElementById(`e${i}_sets`);
+        if(selectSet && !selectSet.disabled) {
             prediccionesList[i] = { sets: getVal(`e${i}_sets`), puntos: getVal(`e${i}_puntos`), signo: getVal(`e${i}_signo`) };
         }
     }
@@ -323,16 +374,25 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                 const sortedHistory = data.history.sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
                 let histHtml = "";
                 
+                // Mapear info de equipos para buscar fechas e iconos rápidos
+                const infoEqMap = {};
+                equiposTotalesInfo.forEach(eq => infoEqMap[eq.id] = eq);
+
                 sortedHistory.forEach(row => {
                     histHtml += `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
                     
                     let hayDatos = false;
                     for(let i=1; i<=equiposTotalesInfo.length; i++) {
                         let p = row.predicciones[i];
-                        let eqName = equiposTotalesInfo[i-1].nombre;
+                        let eqBase = infoEqMap[i];
+                        let eqName = eqBase ? eqBase.nombre : `Equipo ${i}`;
+                        let iconoLoc = eqBase && eqBase.ubicacion === "CASA" ? "🏠" : (eqBase && eqBase.ubicacion === "FUERA" ? "✈️" : "");
                         
                         if(p && p.sets) {
                             hayDatos = true;
+                            let fStr = eqBase && eqBase.timestamp ? formatFecha(eqBase.timestamp) : "";
+                            let headerExtra = (iconoLoc || fStr) ? `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${fStr}</span>` : "";
+
                             let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
                             
                             let puntosInfo = "";
@@ -353,7 +413,7 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
 
                             histHtml += `
                             <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
-                                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}</div>
+                                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}${headerExtra}</div>
                                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light);">
                                     <div style="margin-right:15px; margin-bottom:8px;">
                                         <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Porra</span>
