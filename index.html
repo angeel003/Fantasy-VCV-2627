@@ -49,7 +49,7 @@
     <h2>Enviar Porra Semanal</h2>
     <div class="form-container">
         <form id="porraForm">
-           <!-- Datos de usuario -->
+            <!-- Datos de usuario -->
             <div class="row">
                 <div class="form-group col-md-3">
                     <label>Jugador</label>
@@ -60,11 +60,11 @@
                     <input type="password" id="inputPassword" class="form-control" required>
                 </div>
                 <div class="form-group col-md-3">
-                    <label>Jornada Activa</label>
+                    <label>Jornada</label>
                     <input type="number" id="inputJornada" class="form-control" readonly style="background: #e9ecef;">
                 </div>
                 <div class="form-group col-md-3 d-flex align-items-end">
-                    <button type="button" class="btn btn-info btn-block mb-3" id="btnLoad" style="font-weight:bold; color: white;">⬇️ Cargar mis datos</button>
+                    <button type="button" class="btn btn-info btn-block mb-3" id="btnLoad" style="font-weight:bold; color: white; padding: 8px 5px; font-size:0.9rem;">⬇️ Cargar mis datos</button>
                 </div>
             </div>
             
@@ -125,7 +125,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
 // =========================================================
-// PEGA AQUÍ TUS TRES ENLACES DE GOOGLE
+// ENLACES YA CONFIGURADOS CON TUS URLS
 // =========================================================
 const globalCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=603202484&single=true&output=csv"; 
 const weeklyCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=151036387&single=true&output=csv";
@@ -183,6 +183,10 @@ fetch(scriptURL)
         document.getElementById('contenedorPartidos').innerHTML = html;
         document.getElementById('cargandoJornada').style.display = "none";
         document.getElementById('btnSubmit').style.display = "block";
+    })
+    .catch(err => {
+        document.getElementById('cargandoJornada').innerHTML = "⚠️ Error al conectar con Google Sheets. Comprueba que el enlace de Apps Script esté publicado correctamente.";
+        document.getElementById('cargandoJornada').style.color = "red";
     });
 
 // =========================================================
@@ -302,7 +306,6 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     });
 });
 
-    
 // =========================================================
 // LÓGICA DE TABLAS
 // =========================================================
