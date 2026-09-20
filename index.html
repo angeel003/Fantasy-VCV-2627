@@ -16,13 +16,12 @@
     .section-alt { background: #e9ecef; }
     h2 { margin-bottom: 35px; font-weight: 600; color: #333; }
     
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
     th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: center; }
     thead { background: #1976d2; color: white; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
     .medal-2 { background: #f8f9fa; font-weight: bold; }
     .medal-3 { background: #fff4e6; font-weight: bold; }
-    .last-places { background: #ffebee; }
 
     .form-container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
     .form-group label { font-weight: bold; color: #0d47a1; }
@@ -50,7 +49,7 @@
 <!-- PANTALLA DE LOGIN -->
 <div id="loginSection">
     <div class="login-card">
-        <h3 style="color: #0d47a1; margin-bottom: 25px; font-weight:bold;">Acceso de Jugadores</h3>
+        <h3 style="color: #0d47a1; margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
         <div class="form-group text-left">
             <label>Usuario</label>
             <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
@@ -67,6 +66,7 @@
 <!-- APLICACIÓN PRINCIPAL (Oculta al inicio) -->
 <div id="appSection" style="display: none;">
     
+    <!-- 1. SECCIÓN DE PREDICCIONES -->
     <section>
         <h2>Mis Predicciones</h2>
         <div class="form-container">
@@ -84,37 +84,34 @@
             <form id="porraForm">
                 <hr>
                 <h4 style="color: #0d47a1; margin-bottom: 20px;">Cartelera de la Jornada</h4>
-                
-                <div id="contenedorPartidos">
-                    <!-- Los partidos se generarán aquí mágicamente -->
-                </div>
-
+                <div id="contenedorPartidos"></div>
                 <button type="submit" class="btn btn-success btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
             </form>
         </div>
     </section>
 
-    <!-- LAS TABLAS DE CLASIFICACIÓN SE MANTENDRÁN AQUÍ PARA LA SIGUIENTE FASE -->
-    <section class="section-alt">
-        <h2>Clasificación General</h2>
-        <div class="table-responsive">
-            <table id="globalTable">
-                <thead><tr><th>Posición y Jugador</th><th>Puntos</th></tr></thead>
-                <tbody></tbody>
-            </table>
+    <!-- 2. SECCIÓN DE CLASIFICACIONES PRIVADAS (Se generan solas) -->
+    <section class="section-alt" id="clasificacionesSection">
+        <h2>Clasificaciones Privadas</h2>
+        <div id="tablasClasificacionContainer">
+            <!-- Aquí el JavaScript dibujará las ligas a las que pertenece el jugador -->
         </div>
     </section>
-        
+
+    <!-- 3. SECCIÓN DE HISTORIAL PRIVADO -->
     <section>
-        <h2>Resultados por Jornada</h2>
-        <div style="margin-bottom:20px;">
-            <select id="jornadaSelect" style="padding:8px 12px; border-radius:5px; border:1px solid #ccc;">
-                <option value="">-- Todas las jornadas --</option>
-            </select>
-        </div>
-        <div class="table-responsive">
-            <table id="weeklyTable">
-                <thead><tr><th>Jornada</th><th>Jugador</th><th>Puntos</th></tr></thead>
+        <h2>Mi Historial Privado</h2>
+        <p>Consulta tus predicciones de jornadas anteriores.</p>
+        <button type="button" class="btn btn-secondary mb-4" id="btnHistory" style="font-weight:bold;">🔒 Ver mi historial</button>
+        <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
+        
+        <div class="table-responsive" id="historyTableContainer" style="display:none;">
+            <table id="historialTable">
+                <thead>
+                    <tr id="historialTableHead">
+                        <!-- Se generará dinámicamente según tus equipos locales -->
+                    </tr>
+                </thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -125,21 +122,17 @@
     <p>© Liga de Voleibol 2025-2026</p>   
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
 // =========================================================
-// ENLACES
+// CONFIGURACIÓN (¡Los CSV públicos han desaparecido!)
 // =========================================================
-const globalCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=603202484&single=true&output=csv"; 
-const weeklyCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=151036387&single=true&output=csv";
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 // Variables globales para la sesión
 let currentUser = "";
 let currentPassword = "";
 let currentJornada = 0;
-let totalEquipos = 0;
-let misLigas = [];
+let equiposTotalesInfo = []; // Guardará nombres y IDs para el historial
 
 // =========================================================
 // 1. SISTEMA DE LOGIN Y GENERACIÓN DE PANTALLA
@@ -169,27 +162,25 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
-            // Guardamos credenciales y configuramos la web
             currentUser = usr;
             currentPassword = pwd;
             currentJornada = data.jornada;
-            totalEquipos = data.equipos.length;
-            misLigas = data.ligas; // Usaremos esto en la siguiente fase para las tablas
+            equiposTotalesInfo = data.equipos;
 
             document.getElementById('displayJugador').innerText = "👤 " + usr;
             document.getElementById('displayJornada').innerText = data.jornada;
 
-            // DIBUJAR FORMULARIO DINÁMICO
-            let html = "";
+            // A. DIBUJAR PREDICCIONES (Solo los partidos con permiso)
+            let htmlPartidos = "";
             let equiposPermitidos = 0;
             
             data.equipos.forEach(eq => {
                 if (eq.permitido) {
                     equiposPermitidos++;
                     if (eq.rival.toUpperCase() !== "CERRADO") {
-                        html += `
+                        htmlPartidos += `
                         <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid #0d47a1;">
-                            <h5 style="margin-bottom: 15px; color:#1976d2;">🏐 Equipo ${eq.id} vs ${eq.rival}</h5>
+                            <h5 style="margin-bottom: 15px; color:#1976d2;">🏐 ${eq.nombre} vs ${eq.rival}</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
@@ -204,7 +195,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Puntos</label>
+                                    <label>Puntos Dif.</label>
                                     <input type="number" class="form-control" id="e${eq.id}_puntos" placeholder="Ej: 12" min="0" required>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -218,20 +209,41 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             </div>
                         </div>`;
                     } else {
-                        html += `
+                        htmlPartidos += `
                         <div class="p-3 mb-3" style="background: #ffebee; border-radius: 8px; border: 1px solid #ffcdd2; border-left: 5px solid #c62828;">
-                            <h5 style="margin-bottom: 0; color: #c62828;">💤 Equipo ${eq.id} descansa esta jornada</h5>
+                            <h5 style="margin-bottom: 0; color: #c62828;">💤 ${eq.nombre} descansa esta jornada</h5>
                         </div>`;
                     }
                 }
             });
 
             if (equiposPermitidos === 0) {
-                html = `<div class="alert-box alert-warning" style="display:block;">No tienes partidos asignados para predecir.</div>`;
+                htmlPartidos = `<div class="alert-box alert-warning" style="display:block;">No tienes partidos asignados para predecir.</div>`;
                 document.getElementById('btnSubmit').style.display = "none";
             }
+            document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
 
-            document.getElementById('contenedorPartidos').innerHTML = html;
+            // B. DIBUJAR CLASIFICACIONES PRIVADAS (Automáticamente)
+            let clasifHtml = "";
+            if(data.ligas.length === 0) {
+                clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`;
+            } else {
+                data.ligas.forEach(liga => {
+                    clasifHtml += `<h4 style="margin-top:40px; color:#0d47a1;">🏆 Liga: ${liga}</h4>`;
+                    clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:white; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
+                    <thead style="background:#1976d2; color:white;"><tr><th style="padding:14px;">Posición y Jugador</th><th style="padding:14px;">Puntos</th></tr></thead><tbody>`;
+                    
+                    let ranking = data.clasificaciones[liga] || [];
+                    ranking.forEach((r, index) => {
+                        let pos = index + 1;
+                        let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
+                        let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
+                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd;"><strong>${pos}</strong> - ${r.jugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem;">${r.puntos}</td></tr>`;
+                    });
+                    clasifHtml += `</tbody></table></div>`;
+                });
+            }
+            document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
             // TRANSICIÓN DE PANTALLA
             document.getElementById('loginSection').style.display = "none";
@@ -248,7 +260,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     })
     .catch(err => {
         msgBox.className = "alert-box alert-danger";
-        msgBox.innerText = "Error de conexión. Inténtalo de nuevo.";
+        msgBox.innerText = "Error de conexión con Google Sheets.";
         msgBox.style.display = "block";
     })
     .finally(() => {
@@ -275,9 +287,7 @@ function cargarDatosAntiguos() {
     .then(data => {
         if(data.status === "success") {
             const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
-            
-            // Rellenar dinámicamente según totalEquipos
-            for(let i=1; i<=totalEquipos; i++) {
+            for(let i=1; i<=equiposTotalesInfo.length; i++) {
                 if(data.data.predicciones[i]) {
                     setVal(`e${i}_sets`, data.data.predicciones[i].sets);
                     setVal(`e${i}_puntos`, data.data.predicciones[i].puntos);
@@ -287,7 +297,7 @@ function cargarDatosAntiguos() {
             msgBox.className = "alert-box alert-success";
             msgBox.innerText = "¡Tus predicciones guardadas se han cargado!";
         } else {
-            msgBox.style.display = "none"; // No apostó aún
+            msgBox.style.display = "none";
         }
     })
     .catch(() => { msgBox.style.display = "none"; });
@@ -308,8 +318,7 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
 
-    for(let i=1; i<=totalEquipos; i++) {
-        // Solo guardamos datos si el recuadro existe (si tiene permiso)
+    for(let i=1; i<=equiposTotalesInfo.length; i++) {
         if(document.getElementById(`e${i}_sets`)) {
             prediccionesList[i] = {
                 sets: getVal(`e${i}_sets`),
@@ -319,17 +328,9 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         }
     }
 
-    const formData = {
-        action: 'save',
-        usuario: currentUser,
-        password: currentPassword,
-        jornada: currentJornada,
-        predicciones: prediccionesList
-    };
-
     fetch(scriptURL, {
         method: 'POST',
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornada, predicciones: prediccionesList }),
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     })
     .then(res => res.json())
@@ -355,60 +356,65 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
 });
 
 // =========================================================
-// LÓGICA DE TABLAS (Se mantienen igual por ahora)
+// 4. HISTORIAL PRIVADO DINÁMICO
 // =========================================================
-function loadCSV(url, callback) {
-    if(url.includes("ENLACE_CSV")) return;
-    $.ajax({
-        type: "GET", url: url, dataType: "text",
-        success: function(data) { if (!data.includes("<html")) callback(data); }
+document.getElementById('btnHistory').addEventListener('click', function(e) {
+    e.preventDefault();
+    const msgBox = document.getElementById('historyMessage');
+    const tableContainer = document.getElementById('historyTableContainer');
+    const btnHist = this;
+
+    btnHist.innerText = "Cargando historial... ⏳";
+    btnHist.disabled = true;
+    msgBox.style.display = "none";
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'get_history', usuario: currentUser, password: currentPassword }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            if (data.history.length === 0) {
+                msgBox.style.display = "block";
+                msgBox.className = "alert-box alert-warning";
+                msgBox.innerText = "Aún no tienes predicciones guardadas en ninguna jornada.";
+                tableContainer.style.display = "none";
+            } else {
+                // Crear Cabeceras de la tabla
+                let headHtml = `<th>Jornada</th>`;
+                equiposTotalesInfo.forEach(eq => {
+                    headHtml += `<th>${eq.nombre}</th>`;
+                });
+                document.getElementById('historialTableHead').innerHTML = headHtml;
+
+                // Ordenar por jornada y crear filas
+                const sortedHistory = data.history.sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
+                let rowsHtml = "";
+                sortedHistory.forEach(row => {
+                    rowsHtml += `<tr><td><strong>Jornada ${row.jornada}</strong></td>`;
+                    for(let i=1; i<=equiposTotalesInfo.length; i++) {
+                        let p = row.predicciones[i];
+                        if(p && p.sets) {
+                            rowsHtml += `<td><span style="color:#1976d2; font-weight:bold;">${p.sets}</span><br><small>${p.puntos} pts (${p.signo})</small></td>`;
+                        } else {
+                            rowsHtml += `<td><span style="color:#999">-</span></td>`;
+                        }
+                    }
+                    rowsHtml += `</tr>`;
+                });
+                
+                document.querySelector('#historialTable tbody').innerHTML = rowsHtml;
+                tableContainer.style.display = "block";
+            }
+        }
+    })
+    .finally(() => {
+        btnHist.innerText = "🔒 Ver mi historial";
+        btnHist.disabled = false;
     });
-}
-
-function populateGlobalTable(data) {
-    const lines = data.split("\n").filter(line => line.trim() !== "");
-    const tbody = $("#globalTable tbody").empty();
-    for(let i = 1; i < lines.length; i++){
-        const cols = lines[i].split(",");
-        if(cols.length < 2) continue;
-        const jugador = cols[0].trim(), puntos = cols[1].trim();
-        let clase="", textoClase="";
-        if(i == 1){ clase="medal-1"; textoClase="🥇"; }
-        else if(i == 2){ clase="medal-2"; textoClase="🥈"; }
-        else if(i == 3){ clase="medal-3"; textoClase="🥉"; }
-        tbody.append(`<tr class="${clase}"><td><strong>${i}</strong> - ${jugador} ${textoClase}</td><td style="font-size: 1.1rem; font-weight: bold;">${puntos}</td></tr>`);
-    }
-}
-
-let weeklyData = []; 
-function populateWeeklyTable(data) {
-    const lines = data.split("\n").filter(line => line.trim() !== "");
-    weeklyData = []; 
-    let jornadasSet = new Set(); 
-    for(let i = 1; i < lines.length; i++){
-        const cols = lines[i].split(",");
-        if(cols.length < 3) continue; 
-        const jornada = cols[0].trim(), jugador = cols[1].trim(), puntos = cols[2].trim(); 
-        weeklyData.push({jornada, jugador, puntos});
-        jornadasSet.add(jornada);
-    }
-    const select = $("#jornadaSelect");
-    select.find("option:gt(0)").remove(); 
-    const jornadasArray = Array.from(jornadasSet).sort((a,b)=> parseInt(a) - parseInt(b));
-    jornadasArray.forEach(j => { select.append(`<option value="${j}">Jornada ${j}</option>`); });
-    if(jornadasArray.length > 0) {
-        select.val(jornadasArray[jornadasArray.length - 1]);
-        renderWeeklyTable(jornadasArray[jornadasArray.length - 1]);
-    }
-}
-
-function renderWeeklyTable(selectedJornada = "") {
-    const tbody = $("#weeklyTable tbody").empty();
-    let rowsToRender = selectedJornada !== "" ? weeklyData.filter(row => row.jornada === selectedJornada).sort((a, b) => parseFloat(b.puntos) - parseFloat(a.puntos)) : [...weeklyData].sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
-    rowsToRender.forEach(row => tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td></tr>`));
-}
-
-$("#jornadaSelect").on("change", function(){ renderWeeklyTable($(this).val()); });$(document).ready(function(){ loadCSV(globalCSV, populateGlobalTable); loadCSV(weeklyCSV, populateWeeklyTable); });
+});
 </script>
 </body>
 </html>
