@@ -62,13 +62,58 @@
         <div id="loginMessage" class="alert-box mt-3"></div>
 
         <!-- SECCIÓN DE AYUDA / FAQ -->
+        <!-- SECCIÓN DE AYUDA / FAQ -->
         <hr style="margin: 30px 0 20px 0;">
-        <div style="font-size: 0.9rem; color: #555; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px;">
-            <strong style="color: #333;">❓ ¿Problemas para acceder?</strong><br>
-            <div style="margin-top: 8px; line-height: 1.4;">
-                Si aún no tienes cuenta en el Fantasy, o si no recuerdas tu contraseña, envíame un correo para que te lo solucione:<br>
-                <a href="mailto:TU_CORREO_AQUI@gmail.com" style="font-weight:bold; color:#1976d2; display:block; margin-top:5px;">TU_CORREO_AQUI@gmail.com</a>
-            </div>
+        
+        <style>
+            /* Estilos específicos para el FAQ desplegable */
+            .faq-container { text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px; }
+            .faq-title { font-weight: bold; color: #0d47a1; margin-bottom: 15px; font-size: 1.05rem; text-align: center; }
+            .faq-details { margin-bottom: 8px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px; }
+            .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+            .faq-summary { font-weight: 600; color: #444; cursor: pointer; padding: 4px 0; outline: none; font-size: 0.95rem; }
+            .faq-summary:hover { color: #1976d2; }
+            .faq-content { font-size: 0.85rem; color: #555; padding: 8px 5px 5px 15px; line-height: 1.5; }
+            .faq-email { font-weight: bold; color: #1976d2; }
+        </style>
+
+        <div class="faq-container">
+            <div class="faq-title">❓ Preguntas Frecuentes (FAQ)</div>
+            
+            <details class="faq-details">
+                <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
+                <div class="faq-content">
+                    Es la porra privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!
+                </div>
+            </details>
+
+            <details class="faq-details">
+                <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
+                <div class="faq-content">
+                    El sistema calcula tus puntos automáticamente al acabar la jornada. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.
+                </div>
+            </details>
+
+            <details class="faq-details">
+                <summary class="faq-summary">Crear una liga privada</summary>
+                <div class="faq-content">
+                    El Fantasy permite clasificaciones separadas. Si quieres que te incluya en una clasificación exclusiva con los miembros de tu equipo o tu grupo de amigos, escríbeme a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.
+                </div>
+            </details>
+
+            <details class="faq-details">
+                <summary class="faq-summary">Aún no tengo cuenta</summary>
+                <div class="faq-content">
+                    ¡Únete a la liga! Mándame un correo a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> indicando quién eres, en qué ligas o con qué amigos quieres competir, y los partidos de qué equipos quieres predecir.
+                </div>
+            </details>
+
+            <details class="faq-details">
+                <summary class="faq-summary">He olvidado mi contraseña</summary>
+                <div class="faq-content">
+                    No pasa nada. Escríbeme a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>, dime quién eres y te la restableceré lo antes posible.
+                </div>
+            </details>
         </div>
     </div>
 </div>
