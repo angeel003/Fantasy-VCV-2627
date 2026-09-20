@@ -54,7 +54,6 @@
     
     footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
 
-    /* Estilos Filtros Historial */
     .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:#f4f6f9; padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
     .filter-checkbox input { margin-right:6px; cursor:pointer; }
 </style>
@@ -122,8 +121,7 @@
                 <hr>
                 <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
                 <div id="contenedorPartidos"></div>
-                
-                <!-- AVISO DE CIERRE 15 MINUTOS -->
+
                 <div style="background-color:#ffebee; border: 1px solid #f5c6cb; border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
                     <p style="color:#d32f2f; font-size:0.95rem; font-weight:bold; margin:0;">
                         ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
@@ -140,7 +138,6 @@
         <div id="tablasClasificacionContainer"></div>
     </section>
 
-    <!-- CLASIFICACIONES OFICIALES EXTERNAS -->
     <section>
         <h2>📊 Clasificaciones Oficiales (Federación)</h2>
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
@@ -159,7 +156,6 @@
         <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">🔒 Cargar mi historial</button>
         <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
         
-        <!-- CONTROLES DEL HISTORIAL (Filtros y Orden) -->
         <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
             <div style="font-weight:bold; color:var(--purple-dark); margin-bottom:12px; font-size:1.1rem;">Filtrar partidos por Liga:</div>
             <div id="filterLigasContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
@@ -209,7 +205,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let equiposCerrados = 0;
             
             data.equipos.forEach(eq => {
-                if (eq.permitido && eq.rival !== "") {
+                // AQUÍ ESTÁ LA MAGIA DEL FILTRO: Si "eq.mostrar" es false (Ocultar), lo ignoramos por completo
+                if (eq.permitido && eq.mostrar) {
                     equiposPermitidos++;
                     let valJornada = String(eq.jornadaEquipo || "").trim();
                     let infoJornadaEq = "";
@@ -225,7 +222,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
-                        <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <div class="p-3 mb-3 partido-activo" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.nombre} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
@@ -327,7 +324,7 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 15 * 60 * 1000; // 15 minutos (NUEVO LÍMITE)
+            const limite = 15 * 60 * 1000; // Bloquear exactamente 15 minutos antes
 
             if (diff <= limite && diff > -14400000) { 
                 el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
@@ -340,8 +337,7 @@ function iniciarRelojes() {
                 el.innerHTML = "🏁 Partido en curso o Finalizado";
                 el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
             } else {
-                // Cálculo para mostrar el tiempo que falta PARA EL CIERRE (no para el partido)
-                let diffToClose = diff - limite;
+                let diffToClose = diff - limite; // Mostramos cuánto falta PARA QUE SE CIERRE
                 let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
                 let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
