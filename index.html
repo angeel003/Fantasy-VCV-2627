@@ -12,7 +12,7 @@
     header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 60px 15px; text-align: center; }
     header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
     header p { font-size: 1.1rem; opacity: 0.9; }
-    section { padding: 60px 15px; text-align: center; }
+    section { padding: 50px 15px; text-align: center; }
     .section-alt { background: #e9ecef; }
     h2 { margin-bottom: 35px; font-weight: 600; color: #333; }
     
@@ -24,15 +24,17 @@
     .medal-3 { background: #fff4e6; font-weight: bold; }
     .last-places { background: #ffebee; }
 
-    /* Estilos del Formulario */
-    .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
+    .form-container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
     .form-group label { font-weight: bold; color: #0d47a1; }
-    .form-control { margin-bottom: 15px; }
-    #formMensaje { margin-top: 15px; display: none; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; }
-    .alert-success { background: #d4edda; color: #155724; }
-    .alert-danger { background: #f8d7da; color: #721c24; }
+    .alert-box { display: none; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 20px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
+    /* Estilos del Login */
+    #loginSection { min-height: 60vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; }
+    
     footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
 </style>
 </head>
@@ -40,105 +42,85 @@
 
 <header>
     <div class="header-content">
-        <h1 style="margin-bottom: 25px; line-height:1.2;">🏐 Liga de Porras Voleibol</h1>
-        <p style="font-size:0.9rem; margin-bottom: 15px; line-height:1.4;">Temporada 25/26</p>
+        <h1 style="margin-bottom: 10px; line-height:1.2;">🏐 Liga de Porras</h1>
+        <p style="font-size:1.1rem; margin-bottom: 0;">Temporada 25/26</p>
     </div>
 </header>
+
+<!-- PANTALLA DE LOGIN -->
+<div id="loginSection">
+    <div class="login-card">
+        <h3 style="color: #0d47a1; margin-bottom: 25px; font-weight:bold;">Acceso de Jugadores</h3>
+        <div class="form-group text-left">
+            <label>Usuario</label>
+            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group text-left">
+            <label>Contraseña</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Tu contraseña" required>
+        </div>
+        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar a la Liga</button>
+        <div id="loginMessage" class="alert-box mt-3"></div>
+    </div>
+</div>
+
+<!-- APLICACIÓN PRINCIPAL (Oculta al inicio) -->
+<div id="appSection" style="display: none;">
     
-<section>
-    <h2>Enviar Porra Semanal</h2>
-    <div class="form-container">
-        <form id="porraForm">
-            <!-- Datos de usuario -->
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>Jugador</label>
-                    <input type="text" id="inputUsuario" class="form-control" required>
+    <section>
+        <h2>Mis Predicciones</h2>
+        <div class="form-container">
+            <div class="row mb-3" style="background:#f8f9fa; padding:15px; border-radius:8px; align-items:center;">
+                <div class="col-md-6">
+                    <span style="font-size:1.2rem; font-weight:bold; color:#0d47a1;" id="displayJugador"></span>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>Contraseña</label>
-                    <input type="password" id="inputPassword" class="form-control" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Jornada</label>
-                    <input type="number" id="inputJornada" class="form-control" readonly style="background: #e9ecef;">
+                <div class="col-md-6 text-right">
+                    <span style="background:#e9ecef; padding:5px 15px; border-radius:20px; font-weight:bold;">Jornada <span id="displayJornada"></span></span>
                 </div>
             </div>
-            
-            <hr>
-            <h4 style="color: #0d47a1; margin-bottom: 20px;">Cartelera de la Jornada</h4>
 
-            <div id="cargandoJornada" style="text-align:center; font-weight:bold; color:#666;">Cargando partidos... ⏳</div>
-            <div id="contenedorPartidos"></div>
+            <div id="appMessage" class="alert-box"></div>
 
-            <button type="submit" class="btn btn-primary btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px; display: none;">Enviar Predicciones</button>
-        </form>
-        <div id="formMensaje"></div>
-    </div>
-</section>
+            <form id="porraForm">
+                <hr>
+                <h4 style="color: #0d47a1; margin-bottom: 20px;">Cartelera de la Jornada</h4>
+                
+                <div id="contenedorPartidos">
+                    <!-- Los partidos se generarán aquí mágicamente -->
+                </div>
 
-<section class="section-alt">
-    <div id="messages"></div>
-    <h2>Clasificación General</h2>
-    <div class="table-responsive">
-        <table id="globalTable">
-            <thead>
-                <tr>
-                    <th>Posición y Jugador</th>
-                    <th>Puntos Totales</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</section>
-    
-<section>
-    <h2>Resultados por Jornada</h2>
-    <div style="margin-bottom:30px;">
-        <label for="jornadaSelect" style="font-weight:bold;">Filtrar por jornada: </label>
-        <select id="jornadaSelect" style="padding:8px 12px; border-radius: 5px; border: 1px solid #ccc;">
-            <option value="">-- Todas las jornadas --</option>
-        </select>
-    </div>
-    <div class="table-responsive">
-        <table id="weeklyTable">
-            <thead>
-                <tr>
-                    <th>Jornada</th>
-                    <th>Jugador</th>
-                    <th>Puntos</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</section>
+                <button type="submit" class="btn btn-success btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
+            </form>
+        </div>
+    </section>
 
-<section class="section-alt">
-    <h2>Mi Historial Privado</h2>
-    <p>Usa tu usuario y contraseña en la parte superior y pulsa aquí para ver todas tus apuestas pasadas.</p>
-    <button type="button" class="btn btn-secondary mb-4" id="btnHistory" style="font-weight:bold;">🔒 Ver mi historial</button>
-    
-    <div id="historyMessage" style="display:none; padding:10px; border-radius:5px; margin-bottom:15px; font-weight:bold; text-align:center; max-width:600px; margin: 0 auto;"></div>
-    
-    <div class="table-responsive" id="historyTableContainer" style="display:none;">
-        <table id="historialTable">
-            <thead>
-                <tr>
-                    <th>Jornada</th>
-                    <th>Equipo 1</th>
-                    <th>Equipo 2</th>
-                    <th>Equipo 3</th>
-                    <th>Equipo 4</th>
-                    <th>Equipo 5</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</section>
-    
+    <!-- LAS TABLAS DE CLASIFICACIÓN SE MANTENDRÁN AQUÍ PARA LA SIGUIENTE FASE -->
+    <section class="section-alt">
+        <h2>Clasificación General</h2>
+        <div class="table-responsive">
+            <table id="globalTable">
+                <thead><tr><th>Posición y Jugador</th><th>Puntos</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+        
+    <section>
+        <h2>Resultados por Jornada</h2>
+        <div style="margin-bottom:20px;">
+            <select id="jornadaSelect" style="padding:8px 12px; border-radius:5px; border:1px solid #ccc;">
+                <option value="">-- Todas las jornadas --</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table id="weeklyTable">
+                <thead><tr><th>Jornada</th><th>Jugador</th><th>Puntos</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
 <footer>
     <p>© Liga de Voleibol 2025-2026</p>   
 </footer>
@@ -146,150 +128,203 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
 // =========================================================
-// ENLACES YA CONFIGURADOS CON TUS URLS
+// ENLACES
 // =========================================================
 const globalCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=603202484&single=true&output=csv"; 
 const weeklyCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWuIANTKyg0oSLqLhXEbnJgisB01HEKlqCIcuDg5HarsmntJ04Ilas2p6a0EYMU4YO7ReGkX9t24mE/pub?gid=151036387&single=true&output=csv";
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
+// Variables globales para la sesión
+let currentUser = "";
+let currentPassword = "";
+let currentJornada = 0;
+let totalEquipos = 0;
+let misLigas = [];
+
 // =========================================================
-// CARGAR CARTELERA DINÁMICA
+// 1. SISTEMA DE LOGIN Y GENERACIÓN DE PANTALLA
 // =========================================================
-fetch(scriptURL)
+document.getElementById('btnLogin').addEventListener('click', function() {
+    const usr = document.getElementById('loginUsuario').value.trim();
+    const pwd = document.getElementById('loginPassword').value.trim();
+    const msgBox = document.getElementById('loginMessage');
+    const btn = this;
+
+    if(!usr || !pwd) {
+        msgBox.className = "alert-box alert-danger";
+        msgBox.innerText = "Rellena usuario y contraseña.";
+        msgBox.style.display = "block";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "Verificando...";
+    msgBox.style.display = "none";
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('inputJornada').value = data.jornada;
-        let html = "";
-        
-        data.equipos.forEach(eq => {
-            if (eq.rival.toUpperCase() !== "CERRADO") {
-                html += `
-                <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-                    <h5 style="margin-bottom: 15px; color:#1976d2;">🏐 Equipo ${eq.id} vs ${eq.rival}</h5>
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label>Sets (Nuestros-Suyos)</label>
-                            <select class="form-control" id="e${eq.id}_sets" required>
-                                <option value="">Elige...</option>
-                                <option value="3-0">Victoria 3-0</option>
-                                <option value="3-1">Victoria 3-1</option>
-                                <option value="3-2">Victoria 3-2</option>
-                                <option value="2-3">Derrota 2-3</option>
-                                <option value="1-3">Derrota 1-3</option>
-                                <option value="0-3">Derrota 0-3</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Dif. de puntos</label>
-                            <input type="number" class="form-control" id="e${eq.id}_puntos" placeholder="Ej: 12" min="0" required>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Signo</label>
-                            <select class="form-control" id="e${eq.id}_signo" required>
-                                <option value="">Elige...</option>
-                                <option value="A favor">A favor (+)</option>
-                                <option value="En contra">En contra (-)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>`;
-            } else {
-                html += `
-                <div class="p-3 mb-3" style="background: #ffebee; border-radius: 8px; border: 1px solid #ffcdd2;">
-                    <h5 style="margin-bottom: 0; color: #c62828;">💤 Equipo ${eq.id} descansa esta jornada</h5>
-                </div>`;
+        if(data.status === "success") {
+            // Guardamos credenciales y configuramos la web
+            currentUser = usr;
+            currentPassword = pwd;
+            currentJornada = data.jornada;
+            totalEquipos = data.equipos.length;
+            misLigas = data.ligas; // Usaremos esto en la siguiente fase para las tablas
+
+            document.getElementById('displayJugador').innerText = "👤 " + usr;
+            document.getElementById('displayJornada').innerText = data.jornada;
+
+            // DIBUJAR FORMULARIO DINÁMICO
+            let html = "";
+            let equiposPermitidos = 0;
+            
+            data.equipos.forEach(eq => {
+                if (eq.permitido) {
+                    equiposPermitidos++;
+                    if (eq.rival.toUpperCase() !== "CERRADO") {
+                        html += `
+                        <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid #0d47a1;">
+                            <h5 style="margin-bottom: 15px; color:#1976d2;">🏐 Equipo ${eq.id} vs ${eq.rival}</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Sets</label>
+                                    <select class="form-control" id="e${eq.id}_sets" required>
+                                        <option value="">Elige...</option>
+                                        <option value="3-0">Victoria 3-0</option>
+                                        <option value="3-1">Victoria 3-1</option>
+                                        <option value="3-2">Victoria 3-2</option>
+                                        <option value="2-3">Derrota 2-3</option>
+                                        <option value="1-3">Derrota 1-3</option>
+                                        <option value="0-3">Derrota 0-3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Puntos</label>
+                                    <input type="number" class="form-control" id="e${eq.id}_puntos" placeholder="Ej: 12" min="0" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Signo</label>
+                                    <select class="form-control" id="e${eq.id}_signo" required>
+                                        <option value="">Elige...</option>
+                                        <option value="A favor">A favor (+)</option>
+                                        <option value="En contra">En contra (-)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        html += `
+                        <div class="p-3 mb-3" style="background: #ffebee; border-radius: 8px; border: 1px solid #ffcdd2; border-left: 5px solid #c62828;">
+                            <h5 style="margin-bottom: 0; color: #c62828;">💤 Equipo ${eq.id} descansa esta jornada</h5>
+                        </div>`;
+                    }
+                }
+            });
+
+            if (equiposPermitidos === 0) {
+                html = `<div class="alert-box alert-warning" style="display:block;">No tienes partidos asignados para predecir.</div>`;
+                document.getElementById('btnSubmit').style.display = "none";
             }
-        });
-        
-        document.getElementById('contenedorPartidos').innerHTML = html;
-        document.getElementById('cargandoJornada').style.display = "none";
-        document.getElementById('btnSubmit').style.display = "block";
+
+            document.getElementById('contenedorPartidos').innerHTML = html;
+
+            // TRANSICIÓN DE PANTALLA
+            document.getElementById('loginSection').style.display = "none";
+            document.getElementById('appSection').style.display = "block";
+
+            // CARGAR DATOS ANTERIORES SI EXISTEN
+            cargarDatosAntiguos();
+
+        } else {
+            msgBox.className = "alert-box alert-danger";
+            msgBox.innerText = data.message;
+            msgBox.style.display = "block";
+        }
     })
     .catch(err => {
-        document.getElementById('cargandoJornada').innerHTML = "⚠️ Error al conectar con Google Sheets. Comprueba que el enlace de Apps Script esté publicado correctamente.";
-        document.getElementById('cargandoJornada').style.color = "red";
-    });
-
-// =========================================================
-// LÓGICA DE CARGA Y GUARDADO DE FORMULARIO
-// =========================================================
-const getVal = (id) => {
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : "";
-};
-
-// --- Auto-cargar datos al rellenar usuario y contraseña ---
-function checkAndLoadData() {
-    const usr = document.getElementById('inputUsuario').value.trim();
-    const pwd = document.getElementById('inputPassword').value.trim();
-    const jor = document.getElementById('inputJornada').value.trim();
-    const msgBox = document.getElementById('formMensaje');
-
-    // Solo buscamos si los 3 campos tienen datos
-    if (usr && pwd && jor) {
+        msgBox.className = "alert-box alert-danger";
+        msgBox.innerText = "Error de conexión. Inténtalo de nuevo.";
         msgBox.style.display = "block";
-        msgBox.className = "alert-warning";
-        msgBox.innerText = "Buscando predicciones anteriores... ⏳";
+    })
+    .finally(() => {
+        btn.innerText = "Entrar a la Liga";
+        btn.disabled = false;
+    });
+});
 
-        fetch(scriptURL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'load', usuario: usr, password: pwd, jornada: jor }),
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "success") {
-                const od = data.data;
-                const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
-                
-                setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
-                setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
-                setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
-                setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
-                setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
-                
-                msgBox.className = "alert-success";
-                msgBox.innerText = "¡Tus predicciones guardadas se han cargado automáticamente!";
-            } else if (data.status === "not_found") {
-                // Si no hay porra guardada, lo ocultamos en silencio
-                msgBox.style.display = "none";
-            } else {
-                msgBox.className = "alert-danger";
-                msgBox.innerText = data.message;
+// =========================================================
+// 2. AUTO-CARGAR DATOS DEL USUARIO
+// =========================================================
+function cargarDatosAntiguos() {
+    const msgBox = document.getElementById('appMessage');
+    msgBox.className = "alert-box alert-warning";
+    msgBox.innerText = "Cargando tus datos... ⏳";
+    msgBox.style.display = "block";
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword, jornada: currentJornada }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
+            
+            // Rellenar dinámicamente según totalEquipos
+            for(let i=1; i<=totalEquipos; i++) {
+                if(data.data.predicciones[i]) {
+                    setVal(`e${i}_sets`, data.data.predicciones[i].sets);
+                    setVal(`e${i}_puntos`, data.data.predicciones[i].puntos);
+                    setVal(`e${i}_signo`, data.data.predicciones[i].signo);
+                }
             }
-        })
-        .catch(err => {
-            msgBox.style.display = "none"; // Fallo silencioso si hay error de red
-        });
-    }
+            msgBox.className = "alert-box alert-success";
+            msgBox.innerText = "¡Tus predicciones guardadas se han cargado!";
+        } else {
+            msgBox.style.display = "none"; // No apostó aún
+        }
+    })
+    .catch(() => { msgBox.style.display = "none"; });
 }
 
-// Escuchamos si el usuario escribe y sale de la casilla de texto
-document.getElementById('inputUsuario').addEventListener('blur', checkAndLoadData);
-document.getElementById('inputPassword').addEventListener('blur', checkAndLoadData);
-document.getElementById('inputUsuario').addEventListener('change', checkAndLoadData);
-document.getElementById('inputPassword').addEventListener('change', checkAndLoadData);
-// --- Botón de Guardar / Sobrescribir ---
+// =========================================================
+// 3. GUARDAR PREDICCIONES DINÁMICAMENTE
+// =========================================================
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
     const btnSubmit = document.getElementById('btnSubmit');
-    const msgBox = document.getElementById('formMensaje');
+    const msgBox = document.getElementById('appMessage');
     
     btnSubmit.disabled = true;
     btnSubmit.innerText = "Guardando...";
     msgBox.style.display = "none";
-    
+
+    const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+    let prediccionesList = {};
+
+    for(let i=1; i<=totalEquipos; i++) {
+        // Solo guardamos datos si el recuadro existe (si tiene permiso)
+        if(document.getElementById(`e${i}_sets`)) {
+            prediccionesList[i] = {
+                sets: getVal(`e${i}_sets`),
+                puntos: getVal(`e${i}_puntos`),
+                signo: getVal(`e${i}_signo`)
+            };
+        }
+    }
+
     const formData = {
         action: 'save',
-        usuario: document.getElementById('inputUsuario').value.trim(),
-        password: document.getElementById('inputPassword').value.trim(),
-        jornada: document.getElementById('inputJornada').value.trim(),
-        e1_sets: getVal('e1_sets'), e1_puntos: getVal('e1_puntos'), e1_signo: getVal('e1_signo'),
-        e2_sets: getVal('e2_sets'), e2_puntos: getVal('e2_puntos'), e2_signo: getVal('e2_signo'),
-        e3_sets: getVal('e3_sets'), e3_puntos: getVal('e3_puntos'), e3_signo: getVal('e3_signo'),
-        e4_sets: getVal('e4_sets'), e4_puntos: getVal('e4_puntos'), e4_signo: getVal('e4_signo'),
-        e5_sets: getVal('e5_sets'), e5_puntos: getVal('e5_puntos'), e5_signo: getVal('e5_signo')
+        usuario: currentUser,
+        password: currentPassword,
+        jornada: currentJornada,
+        predicciones: prediccionesList
     };
 
     fetch(scriptURL, {
@@ -297,127 +332,42 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         body: JSON.stringify(formData),
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         msgBox.style.display = "block";
         if (data.status === "success") {
-            msgBox.className = "alert-success";
-            msgBox.innerText = data.message;
+            msgBox.className = "alert-box alert-success";
+            msgBox.innerText = "✅ " + data.message;
         } else {
-            msgBox.className = "alert-danger";
-            msgBox.innerText = data.message;
+            msgBox.className = "alert-box alert-danger";
+            msgBox.innerText = "❌ " + data.message;
         }
     })
-    .catch(error => {
+    .catch(() => {
+        msgBox.className = "alert-box alert-danger";
+        msgBox.innerText = "Error de conexión. Revisa el enlace.";
         msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Error de conexión. Revisa el enlace de Apps Script.";
     })
     .finally(() => {
         btnSubmit.disabled = false;
-        btnSubmit.innerText = "Enviar Predicciones";
+        btnSubmit.innerText = "💾 Guardar Mis Predicciones";
     });
 });
 
 // =========================================================
-// LÓGICA DEL HISTORIAL PRIVADO
+// LÓGICA DE TABLAS (Se mantienen igual por ahora)
 // =========================================================
-document.getElementById('btnHistory').addEventListener('click', function(e) {
-    e.preventDefault();
-    const usr = document.getElementById('inputUsuario').value.trim();
-    const pwd = document.getElementById('inputPassword').value.trim();
-    const msgBox = document.getElementById('historyMessage');
-    const tableContainer = document.getElementById('historyTableContainer');
-    const tbody = document.querySelector('#historialTable tbody');
-
-    if(!usr || !pwd) {
-        msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Sube arriba, introduce tu jugador y contraseña, y vuelve a pulsar el botón.";
-        tableContainer.style.display = "none";
-        return;
-    }
-
-    const btnHist = this;
-    btnHist.innerText = "Cargando historial... ⏳";
-    btnHist.disabled = true;
-    msgBox.style.display = "none";
-    tbody.innerHTML = "";
-
-    fetch(scriptURL, {
-        method: 'POST',
-        // Usamos la nueva acción 'get_history'
-        body: JSON.stringify({ action: 'get_history', usuario: usr, password: pwd }),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === "success") {
-            if (data.history.length === 0) {
-                msgBox.style.display = "block";
-                msgBox.className = "alert-warning";
-                msgBox.innerText = "Aún no tienes predicciones guardadas en ninguna jornada.";
-                tableContainer.style.display = "none";
-            } else {
-                // Ordenamos para que la jornada más reciente salga la primera
-                const sortedHistory = data.history.sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
-                const getApuesta = (s, p, sig) => s ? `<span style="color:#1976d2; font-weight:bold;">${s}</span><br><small>${p} pts (${sig})</small>` : '<span style="color:#999">Descansó</span>';
-                
-                let rowsHtml = "";
-                sortedHistory.forEach(row => {
-                    rowsHtml += `<tr>
-                        <td><strong>Jornada ${row.jornada}</strong></td>
-                        <td>${getApuesta(row.e1_sets, row.e1_puntos, row.e1_signo)}</td>
-                        <td>${getApuesta(row.e2_sets, row.e2_puntos, row.e2_signo)}</td>
-                        <td>${getApuesta(row.e3_sets, row.e3_puntos, row.e3_signo)}</td>
-                        <td>${getApuesta(row.e4_sets, row.e4_puntos, row.e4_signo)}</td>
-                        <td>${getApuesta(row.e5_sets, row.e5_puntos, row.e5_signo)}</td>
-                    </tr>`;
-                });
-                tbody.innerHTML = rowsHtml;
-                tableContainer.style.display = "block";
-            }
-        } else {
-            msgBox.style.display = "block";
-            msgBox.className = "alert-danger";
-            msgBox.innerText = data.message;
-            tableContainer.style.display = "none";
-        }
-    })
-    .catch(err => {
-        msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Error de conexión al cargar el historial.";
-    })
-    .finally(() => {
-        btnHist.innerText = "🔒 Ver mi historial";
-        btnHist.disabled = false;
-    });
-});
-
-// =========================================================
-// LÓGICA DE TABLAS
-// =========================================================
-function showError(msg) {
-    $("#messages").html(`<div style="padding:10px; margin:10px auto; max-width: 900px; background:#fee; color:#900; border:1px solid #c00; border-radius:6px; text-align:center;">⚠️ ${msg}</div>`);
-}
-
 function loadCSV(url, callback) {
     if(url.includes("ENLACE_CSV")) return;
     $.ajax({
         type: "GET", url: url, dataType: "text",
-        success: function(data) {
-            if (data.includes("<html")) { showError("Verifica los enlaces CSV."); } 
-            else { callback(data); }
-        },
-        error: function() { showError("Error de conexión con Sheets."); }
+        success: function(data) { if (!data.includes("<html")) callback(data); }
     });
 }
 
 function populateGlobalTable(data) {
     const lines = data.split("\n").filter(line => line.trim() !== "");
-    const tbody = $("#globalTable tbody");
-    tbody.empty();
+    const tbody = $("#globalTable tbody").empty();
     for(let i = 1; i < lines.length; i++){
         const cols = lines[i].split(",");
         if(cols.length < 2) continue;
@@ -426,7 +376,6 @@ function populateGlobalTable(data) {
         if(i == 1){ clase="medal-1"; textoClase="🥇"; }
         else if(i == 2){ clase="medal-2"; textoClase="🥈"; }
         else if(i == 3){ clase="medal-3"; textoClase="🥉"; }
-        else if(i >= lines.length - 2){ clase="last-places"; textoClase="📉"; }
         tbody.append(`<tr class="${clase}"><td><strong>${i}</strong> - ${jugador} ${textoClase}</td><td style="font-size: 1.1rem; font-weight: bold;">${puntos}</td></tr>`);
     }
 }
@@ -448,25 +397,15 @@ function populateWeeklyTable(data) {
     const jornadasArray = Array.from(jornadasSet).sort((a,b)=> parseInt(a) - parseInt(b));
     jornadasArray.forEach(j => { select.append(`<option value="${j}">Jornada ${j}</option>`); });
     if(jornadasArray.length > 0) {
-        const ultimaJornada = jornadasArray[jornadasArray.length - 1];
-        select.val(ultimaJornada);
-        renderWeeklyTable(ultimaJornada);
+        select.val(jornadasArray[jornadasArray.length - 1]);
+        renderWeeklyTable(jornadasArray[jornadasArray.length - 1]);
     }
 }
 
 function renderWeeklyTable(selectedJornada = "") {
-    const tbody = $("#weeklyTable tbody");
-    tbody.empty();
-    let rowsToRender = weeklyData;
-    if (selectedJornada !== "") {
-        rowsToRender = weeklyData.filter(row => row.jornada === selectedJornada);
-        rowsToRender.sort((a, b) => parseFloat(b.puntos) - parseFloat(a.puntos));
-    } else {
-        rowsToRender = [...weeklyData].sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
-    }
-    rowsToRender.forEach(row => {
-        tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td></tr>`);
-    });
+    const tbody = $("#weeklyTable tbody").empty();
+    let rowsToRender = selectedJornada !== "" ? weeklyData.filter(row => row.jornada === selectedJornada).sort((a, b) => parseFloat(b.puntos) - parseFloat(a.puntos)) : [...weeklyData].sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
+    rowsToRender.forEach(row => tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td></tr>`));
 }
 
 $("#jornadaSelect").on("change", function(){ renderWeeklyTable($(this).val()); });$(document).ready(function(){ loadCSV(globalCSV, populateGlobalTable); loadCSV(weeklyCSV, populateWeeklyTable); });
