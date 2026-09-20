@@ -177,6 +177,7 @@ let ligasDelUsuario = [];
 let intervalCountdown = null;
 let globalHistorialData = [];
 let isSortDesc = true;
+let currentJornadaGlobal = 0;
 
 function formatFecha(ts) {
     if(!ts) return "";
@@ -198,6 +199,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(data => {
         if(data.status === "success") {
             currentUser = usr; currentPassword = pwd; equiposTotalesInfo = data.equipos; ligasDelUsuario = data.ligas;
+            currentJornadaGlobal = data.jornada;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
 
             let htmlPartidos = "";
@@ -205,62 +207,62 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let equiposCerrados = 0;
             
             data.equipos.forEach(eq => {
-                // Solo renderiza los que "visibilidad" === MOSTRAR en el servidor.
-                // Como ya se han limpiado los de hace 24h o con resultados, aquí solo llegan los correctos.
-                equiposPermitidos++;
-                let valJornada = String(eq.jornada_eq || "").trim();
-                let infoJornadaEq = "";
-                if(valJornada) {
-                    infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
-                }
-                
-                let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                let infoLocFecha = "";
-                if(iconoLoc || eq.timestamp) {
-                    infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
-                }
+                if (eq.permitido && eq.visibilidad === "MOSTRAR") {
+                    equiposPermitidos++;
+                    let valJornada = String(eq.jornada_eq || "").trim();
+                    let infoJornadaEq = "";
+                    if(valJornada) {
+                        infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
+                    }
+                    
+                    let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
+                    let infoLocFecha = "";
+                    if(iconoLoc || eq.timestamp) {
+                        infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
+                    }
 
-                if (eq.estado === "ABIERTO") {
-                    htmlPartidos += `
-                    <div class="p-3 mb-3 partido-activo" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                        <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                        ${infoLocFecha}
-                        <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
-                        <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
-                            <div class="form-group col-md-4">
-                                <label>Sets</label>
-                                <select class="form-control" id="e${eq.id_partido}_sets" required>
-                                    <option value="">Elige...</option>
-                                    <option value="3-0">Victoria 3-0</option>
-                                    <option value="3-1">Victoria 3-1</option>
-                                    <option value="3-2">Victoria 3-2</option>
-                                    <option value="2-3">Derrota 2-3</option>
-                                    <option value="1-3">Derrota 1-3</option>
-                                    <option value="0-3">Derrota 0-3</option>
-                                </select>
+                    if (eq.estado === "ABIERTO") {
+                        htmlPartidos += `
+                        <div class="p-3 mb-3 partido-activo" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                            ${infoLocFecha}
+                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
+                            <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
+                                <div class="form-group col-md-4">
+                                    <label>Sets</label>
+                                    <select class="form-control" id="e${eq.id_partido}_sets" required>
+                                        <option value="">Elige...</option>
+                                        <option value="3-0">Victoria 3-0</option>
+                                        <option value="3-1">Victoria 3-1</option>
+                                        <option value="3-2">Victoria 3-2</option>
+                                        <option value="2-3">Derrota 2-3</option>
+                                        <option value="1-3">Derrota 1-3</option>
+                                        <option value="0-3">Derrota 0-3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Puntos Dif.</label>
+                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Signo</label>
+                                    <select class="form-control" id="e${eq.id_partido}_signo" required>
+                                        <option value="">Elige...</option>
+                                        <option value="A favor">A favor (+)</option>
+                                        <option value="En contra">En contra (-)</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label>Puntos Dif.</label>
-                                <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Signo</label>
-                                <select class="form-control" id="e${eq.id_partido}_signo" required>
-                                    <option value="">Elige...</option>
-                                    <option value="A favor">A favor (+)</option>
-                                    <option value="En contra">En contra (-)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>`;
-                } else if (eq.estado === "CERRADO") {
-                    equiposCerrados++;
-                    htmlPartidos += `
-                    <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                        <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                        ${infoLocFecha}
-                        <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
-                    </div>`;
+                        </div>`;
+                    } else if (eq.estado === "CERRADO") {
+                        equiposCerrados++;
+                        htmlPartidos += `
+                        <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
+                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                            ${infoLocFecha}
+                            <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
+                        </div>`;
+                    }
                 }
             });
 
@@ -378,7 +380,7 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         }
     });
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         msgBox.style.display = "block";
@@ -434,6 +436,7 @@ function renderizarHistorial() {
     let histHtml = "";
     
     sortedHistory.forEach(ronda => {
+        let esActual = (ronda.ronda == currentJornadaGlobal);
         let blockHtml = `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
         blockHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Ronda ${ronda.ronda}</h4>`;
         
@@ -445,16 +448,28 @@ function renderizarHistorial() {
             
             hayDatosEnEsteBloque = true;
             let eqName = p.equipo_local;
+            let rivalName = p.rival;
             let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
             
+            // Jornada Específica del equipo en el historial
+            let valJornada = String(p.jornada_eq || "").trim();
+            let infoJornadaEq = "";
+            if(valJornada) {
+                infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
+            }
+
             let infoLocFecha = "";
             let htmlReloj = "";
             let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
-            if(iconoLoc || p.timestamp) {
-                infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
-            }
-            if(p.timestamp && p.estado === "ABIERTO") {
-                htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
+            
+            // Solo mostramos icono, fecha y reloj si la ronda coincide con la actual para no liar historiales pasados
+            if (esActual) {
+                if(iconoLoc || p.timestamp) {
+                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
+                }
+                if(p.timestamp && p.estado === "ABIERTO") {
+                    htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
+                }
             }
             
             let puntosInfo = "";
@@ -482,7 +497,7 @@ function renderizarHistorial() {
 
             blockHtml += `
             <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
-                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName}${infoLocFecha}</div>
+                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}</div>
                 ${htmlReloj}
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
                     <div style="margin-right:15px; margin-bottom:8px;">
