@@ -157,8 +157,8 @@
         <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
         
         <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
-            <div style="font-weight:bold; color:var(--purple-dark); margin-bottom:12px; font-size:1.1rem;">Filtrar partidos por Liga:</div>
-            <div id="filterLigasContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
+            <div style="font-weight:bold; color:var(--purple-dark); margin-bottom:12px; font-size:1.1rem;">Filtrar por Equipo:</div>
+            <div id="filterEquiposContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
             <hr style="margin:15px 0;">
             <button id="btnToggleSort" class="btn btn-outline-dark btn-sm" style="font-weight:bold;">⬇️ Orden Descendente (Nuevos primero)</button>
         </div>
@@ -173,7 +173,6 @@
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
-let ligasDelUsuario = [];
 let intervalCountdown = null;
 let globalHistorialData = [];
 let isSortDesc = true;
@@ -198,7 +197,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
-            currentUser = usr; currentPassword = pwd; equiposTotalesInfo = data.equipos; ligasDelUsuario = data.ligas;
+            currentUser = usr; currentPassword = pwd; equiposTotalesInfo = data.equipos;
             currentJornadaGlobal = data.jornada;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
 
@@ -294,16 +293,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
-            let checksHtml = "";
-            ligasDelUsuario.forEach(l => {
-                checksHtml += `<label class="filter-checkbox"><input type="checkbox" class="chk-liga" value="${l}" checked> ${l}</label>`;
-            });
-            document.getElementById('filterLigasContainer').innerHTML = checksHtml;
-
-            document.querySelectorAll('.chk-liga').forEach(chk => {
-                chk.addEventListener('change', renderizarHistorial);
-            });
-
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
             cargarDatosAntiguos();
@@ -325,7 +314,7 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 15 * 60 * 1000; // BLOQUEO EXACTO 15 MIN ANTES
+            const limite = 15 * 60 * 1000; 
 
             if (diff <= limite && diff > -14400000) { 
                 el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
@@ -338,7 +327,7 @@ function iniciarRelojes() {
                 el.innerHTML = "🏁 Partido en curso o Finalizado";
                 el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
             } else {
-                let diffToClose = diff - limite; // Mostramos cuánto falta PARA QUE SE CIERRE
+                let diffToClose = diff - limite; 
                 let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
                 let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
@@ -415,6 +404,25 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                 msgBox.style.display = "block"; msgBox.className = "alert-box alert-warning"; msgBox.innerText = "Aún no tienes predicciones ni resultados."; container.style.display = "none"; controls.style.display = "none";
             } else {
                 globalHistorialData = data.history;
+                
+                // EXTRAER TODOS LOS EQUIPOS DEL HISTORIAL PARA DIBUJAR LOS CHECKBOXES
+                let equiposEnHistorial = new Set();
+                globalHistorialData.forEach(r => {
+                    r.partidos.forEach(p => { equiposEnHistorial.add(p.equipo_local); });
+                });
+                
+                let equiposArray = Array.from(equiposEnHistorial).sort();
+                let checksHtml = "";
+                equiposArray.forEach(eq => {
+                    checksHtml += `<label class="filter-checkbox"><input type="checkbox" class="chk-equipo" value="${eq}" checked> ${eq}</label>`;
+                });
+                document.getElementById('filterEquiposContainer').innerHTML = checksHtml;
+
+                // Añadir el evento de actualización a los checkboxes
+                document.querySelectorAll('.chk-equipo').forEach(chk => {
+                    chk.addEventListener('change', renderizarHistorial);
+                });
+
                 controls.style.display = "block"; 
                 renderizarHistorial(); 
             }
@@ -425,17 +433,29 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
 
 function renderizarHistorial() {
     const container = document.getElementById('historyListContainer');
-    let sortedHistory = [...globalHistorialData];
+    // Hacer una copia segura de los datos para que el ordenado no rompa el original
+    let sortedHistory = JSON.parse(JSON.stringify(globalHistorialData));
     
+    // 1. Ordenar las rondas
     sortedHistory.sort((a, b) => {
-        return isSortDesc ? parseInt(b.ronda) - parseInt(a.ronda) : parseInt(a.ronda) - parseInt(b.ronda);
+        let numA = parseInt(a.ronda.replace(/\D/g, '')) || 0;
+        let numB = parseInt(b.ronda.replace(/\D/g, '')) || 0;
+        return isSortDesc ? numB - numA : numA - numB;
     });
 
-    let checkedLigas = Array.from(document.querySelectorAll('.chk-liga:checked')).map(cb => cb.value);
+    // Leer qué equipos ha marcado el usuario en las casillas
+    let checkedEquipos = Array.from(document.querySelectorAll('.chk-equipo:checked')).map(cb => cb.value);
 
     let histHtml = "";
     
     sortedHistory.forEach(ronda => {
+        // 2. Ordenar los partidos por fecha dentro de su propia ronda
+        ronda.partidos.sort((a, b) => {
+            let tA = a.timestamp || 0;
+            let tB = b.timestamp || 0;
+            return isSortDesc ? tB - tA : tA - tB;
+        });
+
         let esActual = (ronda.ronda == currentJornadaGlobal);
         let blockHtml = `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
         blockHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Ronda ${ronda.ronda}</h4>`;
@@ -443,15 +463,14 @@ function renderizarHistorial() {
         let hayDatosEnEsteBloque = false;
         
         ronda.partidos.forEach(p => {
-            let intersect = p.ligas.filter(l => checkedLigas.includes(l));
-            if (intersect.length === 0) return; 
+            // SI ESTE EQUIPO NO ESTÁ MARCADO, LO SALTAMOS Y NO SE DIBUJA
+            if (!checkedEquipos.includes(p.equipo_local)) return; 
             
             hayDatosEnEsteBloque = true;
             let eqName = p.equipo_local;
             let rivalName = p.rival;
             let ofText = (p.oficial_sets && p.oficial_parciales) ? `<b style="color:#333;">${p.oficial_sets}</b> <span style="font-size:0.85rem;">(${p.oficial_parciales})</span>` : `<i style="color:#999;">Pendiente de disputarse</i>`;
             
-            // Jornada Específica del equipo en el historial
             let valJornada = String(p.jornada_eq || "").trim();
             let infoJornadaEq = "";
             if(valJornada) {
@@ -462,7 +481,6 @@ function renderizarHistorial() {
             let htmlReloj = "";
             let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
             
-            // Solo mostramos icono, fecha y reloj si la ronda coincide con la actual para no liar historiales pasados
             if (esActual) {
                 if(iconoLoc || p.timestamp) {
                     infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
@@ -514,6 +532,8 @@ function renderizarHistorial() {
         });
         
         blockHtml += `</div>`;
+        
+        // Solo dibujamos la caja de la Ronda si queda al menos un partido visible después del filtro
         if(hayDatosEnEsteBloque) { histHtml += blockHtml; }
     });
     
