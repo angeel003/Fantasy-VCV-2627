@@ -309,21 +309,31 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     msgBox.style.display = "none";
     
     const formData = {
-    usuario: document.getElementById('inputUsuario').value.trim(),
-    password: document.getElementById('inputPassword').value.trim(),
-    jornada: document.getElementById('inputJornada').value.trim(),
-    e1_sets: document.getElementById('e1_sets').value,
-    e1_puntos: document.getElementById('e1_puntos').value.trim(),
-    e2_sets: document.getElementById('e2_sets').value,
-    e2_puntos: document.getElementById('e2_puntos').value.trim(),
-    e3_sets: document.getElementById('e3_sets').value,
-    e3_puntos: document.getElementById('e3_puntos').value.trim(),
-    e4_sets: document.getElementById('e4_sets').value,
-    e4_puntos: document.getElementById('e4_puntos').value.trim(),
-    e5_sets: document.getElementById('e5_sets').value,
-    e5_puntos: document.getElementById('e5_puntos').value.trim()
-};
-
+        usuario: document.getElementById('inputUsuario').value.trim(),
+        password: document.getElementById('inputPassword').value.trim(),
+        jornada: document.getElementById('inputJornada').value.trim(),
+        
+        e1_sets: document.getElementById('e1_sets').value,
+        e1_puntos: document.getElementById('e1_puntos').value.trim(),
+        e1_signo: document.getElementById('e1_signo').value,
+        
+        e2_sets: document.getElementById('e2_sets').value,
+        e2_puntos: document.getElementById('e2_puntos').value.trim(),
+        e2_signo: document.getElementById('e2_signo').value,
+        
+        e3_sets: document.getElementById('e3_sets').value,
+        e3_puntos: document.getElementById('e3_puntos').value.trim(),
+        e3_signo: document.getElementById('e3_signo').value,
+        
+        e4_sets: document.getElementById('e4_sets').value,
+        e4_puntos: document.getElementById('e4_puntos').value.trim(),
+        e4_signo: document.getElementById('e4_signo').value,
+        
+        e5_sets: document.getElementById('e5_sets').value,
+        e5_puntos: document.getElementById('e5_puntos').value.trim(),
+        e5_signo: document.getElementById('e5_signo').value
+    };
+    
     fetch(scriptURL, {
         method: 'POST',
         body: JSON.stringify(formData),
