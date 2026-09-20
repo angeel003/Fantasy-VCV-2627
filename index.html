@@ -1,4 +1,53 @@
-<form id="porraForm">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Liga de Porras Voleibol 25/26</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; }
+    header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 60px 15px; text-align: center; }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
+    header p { font-size: 1.1rem; opacity: 0.9; }
+    section { padding: 60px 15px; text-align: center; }
+    .section-alt { background: #e9ecef; }
+    h2 { margin-bottom: 35px; font-weight: 600; color: #333; }
+    
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+    th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: center; }
+    thead { background: #1976d2; color: white; }
+    .medal-1 { background: #fff8e1; font-weight: bold; }
+    .medal-2 { background: #f8f9fa; font-weight: bold; }
+    .medal-3 { background: #fff4e6; font-weight: bold; }
+    .last-places { background: #ffebee; }
+
+    /* Estilos del Formulario */
+    .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
+    .form-group label { font-weight: bold; color: #0d47a1; }
+    .form-control { margin-bottom: 15px; }
+    #formMensaje { margin-top: 15px; display: none; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-danger { background: #f8d7da; color: #721c24; }
+
+    footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <h1 style="margin-bottom: 25px; line-height:1.2;">🏐 Liga de Porras Voleibol</h1>
+        <p style="font-size:0.9rem; margin-bottom: 15px; line-height:1.4;">Temporada 25/26</p>
+    </div>
+</header>
+    
+<section>
+    <h2>Enviar Porra Semanal</h2>
+    <div class="form-container">
+        <form id="porraForm">
     <!-- Datos de usuario -->
     <div class="row">
         <div class="form-group col-md-4">
@@ -66,3 +115,187 @@
 
     <button type="submit" class="btn btn-primary btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">Enviar Predicciones</button>
 </form>
+        <div id="formMensaje"></div>
+    </div>
+</section>
+
+<section class="section-alt">
+    <div id="messages"></div>
+    <h2>Clasificación General</h2>
+    <div class="table-responsive">
+        <table id="globalTable">
+            <thead>
+                <tr>
+                    <th>Posición y Jugador</th>
+                    <th>Puntos Totales</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+    
+<section>
+    <h2>Resultados por Jornada</h2>
+    <div style="margin-bottom:30px;">
+        <label for="jornadaSelect" style="font-weight:bold;">Filtrar por jornada: </label>
+        <select id="jornadaSelect" style="padding:8px 12px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="">-- Todas las jornadas --</option>
+        </select>
+    </div>
+    <div class="table-responsive">
+        <table id="weeklyTable">
+            <thead>
+                <tr>
+                    <th>Jornada</th>
+                    <th>Jugador</th>
+                    <th>Puntos</th>
+                    <th>Aciertos</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <p>© Liga de Voleibol 2025-2026</p>   
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+// =========================================================
+// 1. PEGA AQUÍ LOS TRES ENLACES IMPORTANTES
+// =========================================================
+const globalCSV = "ENLACE_CSV_CLASIFICACION_GENERAL_AQUI"; 
+const weeklyCSV = "ENLACE_CSV_JORNADAS_AQUI";
+const scriptURL = "ENLACE_DE_TU_APLICACION_WEB_DE_APPS_SCRIPT_AQUI";
+
+// =========================================================
+// LÓGICA DE ENVÍO DE FORMULARIO
+// =========================================================
+document.getElementById('porraForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btnSubmit = document.getElementById('btnSubmit');
+    const msgBox = document.getElementById('formMensaje');
+    
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Enviando, por favor espera...";
+    msgBox.style.display = "none";
+    
+    const formData = {
+        usuario: document.getElementById('inputUsuario').value.trim(),
+        password: document.getElementById('inputPassword').value.trim(),
+        jornada: document.getElementById('inputJornada').value.trim(),
+        p1: document.getElementById('inputP1').value.trim(),
+        p2: document.getElementById('inputP2').value.trim(),
+        p3: document.getElementById('inputP3').value.trim()
+    };
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(response => response.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if (data.status === "success") {
+            msgBox.className = "alert-success";
+            msgBox.innerText = data.message;
+            document.getElementById('porraForm').reset();
+        } else {
+            msgBox.className = "alert-danger";
+            msgBox.innerText = data.message;
+        }
+    })
+    .catch(error => {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Error de conexión. Inténtalo de nuevo.";
+    })
+    .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Enviar Predicciones";
+    });
+});
+
+// =========================================================
+// LÓGICA DE TABLAS (Sin cambios respecto al original)
+// =========================================================
+function showError(msg) {
+    $("#messages").html(`<div style="padding:10px; margin:10px auto; max-width: 900px; background:#fee; color:#900; border:1px solid #c00; border-radius:6px; text-align:center;">⚠️ ${msg}</div>`);
+}
+
+function loadCSV(url, callback) {
+    if(url.includes("ENLACE_CSV")) return;
+    $.ajax({
+        type: "GET", url: url, dataType: "text",
+        success: function(data) {
+            if (data.includes("<html")) { showError("Verifica los enlaces CSV."); } 
+            else { callback(data); }
+        },
+        error: function() { showError("Error de conexión con Sheets."); }
+    });
+}
+
+function populateGlobalTable(data) {
+    const lines = data.split("\n").filter(line => line.trim() !== "");
+    const tbody = $("#globalTable tbody");
+    tbody.empty();
+    for(let i = 1; i < lines.length; i++){
+        const cols = lines[i].split(",");
+        if(cols.length < 2) continue;
+        const jugador = cols[0].trim(), puntos = cols[1].trim();
+        let clase="", textoClase="";
+        if(i == 1){ clase="medal-1"; textoClase="🥇"; }
+        else if(i == 2){ clase="medal-2"; textoClase="🥈"; }
+        else if(i == 3){ clase="medal-3"; textoClase="🥉"; }
+        else if(i >= lines.length - 2){ clase="last-places"; textoClase="📉"; }
+        tbody.append(`<tr class="${clase}"><td><strong>${i}</strong> - ${jugador} ${textoClase}</td><td style="font-size: 1.1rem; font-weight: bold;">${puntos}</td></tr>`);
+    }
+}
+
+let weeklyData = []; 
+function populateWeeklyTable(data) {
+    const lines = data.split("\n").filter(line => line.trim() !== "");
+    weeklyData = []; 
+    let jornadasSet = new Set(); 
+    for(let i = 1; i < lines.length; i++){
+        const cols = lines[i].split(",");
+        if(cols.length < 3) continue; 
+        const jornada = cols[0].trim(), jugador = cols[1].trim(), puntos = cols[2].trim(), aciertos = cols[3] ? cols[3].trim() : "-"; 
+        weeklyData.push({jornada, jugador, puntos, aciertos});
+        jornadasSet.add(jornada);
+    }
+    const select = $("#jornadaSelect");
+    select.find("option:gt(0)").remove(); 
+    const jornadasArray = Array.from(jornadasSet).sort((a,b)=> parseInt(a) - parseInt(b));
+    jornadasArray.forEach(j => { select.append(`<option value="${j}">Jornada ${j}</option>`); });
+    if(jornadasArray.length > 0) {
+        const ultimaJornada = jornadasArray[jornadasArray.length - 1];
+        select.val(ultimaJornada);
+        renderWeeklyTable(ultimaJornada);
+    }
+}
+
+function renderWeeklyTable(selectedJornada = "") {
+    const tbody = $("#weeklyTable tbody");
+    tbody.empty();
+    let rowsToRender = weeklyData;
+    if (selectedJornada !== "") {
+        rowsToRender = weeklyData.filter(row => row.jornada === selectedJornada);
+        rowsToRender.sort((a, b) => parseFloat(b.puntos) - parseFloat(a.puntos));
+    } else {
+        rowsToRender = [...weeklyData].sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
+    }
+    rowsToRender.forEach(row => {
+        tbody.append(`<tr><td><strong>${row.jornada}</strong></td><td>${row.jugador}</td><td style="font-weight: bold; color: #1976d2;">${row.puntos}</td><td>${row.aciertos}</td></tr>`);
+    });
+}
+
+$("#jornadaSelect").on("change", function(){ renderWeeklyTable($(this).val()); });$(document).ready(function(){ loadCSV(globalCSV, populateGlobalTable); loadCSV(weeklyCSV, populateWeeklyTable); });
+</script>
+</body>
+</html>
