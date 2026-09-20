@@ -186,15 +186,73 @@ fetch(scriptURL)
     });
 
 // =========================================================
-// ENVÍO DE FORMULARIO CON AVISO DE DUPLICADOS
+// LÓGICA DE CARGA Y GUARDADO DE FORMULARIO
 // =========================================================
 const getVal = (id) => {
     const el = document.getElementById(id);
     return el ? el.value.trim() : "";
 };
 
-let forceReplaceFlag = false; 
+// --- Botón de Cargar Datos ---
+document.getElementById('btnLoad').addEventListener('click', function(e) {
+    e.preventDefault();
+    const usr = document.getElementById('inputUsuario').value.trim();
+    const pwd = document.getElementById('inputPassword').value.trim();
+    const jor = document.getElementById('inputJornada').value.trim();
+    const msgBox = document.getElementById('formMensaje');
 
+    if(!usr || !pwd) {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Introduce tu jugador y contraseña primero para cargar tus datos.";
+        return;
+    }
+
+    const btnLoad = this;
+    btnLoad.innerText = "Cargando...";
+    btnLoad.disabled = true;
+    msgBox.style.display = "none";
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'load', usuario: usr, password: pwd, jornada: jor }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if(data.status === "success") {
+            const od = data.data;
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
+            
+            setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
+            setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
+            setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
+            setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
+            setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
+            
+            msgBox.className = "alert-success";
+            msgBox.innerText = "Tus predicciones han sido cargadas en el formulario.";
+        } else if (data.status === "not_found") {
+            msgBox.className = "alert-warning";
+            msgBox.innerText = data.message;
+        } else {
+            msgBox.className = "alert-danger";
+            msgBox.innerText = data.message;
+        }
+    })
+    .catch(err => {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Error de conexión al cargar los datos.";
+    })
+    .finally(() => {
+        btnLoad.innerText = "⬇️ Cargar mis datos";
+        btnLoad.disabled = false;
+    });
+});
+
+// --- Botón de Guardar / Sobrescribir ---
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -202,14 +260,14 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     const msgBox = document.getElementById('formMensaje');
     
     btnSubmit.disabled = true;
-    btnSubmit.innerText = "Enviando, por favor espera...";
+    btnSubmit.innerText = "Guardando...";
     msgBox.style.display = "none";
     
     const formData = {
+        action: 'save',
         usuario: document.getElementById('inputUsuario').value.trim(),
         password: document.getElementById('inputPassword').value.trim(),
         jornada: document.getElementById('inputJornada').value.trim(),
-        forceReplace: forceReplaceFlag,
         e1_sets: getVal('e1_sets'), e1_puntos: getVal('e1_puntos'), e1_signo: getVal('e1_signo'),
         e2_sets: getVal('e2_sets'), e2_puntos: getVal('e2_puntos'), e2_signo: getVal('e2_signo'),
         e3_sets: getVal('e3_sets'), e3_puntos: getVal('e3_puntos'), e3_signo: getVal('e3_signo'),
@@ -225,51 +283,9 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         msgBox.style.display = "block";
-        
         if (data.status === "success") {
             msgBox.className = "alert-success";
             msgBox.innerText = data.message;
-            forceReplaceFlag = false; 
-            
-            document.getElementById('inputUsuario').value = '';
-            document.getElementById('inputPassword').value = '';
-            document.querySelectorAll('select').forEach(s => s.value = '');
-            document.querySelectorAll('input[type="number"]').forEach(i => { if(i.id !== 'inputJornada') i.value = ''; });
-            
-        } else if (data.status === "confirm_replace") {
-            msgBox.className = "alert-warning";
-            msgBox.innerHTML = `
-                <p style="margin-bottom:15px;">${data.message}</p>
-                <button id="btnConfirmReplace" class="btn btn-warning" style="font-weight:bold; margin-right:10px;">Confirmar y Sobrescribir</button>
-                <button id="btnCancelReplace" class="btn btn-secondary">Cancelar</button>
-            `;
-            
-            // Rellenar las casillas automáticamente con los datos anteriores
-            if (data.oldData) {
-                const od = data.oldData;
-                const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== "") el.value = val; };
-                
-                setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
-                setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
-                setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
-                setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
-                setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
-            }
-            
-            document.getElementById('btnConfirmReplace').addEventListener('click', function(e) {
-                e.preventDefault();
-                forceReplaceFlag = true; 
-                document.getElementById('btnSubmit').click(); 
-            });
-            
-            document.getElementById('btnCancelReplace').addEventListener('click', function(e) {
-                e.preventDefault();
-                forceReplaceFlag = false;
-                msgBox.style.display = "none";
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = "Enviar Predicciones";
-            });
-            
         } else {
             msgBox.className = "alert-danger";
             msgBox.innerText = data.message;
@@ -278,16 +294,15 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .catch(error => {
         msgBox.style.display = "block";
         msgBox.className = "alert-danger";
-        msgBox.innerText = "Error de conexión. Revisa que el enlace de Apps Script esté correcto.";
+        msgBox.innerText = "Error de conexión. Revisa el enlace de Apps Script.";
     })
     .finally(() => {
-        if(forceReplaceFlag === false) {
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = "Enviar Predicciones";
-        }
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Enviar Predicciones";
     });
 });
 
+    
 // =========================================================
 // LÓGICA DE TABLAS
 // =========================================================
