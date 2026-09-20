@@ -167,25 +167,6 @@
 
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
     </section>
-
-    <!-- DESPLEGABLE FINAL PARA PUNTOS TOTALES (SOLO SI TIENE PERMISO) -->
-    <section id="seccionPuntosTotales" style="display:none; padding: 30px 15px;">
-        <div style="max-width: 700px; margin: 0 auto;">
-            <details style="background: white; border: 2px solid var(--purple-light); border-radius: 10px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <summary style="font-weight: bold; color: var(--purple-dark); font-size: 1.2rem; cursor: pointer; outline: none;">
-                    🎯 Predicción: Puntos Totales de cada Equipo (Fecha límite: 3 de Octubre)
-                </summary>
-                <div style="margin-top: 20px; text-align: left;">
-                    <p style="color:#555; font-size:0.95rem;">Estima cuántos puntos conseguirá cada equipo al finalizar la temporada regular. Plazo máximo hasta el 3 de octubre de 2026 a las 23:59.</p>
-                    <div id="puntosTotalesMessage" class="alert-box"></div>
-                    <form id="puntosTotalesForm">
-                        <div id="contenedorPuntosTotalesInputs"></div>
-                        <button type="submit" class="btn btn-primary btn-block mt-4" id="btnSubmitPuntosTotales" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Puntos Totales</button>
-                    </form>
-                </div>
-            </details>
-        </div>
-    </section>
 </div>
 
 <footer><p>© Fantasy VCV 2026-2027</p></footer>
@@ -301,34 +282,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
             iniciarRelojes();
-
-            // GESTIÓN DEL DESPLEGABLE DE PUNTOS TOTALES
-            if (data.puntos_totales_activo) {
-                document.getElementById('seccionPuntosTotales').style.display = "block";
-                let ptHtml = "";
-                data.puntos_totales_equipos.forEach(eqName => {
-                    let valPrevio = (data.puntos_totales_pred && data.puntos_totales_pred[eqName]) ? data.puntos_totales_pred[eqName] : "";
-                    let disabledStr = data.puntos_totales_cerrado ? "disabled" : "";
-                    ptHtml += `
-                    <div class="form-group row align-items-center">
-                        <label class="col-sm-7 col-form-label" style="font-weight:600; color:#444;">🏐 ${eqName}</label>
-                        <div class="col-sm-5">
-                            <input type="number" class="form-control input-puntos-totales" data-eq="${eqName}" value="${valPrevio}" placeholder="Puntos esperados" ${disabledStr}>
-                        </div>
-                    </div>`;
-                });
-                document.getElementById('contenedorPuntosTotalesInputs').innerHTML = ptHtml;
-
-                if (data.puntos_totales_cerrado) {
-                    document.getElementById('btnSubmitPuntosTotales').style.display = "none";
-                    let msgPt = document.getElementById('puntosTotalesMessage');
-                    msgPt.className = "alert-box alert-warning";
-                    msgPt.innerText = "🔒 El plazo para esta predicción finalizó el 3 de octubre de 2026.";
-                    msgPt.style.display = "block";
-                }
-            } else {
-                document.getElementById('seccionPuntosTotales').style.display = "none";
-            }
 
             let clasifHtml = "";
             if(data.ligas.length === 0) { clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; } 
@@ -456,45 +409,6 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
     })
     .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
-});
-
-// GUARDAR PREDICCIÓN DE PUNTOS TOTALES
-document.getElementById('puntosTotalesForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btnPt = document.getElementById('btnSubmitPuntosTotales');
-    const msgPt = document.getElementById('puntosTotalesMessage');
-    msgPt.style.display = "none";
-
-    let predsTotal = {};
-    document.querySelectorAll('.input-puntos-totales').forEach(input => {
-        let eqName = input.getAttribute('data-eq');
-        predsTotal[eqName] = input.value.trim();
-    });
-
-    btnPt.disabled = true; btnPt.innerText = "Guardando...";
-
-    fetch(scriptURL, { 
-        method: 'POST', 
-        body: JSON.stringify({ action: 'save_puntos_totales', usuario: currentUser, password: currentPassword, puntos_totales: predsTotal }), 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-    })
-    .then(res => res.json())
-    .then(data => {
-        msgPt.style.display = "block";
-        if (data.status === "success") { 
-            msgPt.className = "alert-box alert-success"; 
-            msgPt.innerText = "✅ " + data.message; 
-        } else { 
-            msgPt.className = "alert-box alert-danger"; 
-            msgPt.innerText = "❌ " + data.message; 
-        }
-    })
-    .catch(() => { 
-        msgPt.className = "alert-box alert-danger"; 
-        msgPt.innerText = "Error de conexión."; 
-        msgPt.style.display = "block"; 
-    })
-    .finally(() => { btnPt.disabled = false; btnPt.innerText = "💾 Guardar Puntos Totales"; });
 });
 
 document.getElementById('btnToggleSort').addEventListener('click', function(e) {
