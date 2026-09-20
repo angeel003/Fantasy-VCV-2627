@@ -48,200 +48,162 @@
     <h2>Enviar Porra Semanal</h2>
     <div class="form-container">
         <form id="porraForm">
-    <!-- Datos de usuario -->
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label>Jugador</label>
-            <input type="text" id="inputUsuario" class="form-control" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label>Contraseña</label>
-            <input type="password" id="inputPassword" class="form-control" required>
-        </div>
-        <div class="form-group col-md-4">
-            <label>Jornada</label>
-            <input type="number" id="inputJornada" class="form-control" required min="1">
-        </div>
-    </div>
-    
-    <hr>
-    <h4 style="color: #0d47a1; margin-bottom: 20px;">Predicciones de la Jornada</h4>
-
-    <!-- Generamos 5 bloques, uno por equipo. Aquí te pongo 2 de ejemplo, copia y pega hasta tener los 5 cambiando los IDs (e3, e4, e5) -->
-    
-    <!-- EQUIPO 1 -->
-    <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h5 style="margin-bottom: 15px;">Equipo 1 (Nombre del equipo)</h5>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Sets (Nuestros-Suyos)</label>
-                <select class="form-control" id="e1_sets">
-                    <option value="">Elige...</option>
-                    <option value="3-0">Victoria 3-0</option>
-                    <option value="3-1">Victoria 3-1</option>
-                    <option value="3-2">Victoria 3-2</option>
-                    <option value="2-3">Derrota 2-3</option>
-                    <option value="1-3">Derrota 1-3</option>
-                    <option value="0-3">Derrota 0-3</option>
-                </select>
+            <!-- Datos de usuario -->
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Jugador</label>
+                    <input type="text" id="inputUsuario" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Contraseña</label>
+                    <input type="password" id="inputPassword" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Jornada Activa</label>
+                    <input type="number" id="inputJornada" class="form-control" readonly style="background: #e9ecef;">
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <label>Dif. de puntos</label>
-                <input type="number" class="form-control" id="e1_puntos" placeholder="Ej: 12" min="0">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Signo</label>
-                <select class="form-control" id="e1_signo">
-                    <option value="">Elige...</option>
-                    <option value="A favor">A favor (+)</option>
-                    <option value="En contra">En contra (-)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Repite este bloque para los equipos del 2 al 5, cambiando los IDs a e2_sets, e2_puntos, e2_signo, etc. -->
-
-    <!-- EQUIPO 2 -->
-    <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h5 style="margin-bottom: 15px;">Equipo 2 (Nombre del equipo)</h5>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Sets (Nuestros-Suyos)</label>
-                <select class="form-control" id="e1_sets">
-                    <option value="">Elige...</option>
-                    <option value="3-0">Victoria 3-0</option>
-                    <option value="3-1">Victoria 3-1</option>
-                    <option value="3-2">Victoria 3-2</option>
-                    <option value="2-3">Derrota 2-3</option>
-                    <option value="1-3">Derrota 1-3</option>
-                    <option value="0-3">Derrota 0-3</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Dif. de puntos</label>
-                <input type="number" class="form-control" id="e1_puntos" placeholder="Ej: 12" min="0">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Signo</label>
-                <select class="form-control" id="e1_signo">
-                    <option value="">Elige...</option>
-                    <option value="A favor">A favor (+)</option>
-                    <option value="En contra">En contra (-)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Repite este bloque para los equipos del 2 al 5, cambiando los IDs a e2_sets, e2_puntos, e2_signo, etc. -->
-
-            <!-- EQUIPO 3 -->
-    <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h5 style="margin-bottom: 15px;">Equipo 3 (Nombre del equipo)</h5>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Sets (Nuestros-Suyos)</label>
-                <select class="form-control" id="e1_sets">
-                    <option value="">Elige...</option>
-                    <option value="3-0">Victoria 3-0</option>
-                    <option value="3-1">Victoria 3-1</option>
-                    <option value="3-2">Victoria 3-2</option>
-                    <option value="2-3">Derrota 2-3</option>
-                    <option value="1-3">Derrota 1-3</option>
-                    <option value="0-3">Derrota 0-3</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Dif. de puntos</label>
-                <input type="number" class="form-control" id="e1_puntos" placeholder="Ej: 12" min="0">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Signo</label>
-                <select class="form-control" id="e1_signo">
-                    <option value="">Elige...</option>
-                    <option value="A favor">A favor (+)</option>
-                    <option value="En contra">En contra (-)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-            <!-- EQUIPO 4 -->
-    <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h5 style="margin-bottom: 15px;">Equipo 4 (Nombre del equipo)</h5>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Sets (Nuestros-Suyos)</label>
-                <select class="form-control" id="e1_sets">
-                    <option value="">Elige...</option>
-                    <option value="3-0">Victoria 3-0</option>
-                    <option value="3-1">Victoria 3-1</option>
-                    <option value="3-2">Victoria 3-2</option>
-                    <option value="2-3">Derrota 2-3</option>
-                    <option value="1-3">Derrota 1-3</option>
-                    <option value="0-3">Derrota 0-3</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Dif. de puntos</label>
-                <input type="number" class="form-control" id="e1_puntos" placeholder="Ej: 12" min="0">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Signo</label>
-                <select class="form-control" id="e1_signo">
-                    <option value="">Elige...</option>
-                    <option value="A favor">A favor (+)</option>
-                    <option value="En contra">En contra (-)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
             
-    <!-- EQUIPO 5 -->
-    <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h5 style="margin-bottom: 15px;">Equipo 5 (Nombre del equipo)</h5>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label>Sets (Nuestros-Suyos)</label>
-                <select class="form-control" id="e1_sets">
-                    <option value="">Elige...</option>
-                    <option value="3-0">Victoria 3-0</option>
-                    <option value="3-1">Victoria 3-1</option>
-                    <option value="3-2">Victoria 3-2</option>
-                    <option value="2-3">Derrota 2-3</option>
-                    <option value="1-3">Derrota 1-3</option>
-                    <option value="0-3">Derrota 0-3</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label>Dif. de puntos</label>
-                <input type="number" class="form-control" id="e1_puntos" placeholder="Ej: 12" min="0">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Signo</label>
-                <select class="form-control" id="e1_signo">
-                    <option value="">Elige...</option>
-                    <option value="A favor">A favor (+)</option>
-                    <option value="En contra">En contra (-)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Repite este bloque para los equipos del 2 al 5, cambiando los IDs a e2_sets, e2_puntos, e2_signo, etc. -->
-            <!-- Repite este bloque para los equipos del 2 al 5, cambiando los IDs a e2_sets, e2_puntos, e2_signo, etc. -->
-    
-    <!-- Repite este bloque para los equipos del 2 al 5, cambiando los IDs a e2_sets, e2_puntos, e2_signo, etc. -->
-            
-    
-    <!-- REPETIR PARA EQUIPOS 3, 4 y 5 (Cambiando IDs a e3_sets, e3_puntos, etc.) -->
+            <hr>
+            <h4 style="color: #0d47a1; margin-bottom: 20px;">Cartelera de la Jornada</h4>
 
-    <button type="submit" class="btn btn-primary btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">Enviar Predicciones</button>
-</form>
+            <!-- Aquí aparecerán los equipos mágicamente -->
+            <div id="cargandoJornada" style="text-align:center; font-weight:bold; color:#666;">Cargando partidos... ⏳</div>
+            <div id="contenedorPartidos"></div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px; display: none;">Enviar Predicciones</button>
+        </form>
         <div id="formMensaje"></div>
     </div>
 </section>
+
+<!-- ... (El resto de tu HTML con las tablas de clasificación se queda igual) ... -->
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+// =========================================================
+// 1. PEGA AQUÍ TUS 3 ENLACES
+// =========================================================
+const globalCSV = "ENLACE_CSV_GENERAL_AQUI"; 
+const weeklyCSV = "ENLACE_CSV_JORNADAS_AQUI";
+const scriptURL = "ENLACE_DE_APPS_SCRIPT_AQUI";
+
+// =========================================================
+// CARGAR CARTELERA DINÁMICA
+// =========================================================
+fetch(scriptURL)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('inputJornada').value = data.jornada;
+        let html = "";
+        
+        data.equipos.forEach(eq => {
+            if (eq.rival.toUpperCase() !== "CERRADO") {
+                html += `
+                <div class="p-3 mb-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                    <h5 style="margin-bottom: 15px; color:#1976d2;">🏐 Equipo ${eq.id} vs ${eq.rival}</h5>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>Sets (Nuestros-Suyos)</label>
+                            <select class="form-control" id="e${eq.id}_sets" required>
+                                <option value="">Elige...</option>
+                                <option value="3-0">Victoria 3-0</option>
+                                <option value="3-1">Victoria 3-1</option>
+                                <option value="3-2">Victoria 3-2</option>
+                                <option value="2-3">Derrota 2-3</option>
+                                <option value="1-3">Derrota 1-3</option>
+                                <option value="0-3">Derrota 0-3</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Dif. de puntos</label>
+                            <input type="number" class="form-control" id="e${eq.id}_puntos" placeholder="Ej: 12" min="0" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Signo</label>
+                            <select class="form-control" id="e${eq.id}_signo" required>
+                                <option value="">Elige...</option>
+                                <option value="A favor">A favor (+)</option>
+                                <option value="En contra">En contra (-)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>`;
+            } else {
+                html += `
+                <div class="p-3 mb-3" style="background: #ffebee; border-radius: 8px; border: 1px solid #ffcdd2;">
+                    <h5 style="margin-bottom: 0; color: #c62828;">💤 Equipo ${eq.id} descansa esta jornada</h5>
+                </div>`;
+            }
+        });
+        
+        document.getElementById('contenedorPartidos').innerHTML = html;
+        document.getElementById('cargandoJornada').style.display = "none";
+        document.getElementById('btnSubmit').style.display = "block";
+    });
+
+// =========================================================
+// ENVÍO DE FORMULARIO A PRUEBA DE ERRORES
+// =========================================================
+// Función segura para sacar valores aunque el equipo esté cerrado y el input no exista
+const getVal = (id) => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : "";
+};
+
+document.getElementById('porraForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btnSubmit = document.getElementById('btnSubmit');
+    const msgBox = document.getElementById('formMensaje');
+    
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Enviando, por favor espera...";
+    msgBox.style.display = "none";
+    
+    const formData = {
+        usuario: document.getElementById('inputUsuario').value.trim(),
+        password: document.getElementById('inputPassword').value.trim(),
+        jornada: document.getElementById('inputJornada').value.trim(),
+        e1_sets: getVal('e1_sets'), e1_puntos: getVal('e1_puntos'), e1_signo: getVal('e1_signo'),
+        e2_sets: getVal('e2_sets'), e2_puntos: getVal('e2_puntos'), e2_signo: getVal('e2_signo'),
+        e3_sets: getVal('e3_sets'), e3_puntos: getVal('e3_puntos'), e3_signo: getVal('e3_signo'),
+        e4_sets: getVal('e4_sets'), e4_puntos: getVal('e4_puntos'), e4_signo: getVal('e4_signo'),
+        e5_sets: getVal('e5_sets'), e5_puntos: getVal('e5_puntos'), e5_signo: getVal('e5_signo')
+    };
+
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(response => response.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if (data.status === "success") {
+            msgBox.className = "alert-success";
+            msgBox.innerText = data.message;
+            // Solo reseteamos los campos manuales, no los generados
+            document.getElementById('inputUsuario').value = '';
+            document.getElementById('inputPassword').value = '';
+            document.querySelectorAll('select').forEach(s => s.value = '');
+            document.querySelectorAll('input[type="number"]').forEach(i => { if(i.id !== 'inputJornada') i.value = ''; });
+        } else {
+            msgBox.className = "alert-danger";
+            msgBox.innerText = data.message;
+        }
+    })
+    .catch(error => {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Error de conexión. Revisa que el enlace de Apps Script esté correcto.";
+    })
+    .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Enviar Predicciones";
+    });
+});
+</script>
 
 <section class="section-alt">
     <div id="messages"></div>
