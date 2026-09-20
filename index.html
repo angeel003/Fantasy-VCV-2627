@@ -94,15 +94,15 @@
         </details>
         <details class="faq-details">
             <summary class="faq-summary">Crear una liga privada</summary>
-            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, tu equipo, amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a>.</div>
+            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, tu equipo, amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a>.</div>
         </details>
         <details class="faq-details">
             <summary class="faq-summary">Aún no tengo cuenta</summary>
-            <div class="faq-content">¡Únete a la liga! Mándame un correo a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> indicando quién eres, a qué ligas quieres que se te añada, y los partidos de qué equipos quieres predecir.</div>
+            <div class="faq-content">¡Únete a la liga! Mándame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> indicando quién eres, a qué ligas quieres que se te añada, y los partidos de qué equipos quieres predecir.</div>
         </details>
         <details class="faq-details">
             <summary class="faq-summary">He olvidado mi contraseña</summary>
-            <div class="faq-content">No pasa nada. Escríbeme a <a href="mailto:TU_CORREO_AQUI@gmail.com" class="faq-email">TU_CORREO_AQUI@gmail.com</a> para que te la restablezca lo antes posible.</div>
+            <div class="faq-content">No pasa nada. Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca lo antes posible.</div>
         </details>
     </div>
 </div>
@@ -379,15 +379,11 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
 
     equiposTotalesInfo.forEach(eq => {
         const elSet = document.getElementById(`e${eq.id_partido}_sets`);
-        const elPuntos = document.getElementById(`e${eq.id_partido}_puntos`);
-        const elSigno = document.getElementById(`e${eq.id_partido}_signo`);
-
         if(elSet && !elSet.disabled) {
             let vSet = getVal(`e${eq.id_partido}_sets`);
             let vPuntos = getVal(`e${eq.id_partido}_puntos`);
             let vSigno = getVal(`e${eq.id_partido}_signo`);
 
-            // REVISIÓN CONDICIONAL: Si ha rellenado algo, tiene que rellenar los 3 campos de ese partido
             let numRellenos = (vSet !== "" ? 1 : 0) + (vPuntos !== "" ? 1 : 0) + (vSigno !== "" ? 1 : 0);
             if (numRellenos > 0 && numRellenos < 3) {
                 validacionFallida = true;
@@ -401,7 +397,7 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
         msgBox.className = "alert-box alert-danger"; 
         msgBox.innerText = "❌ Si predices un partido, debes rellenar sus 3 campos (Sets, Puntos y Signo). Puedes dejar partidos enteros en blanco si no quieres jugarlos hoy."; 
         msgBox.style.display = "block";
-        return; // Frena el envío
+        return; 
     }
 
     btnSubmit.disabled = true; btnSubmit.innerText = "Guardando..."; 
