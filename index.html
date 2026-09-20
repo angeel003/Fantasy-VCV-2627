@@ -115,6 +115,30 @@
     </div>
 </section>
 
+<section class="section-alt">
+    <h2>Mi Historial Privado</h2>
+    <p>Usa tu usuario y contraseña en la parte superior y pulsa aquí para ver todas tus apuestas pasadas.</p>
+    <button type="button" class="btn btn-secondary mb-4" id="btnHistory" style="font-weight:bold;">🔒 Ver mi historial</button>
+    
+    <div id="historyMessage" style="display:none; padding:10px; border-radius:5px; margin-bottom:15px; font-weight:bold; text-align:center; max-width:600px; margin: 0 auto;"></div>
+    
+    <div class="table-responsive" id="historyTableContainer" style="display:none;">
+        <table id="historialTable">
+            <thead>
+                <tr>
+                    <th>Jornada</th>
+                    <th>Equipo 1</th>
+                    <th>Equipo 2</th>
+                    <th>Equipo 3</th>
+                    <th>Equipo 4</th>
+                    <th>Equipo 5</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+    
 <footer>
     <p>© Liga de Voleibol 2025-2026</p>   
 </footer>
@@ -292,6 +316,82 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .finally(() => {
         btnSubmit.disabled = false;
         btnSubmit.innerText = "Enviar Predicciones";
+    });
+});
+
+// =========================================================
+// LÓGICA DEL HISTORIAL PRIVADO
+// =========================================================
+document.getElementById('btnHistory').addEventListener('click', function(e) {
+    e.preventDefault();
+    const usr = document.getElementById('inputUsuario').value.trim();
+    const pwd = document.getElementById('inputPassword').value.trim();
+    const msgBox = document.getElementById('historyMessage');
+    const tableContainer = document.getElementById('historyTableContainer');
+    const tbody = document.querySelector('#historialTable tbody');
+
+    if(!usr || !pwd) {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Sube arriba, introduce tu jugador y contraseña, y vuelve a pulsar el botón.";
+        tableContainer.style.display = "none";
+        return;
+    }
+
+    const btnHist = this;
+    btnHist.innerText = "Cargando historial... ⏳";
+    btnHist.disabled = true;
+    msgBox.style.display = "none";
+    tbody.innerHTML = "";
+
+    fetch(scriptURL, {
+        method: 'POST',
+        // Usamos la nueva acción 'get_history'
+        body: JSON.stringify({ action: 'get_history', usuario: usr, password: pwd }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            if (data.history.length === 0) {
+                msgBox.style.display = "block";
+                msgBox.className = "alert-warning";
+                msgBox.innerText = "Aún no tienes predicciones guardadas en ninguna jornada.";
+                tableContainer.style.display = "none";
+            } else {
+                // Ordenamos para que la jornada más reciente salga la primera
+                const sortedHistory = data.history.sort((a, b) => parseInt(b.jornada) - parseInt(a.jornada));
+                const getApuesta = (s, p, sig) => s ? `<span style="color:#1976d2; font-weight:bold;">${s}</span><br><small>${p} pts (${sig})</small>` : '<span style="color:#999">Descansó</span>';
+                
+                let rowsHtml = "";
+                sortedHistory.forEach(row => {
+                    rowsHtml += `<tr>
+                        <td><strong>Jornada ${row.jornada}</strong></td>
+                        <td>${getApuesta(row.e1_sets, row.e1_puntos, row.e1_signo)}</td>
+                        <td>${getApuesta(row.e2_sets, row.e2_puntos, row.e2_signo)}</td>
+                        <td>${getApuesta(row.e3_sets, row.e3_puntos, row.e3_signo)}</td>
+                        <td>${getApuesta(row.e4_sets, row.e4_puntos, row.e4_signo)}</td>
+                        <td>${getApuesta(row.e5_sets, row.e5_puntos, row.e5_signo)}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = rowsHtml;
+                tableContainer.style.display = "block";
+            }
+        } else {
+            msgBox.style.display = "block";
+            msgBox.className = "alert-danger";
+            msgBox.innerText = data.message;
+            tableContainer.style.display = "none";
+        }
+    })
+    .catch(err => {
+        msgBox.style.display = "block";
+        msgBox.className = "alert-danger";
+        msgBox.innerText = "Error de conexión al cargar el historial.";
+    })
+    .finally(() => {
+        btnHist.innerText = "🔒 Ver mi historial";
+        btnHist.disabled = false;
     });
 });
 
