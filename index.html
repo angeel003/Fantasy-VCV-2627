@@ -194,65 +194,57 @@ const getVal = (id) => {
     return el ? el.value.trim() : "";
 };
 
-// --- Botón de Cargar Datos ---
-document.getElementById('btnLoad').addEventListener('click', function(e) {
-    e.preventDefault();
+// --- Auto-cargar datos al rellenar usuario y contraseña ---
+function checkAndLoadData() {
     const usr = document.getElementById('inputUsuario').value.trim();
     const pwd = document.getElementById('inputPassword').value.trim();
     const jor = document.getElementById('inputJornada').value.trim();
     const msgBox = document.getElementById('formMensaje');
 
-    if(!usr || !pwd) {
+    // Solo buscamos si los 3 campos tienen datos
+    if (usr && pwd && jor) {
         msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Introduce tu jugador y contraseña primero para cargar tus datos.";
-        return;
+        msgBox.className = "alert-warning";
+        msgBox.innerText = "Buscando predicciones anteriores... ⏳";
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'load', usuario: usr, password: pwd, jornada: jor }),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") {
+                const od = data.data;
+                const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
+                
+                setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
+                setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
+                setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
+                setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
+                setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
+                
+                msgBox.className = "alert-success";
+                msgBox.innerText = "¡Tus predicciones guardadas se han cargado automáticamente!";
+            } else if (data.status === "not_found") {
+                // Si no hay porra guardada, lo ocultamos en silencio
+                msgBox.style.display = "none";
+            } else {
+                msgBox.className = "alert-danger";
+                msgBox.innerText = data.message;
+            }
+        })
+        .catch(err => {
+            msgBox.style.display = "none"; // Fallo silencioso si hay error de red
+        });
     }
+}
 
-    const btnLoad = this;
-    btnLoad.innerText = "Cargando...";
-    btnLoad.disabled = true;
-    msgBox.style.display = "none";
-
-    fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'load', usuario: usr, password: pwd, jornada: jor }),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
-    .then(res => res.json())
-    .then(data => {
-        msgBox.style.display = "block";
-        if(data.status === "success") {
-            const od = data.data;
-            const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
-            
-            setVal('e1_sets', od[3]); setVal('e1_puntos', od[4]); setVal('e1_signo', od[5]);
-            setVal('e2_sets', od[6]); setVal('e2_puntos', od[7]); setVal('e2_signo', od[8]);
-            setVal('e3_sets', od[9]); setVal('e3_puntos', od[10]); setVal('e3_signo', od[11]);
-            setVal('e4_sets', od[12]); setVal('e4_puntos', od[13]); setVal('e4_signo', od[14]);
-            setVal('e5_sets', od[15]); setVal('e5_puntos', od[16]); setVal('e5_signo', od[17]);
-            
-            msgBox.className = "alert-success";
-            msgBox.innerText = "Tus predicciones han sido cargadas en el formulario.";
-        } else if (data.status === "not_found") {
-            msgBox.className = "alert-warning";
-            msgBox.innerText = data.message;
-        } else {
-            msgBox.className = "alert-danger";
-            msgBox.innerText = data.message;
-        }
-    })
-    .catch(err => {
-        msgBox.style.display = "block";
-        msgBox.className = "alert-danger";
-        msgBox.innerText = "Error de conexión al cargar los datos.";
-    })
-    .finally(() => {
-        btnLoad.innerText = "⬇️ Cargar mis datos";
-        btnLoad.disabled = false;
-    });
-});
-
+// Escuchamos si el usuario escribe y sale de la casilla de texto
+document.getElementById('inputUsuario').addEventListener('blur', checkAndLoadData);
+document.getElementById('inputPassword').addEventListener('blur', checkAndLoadData);
+document.getElementById('inputUsuario').addEventListener('change', checkAndLoadData);
+document.getElementById('inputPassword').addEventListener('change', checkAndLoadData);
 // --- Botón de Guardar / Sobrescribir ---
 document.getElementById('porraForm').addEventListener('submit', function(e) {
     e.preventDefault();
