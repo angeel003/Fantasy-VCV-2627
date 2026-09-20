@@ -122,7 +122,15 @@
                 <hr>
                 <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
                 <div id="contenedorPartidos"></div>
-                <button type="submit" class="btn btn-success btn-block mt-4" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
+                
+                <!-- AVISO DE CIERRE 15 MINUTOS -->
+                <div style="background-color:#ffebee; border: 1px solid #f5c6cb; border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
+                    <p style="color:#d32f2f; font-size:0.95rem; font-weight:bold; margin:0;">
+                        ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
             </form>
         </div>
     </section>
@@ -132,6 +140,7 @@
         <div id="tablasClasificacionContainer"></div>
     </section>
 
+    <!-- CLASIFICACIONES OFICIALES EXTERNAS -->
     <section>
         <h2>📊 Clasificaciones Oficiales (Federación)</h2>
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
@@ -287,14 +296,12 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
-            // Construir checkboxes de las Ligas para el filtro del historial
             let checksHtml = "";
             ligasDelUsuario.forEach(l => {
                 checksHtml += `<label class="filter-checkbox"><input type="checkbox" class="chk-liga" value="${l}" checked> ${l}</label>`;
             });
             document.getElementById('filterLigasContainer').innerHTML = checksHtml;
 
-            // Añadir eventos a los checkboxes recién creados para que repinten el historial
             document.querySelectorAll('.chk-liga').forEach(chk => {
                 chk.addEventListener('change', renderizarHistorial);
             });
@@ -320,21 +327,25 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 30 * 60 * 1000; // 30 minutos
+            const limite = 15 * 60 * 1000; // 15 minutos (NUEVO LÍMITE)
 
             if (diff <= limite && diff > -14400000) { 
-                el.innerHTML = "🔒 CERRADO (Empieza en menos de 30 min)";
+                el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
                 el.style.backgroundColor = "#ffebee"; el.style.color = "#c62828";
-                const divInputs = document.getElementById(`inputs_eq_${eqId}`);
-                if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                if(eqId) {
+                    const divInputs = document.getElementById(`inputs_eq_${eqId}`);
+                    if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                }
             } else if (diff <= -14400000) {
                 el.innerHTML = "🏁 Partido en curso o Finalizado";
                 el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
             } else {
-                let d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                let s = Math.floor((diff % (1000 * 60)) / 1000);
+                // Cálculo para mostrar el tiempo que falta PARA EL CIERRE (no para el partido)
+                let diffToClose = diff - limite;
+                let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
+                let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
+                let s = Math.floor((diffToClose % (1000 * 60)) / 1000);
                 el.innerHTML = `⏳ Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
                 el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
             }
@@ -384,7 +395,6 @@ document.getElementById('porraForm').addEventListener('submit', function(e) {
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
 });
 
-// ORDENAR HISTORIAL (Evento del botón)
 document.getElementById('btnToggleSort').addEventListener('click', function(e) {
     e.preventDefault();
     isSortDesc = !isSortDesc;
@@ -392,7 +402,6 @@ document.getElementById('btnToggleSort').addEventListener('click', function(e) {
     renderizarHistorial();
 });
 
-// CARGAR HISTORIAL (Boton Principal)
 document.getElementById('btnHistory').addEventListener('click', function(e) {
     e.preventDefault();
     const msgBox = document.getElementById('historyMessage');
@@ -410,25 +419,22 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
                 msgBox.style.display = "block"; msgBox.className = "alert-box alert-warning"; msgBox.innerText = "Aún no tienes predicciones ni resultados."; container.style.display = "none"; controls.style.display = "none";
             } else {
                 globalHistorialData = data.history;
-                controls.style.display = "block"; // Mostrar los filtros
-                renderizarHistorial(); // Dibujar la lista
+                controls.style.display = "block"; 
+                renderizarHistorial(); 
             }
         }
     })
     .finally(() => { btnHist.innerText = "🔒 Cargar mi historial"; btnHist.disabled = false; });
 });
 
-// FUNCIÓN PARA PINTAR EL HISTORIAL CON LOS FILTROS APLICADOS
 function renderizarHistorial() {
     const container = document.getElementById('historyListContainer');
     let sortedHistory = [...globalHistorialData];
     
-    // 1. Ordenar
     sortedHistory.sort((a, b) => {
         return isSortDesc ? parseInt(b.jornada) - parseInt(a.jornada) : parseInt(a.jornada) - parseInt(b.jornada);
     });
 
-    // 2. Obtener ligas marcadas en los checks
     let checkedLigas = Array.from(document.querySelectorAll('.chk-liga:checked')).map(cb => cb.value);
 
     let histHtml = "";
@@ -444,11 +450,9 @@ function renderizarHistorial() {
             let p = row.predicciones[i];
             let eqBase = equiposTotalesInfo[i-1];
             
-            // Filtro por liga: Si este equipo no puntúa para ninguna de las ligas marcadas, lo ocultamos.
             let intersect = eqBase.ligas.filter(l => checkedLigas.includes(l));
             if (intersect.length === 0) continue; 
             
-            // Si hay predicción o hay resultado oficial de ese equipo
             if((p && p.sets) || (p && p.oficial_sets)) {
                 hayDatosEnEsteBloque = true;
                 let eqName = eqBase.nombre;
@@ -456,7 +460,6 @@ function renderizarHistorial() {
                 
                 let infoLocFecha = "";
                 let htmlReloj = "";
-                // La fecha y el reloj solo se muestran si estamos viendo la jornada actual (para no cruzar fechas viejas)
                 if (esActual) {
                     let iconoLoc = eqBase.ubicacion === "CASA" ? "🏠" : (eqBase.ubicacion === "FUERA" ? "✈️" : "");
                     if(iconoLoc || eqBase.timestamp) {
@@ -473,7 +476,6 @@ function renderizarHistorial() {
                     let mot = p.motivos || "Cálculo pendiente";
                     let bgColor = pts > 0 ? "#e8f5e9" : "#ffebee";
                     let textColor = pts > 0 ? "#2e7d32" : "#c62828";
-                    // Si el usuario no pronosticó, avisamos
                     if (mot === "No pronosticado") { bgColor = "#eeeeee"; textColor = "#666666"; }
                     
                     puntosInfo = `
@@ -488,7 +490,6 @@ function renderizarHistorial() {
                     </div>`;
                 }
 
-                // Renderizar predicción del jugador o "No hizo porra"
                 let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin porra</i>`;
                 let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
 
@@ -512,7 +513,6 @@ function renderizarHistorial() {
         }
         blockHtml += `</div>`;
         
-        // Si después de filtrar sí hay partidos en esta jornada, la añadimos al HTML total
         if(hayDatosEnEsteBloque) { histHtml += blockHtml; }
     });
     
@@ -522,7 +522,7 @@ function renderizarHistorial() {
 
     container.innerHTML = histHtml;
     container.style.display = "block";
-    iniciarRelojes(); // Lanzar los relojes de nuevo si se repinta la pantalla
+    iniciarRelojes(); 
 }
 </script>
 </body>
