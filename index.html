@@ -63,11 +63,12 @@
     .badge-header { width: 24px; height: 24px; cursor: help; transition: transform 0.2s; }
     .badge-header:hover { transform: scale(1.1); }
     
-    .badge-admin { filter: hue-rotate(250deg); }
-    .badge-staff { filter: hue-rotate(0deg); }
-    .badge-entrenador { filter: hue-rotate(150deg); }
-    .badge-jugador { filter: hue-rotate(90deg); }
-    .badge-exjugador { filter: grayscale(100%); }
+    /* COLORES DE CADA ROL */
+    .badge-jugador { filter: none; } /* Azul original */
+    .badge-entrenador { filter: hue-rotate(270deg) saturate(150%); } /* Verde */
+    .badge-staff { filter: hue-rotate(180deg) saturate(200%); } /* Naranja */
+    .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); } /* Amarillo */
+    .badge-exjugador { filter: grayscale(100%) brightness(0%); } /* Negro */
 </style>
 </head>
 <body>
@@ -215,7 +216,6 @@
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
     </section>
     
-    <!-- SECCIÓN SECRETA DE PREDICCIONES TOTALES -->
     <section id="prediccionesTotalesSection" style="display:none;">
         <h2 style="margin-bottom:15px;">🎯 Predicción de Puntos Totales</h2>
         <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos que conseguirá cada equipo a final de temporada. ¡Esta sección es exclusiva y solo la ven los usuarios autorizados!</p>
@@ -560,7 +560,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
-            // --- LÓGICA RENDERIZAR PREDICCIONES TOTALES SECRETA ---
             if(data.equipos_totales && data.equipos_totales.length > 0) {
                 document.getElementById('prediccionesTotalesSection').style.display = "block";
                 
