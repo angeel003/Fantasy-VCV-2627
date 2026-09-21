@@ -84,7 +84,7 @@
         <h3 style="color: var(--purple-dark); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
         <div class="form-group text-left">
             <label>Usuario</label>
-            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre de Usuario" required>
+            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
         </div>
         <div class="form-group text-left">
             <label>Contraseña</label>
@@ -99,7 +99,7 @@
         <div class="faq-title">❓ Preguntas Frecuentes y Gestión (FAQ)</div>
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
-            <div class="faq-content">Es la competición privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
+            <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
         </details>
         <details class="faq-details">
             <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
@@ -215,10 +215,11 @@
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
     </section>
     
-    <section id="porrasTotalesSection" style="display:none;">
-        <h2 style="margin-bottom:15px;">🎯 Porra de Puntos Totales</h2>
-        <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos que conseguirá cada equipo a final de temporada. ¡Esta sección es secreta y solo la ven los usuarios autorizados!</p>
-        <div id="contenedorPorrasTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left;">
+    <!-- SECCIÓN SECRETA DE PREDICCIONES TOTALES -->
+    <section id="prediccionesTotalesSection" style="display:none;">
+        <h2 style="margin-bottom:15px;">🎯 Predicción de Puntos Totales</h2>
+        <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos que conseguirá cada equipo a final de temporada. ¡Esta sección es exclusiva y solo la ven los usuarios autorizados!</p>
+        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left;">
             <!-- Se rellenará automáticamente -->
         </div>
     </section>
@@ -236,6 +237,7 @@ const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/T
 
 let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
 let intervalCountdown = null;
+let intervalTotalesCountdown = null;
 let globalHistorialData = [];
 let isSortDesc = true;
 let currentJornadaGlobal = 0;
@@ -351,7 +353,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('warningPredicciones').style.display = "none";
             document.getElementById('clasificacionesSection').style.display = "none";
             document.getElementById('historialSection').style.display = "none";
-            document.getElementById('porrasTotalesSection').style.display = "none";
+            document.getElementById('prediccionesTotalesSection').style.display = "none";
 
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
@@ -373,7 +375,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
 
                 if (eq.oficial_sets && eq.oficial_sets.includes("-")) {
                     esPasado = true;
-                    // LÓGICA DE GANADO O PERDIDO
                     let sL = parseInt(eq.oficial_sets.split("-")[0]);
                     let sV = parseInt(eq.oficial_sets.split("-")[1]);
                     let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:#dc3545; font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
@@ -559,14 +560,22 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
+            // --- LÓGICA RENDERIZAR PREDICCIONES TOTALES SECRETA ---
             if(data.equipos_totales && data.equipos_totales.length > 0) {
-                document.getElementById('porrasTotalesSection').style.display = "block";
-                let htmlTot = "";
+                document.getElementById('prediccionesTotalesSection').style.display = "block";
+                
+                let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
+                
+                let htmlTot = `
+                <div id="relojTotales" style="font-size:1.1rem; font-weight:bold; padding:10px; background:#e3f2fd; color:#1565c0; border-radius:8px; text-align:center; margin-bottom:20px;">
+                    Calculando tiempo...
+                </div>`;
+                
                 data.equipos_totales.forEach(eq => {
                     let ptsActuales = data.puntos_reales[eq] || 0;
                     let misPts = "";
                     let listaOtros = "";
-                    let porrasEq = data.porras_totales[eq] || [];
+                    let porrasEq = data.predicciones_totales[eq] || [];
                     
                     porrasEq.forEach(porra => {
                         if (porra.usuario === usr) misPts = porra.puntos;
@@ -579,22 +588,35 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                     if (listaOtros === "") { listaOtros = "<div style='color:#999; font-size:0.9rem; margin-top:10px;'>Nadie ha hecho su predicción todavía.</div>"; }
 
-                    htmlTot += `
-                    <div style="background:#f4f6f9; border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--purple-light);">
-                        <h4 style="color:var(--purple-dark); margin-bottom:5px;">${eq}</h4>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos</span>
-                        </div>
-                        
+                    let miCajonHTML = "";
+                    if (isClosed) {
+                        let textoMiPrediccion = misPts !== "" ? `${misPts} pts` : "No participaste";
+                        miCajonHTML = `
+                        <div style="background:white; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
+                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
+                            <div style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);">${textoMiPrediccion}</div>
+                        </div>`;
+                    } else {
+                        miCajonHTML = `
                         <div style="background:white; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
                             <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
                             <div style="display:flex; gap:10px;">
                                 <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
                             </div>
+                        </div>`;
+                    }
+
+                    htmlTot += `
+                    <div style="background:#f4f6f9; border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--purple-light);">
+                        <h4 style="color:var(--purple-dark); margin-bottom:5px;">${eq}</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos reales</span>
                         </div>
+                        
+                        ${miCajonHTML}
 
                         <details>
-                            <summary style="font-weight:bold; color:var(--purple-light); cursor:pointer; outline:none;">👀 Ver porras de los demás</summary>
+                            <summary style="font-weight:bold; color:var(--purple-light); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
                             <div style="margin-top:10px; background:white; padding:10px 15px; border-radius:5px; border:1px solid #eee;">
                                 ${listaOtros}
                             </div>
@@ -602,38 +624,43 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     </div>`;
                 });
                 
-                htmlTot += `
-                <div id="msgPorrasTotales" class="alert-box mt-3" style="padding:10px;"></div>
-                <button class="btn btn-primary btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Porras Secretas</button>`;
+                htmlTot += `<div id="msgPrediccionesTotales" class="alert-box mt-3" style="padding:10px;"></div>`;
                 
-                document.getElementById('contenedorPorrasTotales').innerHTML = htmlTot;
+                if (!isClosed) {
+                    htmlTot += `<button class="btn btn-primary btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Predicciones</button>`;
+                }
 
-                document.getElementById('btnSaveTotales').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    let prediccionesTot = {};
-                    data.equipos_totales.forEach(eq => {
-                        let val = document.getElementById(`pt_${eq}`).value.trim();
-                        if(val !== "") prediccionesTot[eq] = val;
+                document.getElementById('contenedorPrediccionesTotales').innerHTML = htmlTot;
+
+                if (!isClosed) {
+                    document.getElementById('btnSaveTotales').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        let prediccionesTot = {};
+                        data.equipos_totales.forEach(eq => {
+                            let val = document.getElementById(`pt_${eq}`).value.trim();
+                            if(val !== "") prediccionesTot[eq] = val;
+                        });
+                        
+                        const btnT = this;
+                        const msgT = document.getElementById('msgPrediccionesTotales');
+                        btnT.disabled = true; btnT.innerText = "Guardando..."; msgT.style.display = "none";
+
+                        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+                        .then(res => res.json())
+                        .then(d => {
+                            msgT.style.display = "block";
+                            if(d.status === "success") { msgT.className = "alert-box alert-success"; msgT.innerText = d.message; }
+                            else { msgT.className = "alert-box alert-danger"; msgT.innerText = d.message; }
+                        }).catch(() => { msgT.className = "alert-box alert-danger"; msgT.innerText = "Error de conexión."; msgT.style.display = "block"; })
+                        .finally(() => { btnT.disabled = false; btnT.innerText = "💾 Guardar Predicciones"; });
                     });
-                    
-                    const btnT = this;
-                    const msgT = document.getElementById('msgPorrasTotales');
-                    btnT.disabled = true; btnT.innerText = "Guardando..."; msgT.style.display = "none";
-
-                    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
-                    .then(res => res.json())
-                    .then(d => {
-                        msgT.style.display = "block";
-                        if(d.status === "success") { msgT.className = "alert-box alert-success"; msgT.innerText = d.message; }
-                        else { msgT.className = "alert-box alert-danger"; msgT.innerText = d.message; }
-                    }).catch(() => { msgT.className = "alert-box alert-danger"; msgT.innerText = "Error de conexión."; msgT.style.display = "block"; })
-                    .finally(() => { btnT.disabled = false; btnT.innerText = "💾 Guardar Porras Secretas"; });
-                });
+                }
             }
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
             cargarDatosAntiguos();
+            iniciarRelojTotales();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message; msgBox.style.display = "block";
         }
@@ -674,6 +701,28 @@ function iniciarRelojes() {
                 el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
             }
         });
+    }, 1000);
+}
+
+function iniciarRelojTotales() {
+    if(intervalTotalesCountdown) clearInterval(intervalTotalesCountdown);
+    const deadline = new Date("2026-10-03T00:00:00").getTime();
+    intervalTotalesCountdown = setInterval(() => {
+        const el = document.getElementById('relojTotales');
+        if(!el) return;
+        const now = new Date().getTime();
+        const diff = deadline - now;
+        if(diff <= 0) {
+            el.innerHTML = "🔒 PLAZO CERRADO. Las predicciones son definitivas.";
+            el.style.color = "#c62828";
+            el.style.backgroundColor = "#ffebee";
+        } else {
+            let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            let s = Math.floor((diff % (1000 * 60)) / 1000);
+            el.innerHTML = `⏳ El plazo de predicciones finales cierra en: ${d}d ${h}h ${m}m ${s}s`;
+        }
     }, 1000);
 }
 
