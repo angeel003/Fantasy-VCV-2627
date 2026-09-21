@@ -114,7 +114,7 @@
         transition: opacity 0.2s ease;
         transform: translate(-50%, calc(-100% - 10px));
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        white-space: normal; /* Modificado para que el texto largo salte de línea */
+        white-space: normal;
         max-width: 250px;
         text-align: center;
         font-weight: bold;
@@ -264,9 +264,14 @@
                                 • Set 2: VCV pierde de 2<br>
                                 • Set 3: VCV gana de 10<br>
                                 • Set 4: VCV gana de 3<br>
-                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla.
+                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica.
                             </div>
-                            <p style="margin-bottom: 8px;"><b>2. Signo:</b> Indica si crees que esa diferencia de puntos será <i>A favor</i> del VCV, o <i>En contra</i> (a favor del rival).</p>
+                            
+                            <p style="margin-bottom: 8px;"><b>2. Signo <span style="color:var(--vcv-rojo);">(¡VITAL!)</span>:</b> Indica si esa diferencia de puntos será a favor del VCV o del equipo rival.</p>
+                            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px dashed #ffeeba; margin-bottom: 12px; font-size: 0.85rem; color: #856404;">
+                                <b>En el ejemplo anterior:</b> Como el VCV ha ganado el partido por una diferencia global de 16 puntos, tendrías que elegir <b>"A favor (+)"</b>. <br>
+                                ⚠️ Si escribes 16 pero marcas <i>"En contra (-)"</i>, tu predicción fallará por completo, ya que el sistema entenderá que creías que el VCV iba a <b>perder</b> por 16 puntos de diferencia. ¡Asegúrate de poner el signo correcto!
+                            </div>
                             
                             <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
                             
@@ -752,6 +757,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
+                             // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
                         });
 
