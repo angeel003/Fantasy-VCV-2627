@@ -215,6 +215,16 @@
 
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
     </section>
+    
+    <!-- NUEVA SECCIÓN SECRETA DE PORRAS TOTALES -->
+    <section id="porrasTotalesSection" style="display:none;">
+        <h2 style="margin-bottom:15px;">🎯 Porra de Puntos Totales</h2>
+        <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos que conseguirá cada equipo a final de temporada. ¡Esta sección es secreta y solo la ven los usuarios autorizados!</p>
+        <div id="contenedorPorrasTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left;">
+            <!-- Se rellenará automáticamente -->
+        </div>
+    </section>
+
 </div>
 
 <footer><p>© Fantasy VCV 2026-2027</p></footer>
@@ -223,7 +233,6 @@
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 // --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
-// Mientras tanto, utiliza el tic oficial en diferentes colores automáticamente.
 const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
 // --------------------------------------------------------
 
@@ -344,6 +353,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('warningPredicciones').style.display = "none";
             document.getElementById('clasificacionesSection').style.display = "none";
             document.getElementById('historialSection').style.display = "none";
+            document.getElementById('porrasTotalesSection').style.display = "none";
 
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
@@ -422,16 +432,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            // PINTAR NOMBRE REAL EN EL HEADER
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
-            // PINTAR INSIGNIAS EN EL HEADER (SOLO ICONOS GRANDES CON HOVER/TITLE)
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
             misInsignias.forEach(b => {
                 let cssColorClass = getBadgeCSS(b.type);
-                // Usamos "badge-header" para darle más tamaño y juntarlas, y mostramos el texto en el 'title'
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
@@ -532,12 +539,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
                         let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
                         
-                        // Iconos en la tabla (se mantienen pequeños)
                         let uBadges = data.insignias[r.jugador] || [];
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
-                             // En la tabla usan la clase 'badge-icon' (más pequeñita, 16px)
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
@@ -549,6 +554,79 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 });
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
+
+            // --- LÓGICA RENDERIZAR PORRAS TOTALES SECRETA ---
+            if(data.equipos_totales && data.equipos_totales.length > 0) {
+                document.getElementById('porrasTotalesSection').style.display = "block";
+                let htmlTot = "";
+                data.equipos_totales.forEach(eq => {
+                    let ptsActuales = data.puntos_reales[eq] || 0;
+                    let misPts = "";
+                    let listaOtros = "";
+                    let porrasEq = data.porras_totales[eq] || [];
+                    
+                    porrasEq.forEach(porra => {
+                        if (porra.usuario === usr) misPts = porra.puntos;
+                        listaOtros += `
+                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
+                            <span>👤 ${porra.nombre}</span>
+                            <span style="font-weight:bold; color:var(--purple-dark);">${porra.puntos} pts</span>
+                        </div>`;
+                    });
+
+                    if (listaOtros === "") { listaOtros = "<div style='color:#999; font-size:0.9rem; margin-top:10px;'>Nadie ha hecho su predicción todavía.</div>"; }
+
+                    htmlTot += `
+                    <div style="background:#f4f6f9; border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--purple-light);">
+                        <h4 style="color:var(--purple-dark); margin-bottom:5px;">${eq}</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos</span>
+                        </div>
+                        
+                        <div style="background:white; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
+                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
+                            <div style="display:flex; gap:10px;">
+                                <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
+                            </div>
+                        </div>
+
+                        <details>
+                            <summary style="font-weight:bold; color:var(--purple-light); cursor:pointer; outline:none;">👀 Ver porras de los demás</summary>
+                            <div style="margin-top:10px; background:white; padding:10px 15px; border-radius:5px; border:1px solid #eee;">
+                                ${listaOtros}
+                            </div>
+                        </details>
+                    </div>`;
+                });
+                
+                htmlTot += `
+                <div id="msgPorrasTotales" class="alert-box mt-3" style="padding:10px;"></div>
+                <button class="btn btn-primary btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Porras Secretas</button>`;
+                
+                document.getElementById('contenedorPorrasTotales').innerHTML = htmlTot;
+
+                document.getElementById('btnSaveTotales').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    let prediccionesTot = {};
+                    data.equipos_totales.forEach(eq => {
+                        let val = document.getElementById(`pt_${eq}`).value.trim();
+                        if(val !== "") prediccionesTot[eq] = val;
+                    });
+                    
+                    const btnT = this;
+                    const msgT = document.getElementById('msgPorrasTotales');
+                    btnT.disabled = true; btnT.innerText = "Guardando..."; msgT.style.display = "none";
+
+                    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+                    .then(res => res.json())
+                    .then(d => {
+                        msgT.style.display = "block";
+                        if(d.status === "success") { msgT.className = "alert-box alert-success"; msgT.innerText = d.message; }
+                        else { msgT.className = "alert-box alert-danger"; msgT.innerText = d.message; }
+                    }).catch(() => { msgT.className = "alert-box alert-danger"; msgT.innerText = "Error de conexión."; msgT.style.display = "block"; })
+                    .finally(() => { btnT.disabled = false; btnT.innerText = "💾 Guardar Porras Secretas"; });
+                });
+            }
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
