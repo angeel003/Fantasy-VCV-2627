@@ -27,7 +27,8 @@
        3. CABECERAS Y TÍTULOS (Sin fuentes customizadas)
        --------------------------------------------------- */
     header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
-    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
+    header p { font-size: 1.1rem; opacity: 0.9; }
     
     h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
     h2 { margin-bottom: 35px; text-align: center; }
@@ -38,7 +39,7 @@
     /* ---------------------------------------------------
        4. TABLAS Y CAJAS
        --------------------------------------------------- */
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
     th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
     thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
@@ -73,6 +74,7 @@
     .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
     .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
+    .faq-title { font-weight: bold; color: var(--vcv-morado); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
     .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
     .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
     .faq-summary { font-weight: 600; color: var(--vcv-negro); cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
@@ -86,10 +88,10 @@
     .filter-checkbox input { margin-right:6px; cursor:pointer; }
     
     /* ---------------------------------------------------
-       7. ESTILOS DE LOS VERIFICADOS
+       7. ESTILOS DE LOS VERIFICADOS Y TOOLTIP FLOTANTE
        --------------------------------------------------- */
-    .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: help; }
-    .badge-header { width: 24px; height: 24px; cursor: help; transition: transform 0.2s; }
+    .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: pointer; }
+    .badge-header { width: 24px; height: 24px; cursor: pointer; transition: transform 0.2s; }
     .badge-header:hover { transform: scale(1.1); }
     
     .badge-jugador { filter: none; }
@@ -97,6 +99,26 @@
     .badge-staff { filter: hue-rotate(180deg) saturate(200%); }
     .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
     .badge-exjugador { filter: grayscale(100%) brightness(0%); }
+
+    /* Estilos del Bocadillo Flotante (Tooltip) para Móviles */
+    #mobileTooltip {
+        position: fixed;
+        background: var(--vcv-morado);
+        color: var(--vcv-blanco);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        transform: translate(-50%, calc(-100% - 10px));
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        white-space: nowrap;
+        font-weight: bold;
+        border: 1px solid var(--vcv-dorado);
+    }
+    #mobileTooltip.show { opacity: 1; }
 
     /* ESTILOS DEL LOGO/TEXTO DE LA CATEGORÍA */
     .card-match { position: relative; } 
@@ -123,6 +145,9 @@
 </style>
 </head>
 <body>
+
+<!-- DIV OCULTO PARA EL BOCADILLO DE LOS VERIFICADOS -->
+<div id="mobileTooltip"></div>
 
 <header>
     <div class="header-content">
@@ -309,6 +334,37 @@ function getBadgeCSS(type) {
     if(type === 'exjugador') return 'badge-exjugador';
     return '';
 }
+
+// ------------------------------------------------------------------
+// NUEVA LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES (Verificados)
+// ------------------------------------------------------------------
+function showMobileTooltip(e, text) {
+    e.stopPropagation(); // Evita que el clic se propague al documento y lo cierre al instante
+    const tooltip = document.getElementById('mobileTooltip');
+    tooltip.innerText = text;
+    
+    // Posicionar justo encima de la insignia tocada
+    const rect = e.target.getBoundingClientRect();
+    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    tooltip.style.top = rect.top + 'px';
+    
+    tooltip.classList.add('show');
+    
+    // Ocultar a los 2.5 segundos
+    clearTimeout(tooltip.timeoutId);
+    tooltip.timeoutId = setTimeout(() => {
+        tooltip.classList.remove('show');
+    }, 2500);
+}
+
+// Escuchar clics en cualquier lado para cerrar el tooltip antes de tiempo
+document.addEventListener('click', function(e) {
+    const tooltip = document.getElementById('mobileTooltip');
+    if (tooltip && tooltip.classList.contains('show')) {
+        tooltip.classList.remove('show');
+    }
+});
+// ------------------------------------------------------------------
 
 // NUEVA FUNCIÓN: Generar el logo o texto de la categoría
 function getCategoryHTML(catName) {
@@ -527,7 +583,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let insigniasHeaderHtml = "";
             misInsignias.forEach(b => {
                 let cssColorClass = getBadgeCSS(b.type);
-                insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}">`;
+                // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
+                insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
@@ -599,7 +656,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
                         htmlPartidos += `
-                        <div class="p-3 mb-3 card-match" style="background: var(--bg-general); border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
+                        <div class="p-3 mb-3 card-match" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
                             ${categoryHtml}
                             <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
@@ -648,7 +705,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
-                             badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
+                             // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
+                             badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
                         });
 
                         let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${r.jugador})</span>` : r.jugador;
