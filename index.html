@@ -23,8 +23,8 @@
     h2 { margin-bottom: 35px; font-weight: 600; color: #333; }
     
     table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
-    th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: center; }
-    thead { background: var(--purple-light); color: white; }
+    th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
+    thead { background: var(--purple-light); color: white; text-align: center; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
     .medal-2 { background: #f8f9fa; font-weight: bold; }
     .medal-3 { background: #fff4e6; font-weight: bold; }
@@ -115,7 +115,7 @@
         <div class="form-container">
             <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
                 <div class="col-md-12 text-center">
-                    <span style="font-size:1.3rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
+                    <span style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
                 </div>
             </div>
             
@@ -248,7 +248,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 </div>`;
 
                 if (esPasado) {
-                    htmlPasados = cardHtml + htmlPasados; // Insertar al principio para ver el más reciente primero
+                    htmlPasados = cardHtml + htmlPasados; 
                 } else {
                     htmlProximos += cardHtml;
                 }
@@ -288,7 +288,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         if(data.status === "success") {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
-            document.getElementById('displayJugador').innerText = "👤 " + usr;
+            
+            // PINTAMOS EL NOMBRE REAL Y EL USUARIO JUNTOS
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} (@${usr})` : usr;
+            document.getElementById('displayJugador').innerText = "👤 " + displayNom;
+            
             document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
 
             data.equipos.sort((a, b) => {
@@ -377,14 +381,18 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 data.ligas.forEach(liga => {
                     clasifHtml += `<h4 style="margin-top:40px; color:var(--purple-dark);">🏆 Liga: ${liga}</h4>`;
                     clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:white; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
-                    <thead style="background:var(--purple-light); color:white;"><tr><th style="padding:14px;">Posición y Jugador</th><th style="padding:14px;">Puntos Totales</th></tr></thead><tbody>`;
+                    <thead style="background:var(--purple-light); color:white;"><tr><th style="padding:14px;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
                     
                     let ranking = data.clasificaciones[liga] || [];
                     ranking.forEach((r, index) => {
                         let pos = index + 1;
                         let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
                         let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
-                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd;"><strong>${pos}</strong> - ${r.jugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark);">${r.puntos}</td></tr>`;
+                        
+                        // Combinamos nombre real y usuario (@) en la tabla
+                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
+                        
+                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark; text-align:center;">${r.puntos}</td></tr>`;
                     });
                     clasifHtml += `</tbody></table></div>`;
                 });
