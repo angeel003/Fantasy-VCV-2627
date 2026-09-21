@@ -121,7 +121,6 @@
             
             <form id="prediccionForm">
                 <hr>
-                <h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>
                 <div id="contenedorPartidos"></div>
 
                 <div id="warningPredicciones" style="background-color:#ffebee; border: 1px solid #f5c6cb; border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
@@ -202,55 +201,67 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
         if(data.status === "success") {
             isGuestMode = true;
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
-            document.getElementById('tituloPrincipalSeccion').innerText = "Próximos Partidos y Últimos Resultados";
+            document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
-            // Ocultamos las partes privadas para el invitado
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
             document.getElementById('clasificacionesSection').style.display = "none";
             document.getElementById('historialSection').style.display = "none";
 
-            // Ordenar por fecha cronológica
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
                 let tsB = b.timestamp || Infinity;
                 return tsA - tsB; 
             });
 
-            let htmlPartidos = "";
-            if (data.equipos.length === 0) {
-                htmlPartidos = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
-            } else {
-                data.equipos.forEach(eq => {
-                    let valJornada = String(eq.jornada_eq || "").trim();
-                    let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
-                    let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                    let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
+            let htmlProximos = "";
+            let htmlPasados = "";
 
-                    let infoAdicional = "";
-                    if (eq.estado === "ABIERTO") {
-                        infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Predicción disponible</span></div>`;
-                    } else {
-                        if (eq.oficial_sets) {
-                            infoAdicional = `
-                            <div style="margin-top:10px; background:#f8f9fa; border-left:4px solid var(--purple-light); padding:10px; border-radius:4px;">
-                                <span style="font-size:0.85rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span><br>
-                                <b style="font-size:1.1rem; color:var(--purple-dark);">${eq.oficial_sets}</b> <span style="font-size:0.9rem; color:#555;">(${eq.oficial_parciales})</span>
-                            </div>`;
-                        } else {
-                            infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#e2e3e5; color:#383d41; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🔒 En juego / Cerrado</span></div>`;
-                        }
-                    }
+            data.equipos.forEach(eq => {
+                let valJornada = String(eq.jornada_eq || "").trim();
+                let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
+                let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
+                let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
 
-                    htmlPartidos += `
-                    <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                        <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                        ${infoLocFecha}
-                        ${infoAdicional}
+                let infoAdicional = "";
+                let esPasado = false;
+
+                if (eq.oficial_sets) {
+                    esPasado = true;
+                    infoAdicional = `
+                    <div style="margin-top:10px; background:#f8f9fa; border-left:4px solid var(--purple-light); padding:10px; border-radius:4px;">
+                        <span style="font-size:0.85rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span><br>
+                        <b style="font-size:1.1rem; color:var(--purple-dark);">${eq.oficial_sets}</b> <span style="font-size:0.9rem; color:#555;">(${eq.oficial_parciales})</span>
                     </div>`;
-                });
-            }
-            document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
+                } else if (eq.estado === "CERRADO" || eq.visibilidad === "OCULTAR") {
+                    esPasado = true;
+                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#e2e3e5; color:#383d41; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🔒 Partido finalizado</span></div>`;
+                } else {
+                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Próximamente</span></div>`;
+                }
+
+                let cardHtml = `
+                <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                    ${infoLocFecha}
+                    ${infoAdicional}
+                </div>`;
+
+                if (esPasado) {
+                    htmlPasados = cardHtml + htmlPasados; // Insertar al principio para ver el más reciente primero
+                } else {
+                    htmlProximos += cardHtml;
+                }
+            });
+
+            let finalHtml = "";
+            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--purple-dark); margin-bottom:15px; text-align:left; border-bottom:2px solid #ddd; padding-bottom:5px;">Próximos Partidos</h4>` + htmlProximos;
+            if(htmlPasados !== "") finalHtml += `<h4 style="color:var(--purple-dark); margin-top:30px; margin-bottom:15px; text-align:left; border-bottom:2px solid #ddd; padding-bottom:5px;">Últimos Resultados</h4>` + htmlPasados;
+            
+            if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
+
+            document.getElementById('contenedorPartidos').innerHTML = finalHtml;
+            
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
         } else {
@@ -260,7 +271,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "👀 Entrar como Invitado"; btn.disabled = false; });
 });
-
 
 // LOGICA USUARIO NORMAL
 document.getElementById('btnLogin').addEventListener('click', function() {
@@ -279,6 +289,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             document.getElementById('displayJugador').innerText = "👤 " + usr;
+            document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
 
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
@@ -288,7 +299,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             equiposTotalesInfo = data.equipos;
 
-            let htmlPartidos = "";
+            let htmlPartidos = `<h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>`;
             let equiposPermitidos = 0;
             let equiposCerrados = 0;
             
