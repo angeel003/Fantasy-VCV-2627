@@ -105,16 +105,18 @@
         position: fixed;
         background: var(--vcv-morado);
         color: var(--vcv-blanco);
-        padding: 6px 12px;
+        padding: 8px 14px;
         border-radius: 6px;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         z-index: 9999;
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.2s ease;
         transform: translate(-50%, calc(-100% - 10px));
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        white-space: nowrap;
+        white-space: normal; /* Modificado para que el texto largo salte de línea */
+        max-width: 250px;
+        text-align: center;
         font-weight: bold;
         border: 1px solid var(--vcv-dorado);
     }
@@ -146,7 +148,7 @@
 </head>
 <body>
 
-<!-- DIV OCULTO PARA EL BOCADILLO DE LOS VERIFICADOS -->
+<!-- DIV OCULTO PARA EL BOCADILLO DE LOS VERIFICADOS Y DUDAS -->
 <div id="mobileTooltip"></div>
 
 <header>
@@ -179,7 +181,7 @@
         </details>
         <details class="faq-details">
             <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
-            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.</div>
+            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
         </details>
         
         <details class="faq-details">
@@ -188,7 +190,6 @@
                 <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
                 <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
                     
-                    <!-- ADVERTENCIA DE SEGURIDAD AÑADIDA AQUÍ -->
                     <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
                         ⚠️ <b>Atención:</b> Por motivos de seguridad, te rogamos encarecidamente que <b>NO utilices la misma contraseña que usas para cosas importantes</b> (como tu correo electrónico, banco o redes sociales). Esta es una plataforma lúdica.
                     </div>
@@ -248,6 +249,36 @@
             </div>
             
             <form id="prediccionForm">
+                
+                <!-- NUEVO DESPLEGABLE EXPLICATIVO -->
+                <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;">
+                    <details>
+                        <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
+                            ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
+                        </summary>
+                        <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
+                            <p style="margin-bottom: 8px;"><b>1. Diferencia de Puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
+                            <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
+                                <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
+                                • Set 1: VCV gana de 5<br>
+                                • Set 2: VCV pierde de 2<br>
+                                • Set 3: VCV gana de 10<br>
+                                • Set 4: VCV gana de 3<br>
+                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla.
+                            </div>
+                            <p style="margin-bottom: 8px;"><b>2. Signo:</b> Indica si crees que esa diferencia de puntos será <i>A favor</i> del VCV, o <i>En contra</i> (a favor del rival).</p>
+                            
+                            <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
+                            
+                            <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
+                            <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
+                                <!-- Se llena automáticamente desde el servidor -->
+                                <li>Cargando sistema de puntuación...</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                
                 <hr>
                 <div id="contenedorPartidos"></div>
 
@@ -342,28 +373,25 @@ function getBadgeCSS(type) {
 }
 
 // ------------------------------------------------------------------
-// NUEVA LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES (Verificados)
+// LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES
 // ------------------------------------------------------------------
 function showMobileTooltip(e, text) {
-    e.stopPropagation(); // Evita que el clic se propague al documento y lo cierre al instante
+    e.stopPropagation(); 
     const tooltip = document.getElementById('mobileTooltip');
     tooltip.innerText = text;
     
-    // Posicionar justo encima de la insignia tocada
     const rect = e.target.getBoundingClientRect();
     tooltip.style.left = (rect.left + rect.width / 2) + 'px';
     tooltip.style.top = rect.top + 'px';
     
     tooltip.classList.add('show');
     
-    // Ocultar a los 2.5 segundos
     clearTimeout(tooltip.timeoutId);
     tooltip.timeoutId = setTimeout(() => {
         tooltip.classList.remove('show');
-    }, 2500);
+    }, 3500); // 3.5 segundos para dar tiempo a leer
 }
 
-// Escuchar clics en cualquier lado para cerrar el tooltip antes de tiempo
 document.addEventListener('click', function(e) {
     const tooltip = document.getElementById('mobileTooltip');
     if (tooltip && tooltip.classList.contains('show')) {
@@ -372,18 +400,11 @@ document.addEventListener('click', function(e) {
 });
 // ------------------------------------------------------------------
 
-// NUEVA FUNCIÓN: Generar el logo o texto de la categoría
 function getCategoryHTML(catName) {
     if (!catName) return "";
-    
-    // Normalizamos el nombre para buscar la foto: pasamos a minúsculas, quitamos tildes y cambiamos espacios por guiones bajos.
     let safeName = catName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-    
-    // !!! IMPORTANTE: CAMBIA ESTA URL POR LA RUTA REAL DE TU CARPETA EN GITHUB !!!
     let baseUrl = "files/categories/"; 
     let imgUrl = baseUrl + safeName + ".png";
-    
-    // Si falla al cargar la imagen, el evento onerror dibuja una etiqueta de texto en su lugar.
     return `<img src="${imgUrl}" class="cat-badge-img" alt="${catName}" title="${catName}" onerror="this.onerror=null; this.outerHTML='<div class=\\'cat-badge-text\\' title=\\'${catName}\\'>${catName}</div>';">`;
 }
 
@@ -553,6 +574,9 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
+            
+            // Ocultamos la caja de ayuda en modo invitado por si acaso
+            document.querySelector('#prediccionForm > div').style.display = "none"; 
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
@@ -584,6 +608,19 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
+            // --- CARGAR REGLAS DE PUNTUACIÓN DESDE EL SERVIDOR ---
+            if(data.reglas) {
+                let listaReglas = document.getElementById('listaReglasPuntuacion');
+                if(listaReglas) {
+                    listaReglas.innerHTML = `
+                        <li>Acertar el <b>Resultado Exacto (Sets)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.sets} pts</span></li>
+                        <li>Acertar el <b>Ganador del partido</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.ganador} pts</span></li>
+                        <li>Acertar la <b>Diferencia de puntos exacta</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_exacta} pts</span> extra</li>
+                        <li>Acertar la <b>Diferencia aproximada (±5)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_5} pts</span> extra</li>
+                    `;
+                }
+            }
+
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
@@ -649,11 +686,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Puntos Dif.</label>
+                                    <label>Puntos Dif. <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, 'Diferencia de puntos sumando TODOS los sets. (Mira el ejemplo arriba ❓)')">❓</span></label>
                                     <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" style="border-color: #ddd;">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Signo</label>
+                                    <label>Signo <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, '¿Esa diferencia de puntos es a favor del VCV o en contra?')">❓</span></label>
                                     <select class="form-control" id="e${eq.id_partido}_signo" style="border-color: #ddd;">
                                         <option value="">Elige...</option>
                                         <option value="A favor">A favor (+)</option>
@@ -715,7 +752,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
-                             // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
                         });
 
