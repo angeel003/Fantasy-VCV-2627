@@ -158,11 +158,12 @@
     <section>
         <h2 id="tituloPrincipalSeccion">Mis Predicciones</h2>
         <div class="form-container">
+            <!-- LA CAJA DEL NOMBRE SE HA MODIFICADO PARA ALINEAR TODO EN HORIZONTAL -->
             <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
-                <div class="col-md-12 text-center">
-                    <div style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></div>
-                    <!-- CONTENEDOR DE VERIFICADOS DEBAJO DEL NOMBRE (Ahora en línea horizontal) -->
-                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; margin-top:10px;"></div>
+                <div class="col-md-12 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
+                    <div style="font-size:1.3rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></div>
+                    <!-- CONTENEDOR DE VERIFICADOS AL LADO DEL NOMBRE -->
+                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
                 </div>
             </div>
             
@@ -432,9 +433,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
+            // PINTAR NOMBRE REAL EN EL HEADER
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
+            // PINTAR INSIGNIAS EN EL HEADER (SOLO ICONOS GRANDES CON HOVER/TITLE, AL LADO DEL NOMBRE)
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
             misInsignias.forEach(b => {
@@ -543,6 +546,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
+                             // En la tabla usan la clase 'badge-icon' (más pequeñita, 16px)
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
