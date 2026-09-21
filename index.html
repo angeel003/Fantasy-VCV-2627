@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Fantasy VCV 26/27</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-<!-- Fuente Golos Text original -->
+<!-- Recuperamos la fuente Golos Text original -->
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -18,38 +18,51 @@
         --vcv-dorado: #cfb359; 
         --vcv-rojo: #d24442; 
         --vcv-negro: #000000;
-        --bg-general: #f4f6f9; /* Un gris muy clarito para que resalten las tarjetas */
+        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
     }
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
     
+    /* ---------------------------------------------------
+       3. CABECERAS Y TÍTULOS (Sin fuentes customizadas)
+       --------------------------------------------------- */
     header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
-    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    header p { font-size: 1.1rem; opacity: 0.9; }
-    
-    section { padding: 50px 15px; text-align: center; }
-    .section-alt { background: #e9ecef; }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
     
     h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
     h2 { margin-bottom: 35px; text-align: center; }
+
+    section { padding: 50px 15px; text-align: center; }
+    .section-alt { background: #e9ecef; }
     
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+    /* ---------------------------------------------------
+       4. TABLAS Y CAJAS
+       --------------------------------------------------- */
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
     th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
     thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
     .medal-2 { background: #f8f9fa; font-weight: bold; }
     .medal-3 { background: #fff4e6; font-weight: bold; }
 
+    /* ---------------------------------------------------
+       5. BOTONES E INTERACCIONES
+       --------------------------------------------------- */
     .btn-primary { background-color: var(--vcv-morado); border-color: var(--vcv-morado); color: var(--vcv-blanco); }
     .btn-primary:hover, .btn-primary:focus { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
+    
     .btn-success { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
     .btn-success:hover { background-color: #b89c45; border-color: #b89c45; color: var(--vcv-negro); }
+
     .btn-outline-primary { border: 2px solid var(--vcv-morado); color: var(--vcv-morado); }
     .btn-outline-primary:hover { background-color: var(--vcv-morado); color: var(--vcv-blanco); }
 
     .form-container { max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
     .form-group label { font-weight: bold; color: var(--vcv-morado); }
     
+    /* ---------------------------------------------------
+       6. ALERTAS Y MENSAJES
+       --------------------------------------------------- */
     .alert-box { display: none; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 20px; }
     .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
     .alert-danger { background: #fde8e8; color: var(--vcv-rojo); border: 1px solid #f8caca; }
@@ -60,7 +73,6 @@
     .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
     .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
-    .faq-title { font-weight: bold; color: var(--vcv-morado); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
     .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
     .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
     .faq-summary { font-weight: 600; color: var(--vcv-negro); cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
@@ -73,7 +85,9 @@
     .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:var(--bg-general); padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
     .filter-checkbox input { margin-right:6px; cursor:pointer; }
     
-    /* ESTILOS DE LOS VERIFICADOS */
+    /* ---------------------------------------------------
+       7. ESTILOS DE LOS VERIFICADOS
+       --------------------------------------------------- */
     .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: help; }
     .badge-header { width: 24px; height: 24px; cursor: help; transition: transform 0.2s; }
     .badge-header:hover { transform: scale(1.1); }
@@ -112,8 +126,7 @@
 
 <header>
     <div class="header-content">
-        <h1 style="margin-bottom: 10px; line-height:1.2;">Fantasy VCV 26/27</h1>
-        <p style="font-size:1.1rem; margin-bottom: 0;">🏐🏐🏐</p>
+        <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
 </header>
 
@@ -134,7 +147,7 @@
     </div>
 
     <div class="faq-container">
-        <div class="faq-title">❓ Preguntas Frecuentes y Gestión (FAQ)</div>
+        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
             <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
@@ -230,6 +243,7 @@
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
@@ -239,7 +253,9 @@
     <section class="section-alt" id="historialSection">
         <h2>Mi Historial Privado</h2>
         <p>Consulta tus predicciones, los resultados oficiales y los puntos que ganaste.</p>
-        <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">🔒 Cargar mi historial</button>
+        <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">
+            🔒 Cargar mi historial
+        </button>
         <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
         
         <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:var(--vcv-blanco); padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
@@ -326,7 +342,9 @@ document.getElementById('btnChangePwd').addEventListener('click', function(e) {
         msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Las contraseñas nuevas no coinciden."; msgBox.style.display = "block"; return;
     }
 
-    btn.disabled = true; btn.innerText = "Actualizando..."; msgBox.style.display = "none";
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...'; 
+    msgBox.style.display = "none";
 
     fetch(scriptURL, { 
         method: 'POST', 
@@ -364,7 +382,9 @@ document.getElementById('btnReqName').addEventListener('click', function(e) {
         msgBox.className = "alert-box alert-warning"; msgBox.innerText = "Debes rellenar al menos un dato nuevo para solicitar el cambio."; msgBox.style.display = "block"; return;
     }
 
-    btn.disabled = true; btn.innerText = "Enviando..."; msgBox.style.display = "none";
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...'; 
+    msgBox.style.display = "none";
 
     fetch(scriptURL, { 
         method: 'POST', 
@@ -390,7 +410,10 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     e.preventDefault();
     const msgBox = document.getElementById('loginMessage');
     const btn = this;
-    btn.disabled = true; btn.innerText = "Cargando..."; msgBox.style.display = "none";
+    
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Entrando...'; 
+    msgBox.style.display = "none";
 
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login_guest' }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -471,7 +494,10 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
         }
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
-    .finally(() => { btn.innerText = "👀 Entrar como Invitado"; btn.disabled = false; });
+    .finally(() => { 
+        btn.innerText = "👀 Entrar como Invitado"; 
+        btn.disabled = false; 
+    });
 });
 
 // LOGICA USUARIO NORMAL
@@ -482,7 +508,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     const btn = this;
 
     if(!usr || !pwd) { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Rellena usuario y contraseña."; msgBox.style.display = "block"; return; }
-    btn.disabled = true; btn.innerText = "Verificando..."; msgBox.style.display = "none";
+    
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Accediendo...'; 
+    msgBox.style.display = "none";
 
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -491,7 +520,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
             let misInsignias = data.insignias[usr] || [];
@@ -589,12 +618,25 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             iniciarRelojes();
 
             let clasifHtml = "";
-            if(data.ligas.length === 0) { clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; } 
-            else {
+            if(data.ligas.length === 0) { 
+                clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; 
+            } else {
                 data.ligas.forEach(liga => {
-                    clasifHtml += `<h4 style="margin-top:40px; color:var(--vcv-morado);">🏆 Liga: ${liga}</h4>`;
-                    clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:var(--vcv-blanco); box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
-                    <thead style="background:var(--vcv-morado); color:var(--vcv-blanco);"><tr><th style="padding:14px; text-align:left;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
+                    clasifHtml += `
+                    <details style="background:var(--vcv-blanco); border:1px solid #ddd; border-radius:8px; margin-bottom:15px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                        <summary style="padding:15px; font-weight:bold; color:var(--vcv-morado); font-size:1.1rem; cursor:pointer; outline:none;">
+                            🏆 Liga: ${liga}
+                        </summary>
+                        <div style="padding: 0 15px 15px 15px;">
+                            <div class="table-responsive">
+                                <table style="width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden; margin-bottom:0;">
+                                    <thead style="background:var(--vcv-morado); color:var(--vcv-blanco);">
+                                        <tr>
+                                            <th style="padding:12px; text-align:left;">Posición y Jugador</th>
+                                            <th style="padding:12px; text-align:center;">Puntos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
                     
                     let ranking = data.clasificaciones[liga] || [];
                     ranking.forEach((r, index) => {
@@ -609,11 +651,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
-                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
+                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${r.jugador})</span>` : r.jugador;
                         
                         clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${badgesHtmlTable} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--vcv-dorado); text-align:center;">${r.puntos}</td></tr>`;
                     });
-                    clasifHtml += `</tbody></table></div>`;
+                    clasifHtml += `</tbody></table></div></div></details>`;
                 });
             }
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
@@ -700,7 +742,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         
                         const btnT = this;
                         const msgT = document.getElementById('msgPrediccionesTotales');
-                        btnT.disabled = true; btnT.innerText = "Guardando..."; msgT.style.display = "none";
+                        
+                        btnT.disabled = true; 
+                        btnT.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
+                        msgT.style.display = "none";
 
                         fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
                         .then(res => res.json())
@@ -723,7 +768,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         }
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
-    .finally(() => { btn.innerText = "Entrar al Fantasy"; btn.disabled = false; });
+    .finally(() => { 
+        btn.innerText = "Entrar al Fantasy"; 
+        btn.disabled = false; 
+    });
 });
 
 function iniciarRelojes() {
@@ -832,7 +880,8 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
         return; 
     }
 
-    btnSubmit.disabled = true; btnSubmit.innerText = "Guardando..."; 
+    btnSubmit.disabled = true; 
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
 
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -859,7 +908,9 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
     const controls = document.getElementById('historyControls');
     const btnHist = this;
 
-    btnHist.innerText = "Cargando historial... ⏳"; btnHist.disabled = true; msgBox.style.display = "none";
+    btnHist.disabled = true; 
+    btnHist.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando historial...'; 
+    msgBox.style.display = "none";
 
     fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'get_history', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
@@ -891,7 +942,10 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
             }
         }
     })
-    .finally(() => { btnHist.innerText = "🔒 Cargar mi historial"; btnHist.disabled = false; });
+    .finally(() => { 
+        btnHist.innerText = "🔒 Cargar mi historial"; 
+        btnHist.disabled = false; 
+    });
 });
 
 function renderizarHistorial() {
