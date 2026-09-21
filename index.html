@@ -57,6 +57,14 @@
 
     .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:#f4f6f9; padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
     .filter-checkbox input { margin-right:6px; cursor:pointer; }
+    
+    /* ESTILOS DE LOS VERIFICADOS */
+    .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: help; }
+    .badge-admin { filter: hue-rotate(250deg); }
+    .badge-staff { filter: hue-rotate(0deg); }
+    .badge-entrenador { filter: hue-rotate(150deg); }
+    .badge-jugador { filter: hue-rotate(90deg); }
+    .badge-exjugador { filter: grayscale(100%); }
 </style>
 </head>
 <body>
@@ -95,7 +103,6 @@
             <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.</div>
         </details>
         
-        <!-- NUEVO: CAMBIAR CONTRASEÑA -->
         <details class="faq-details">
             <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
             <div class="faq-content">
@@ -112,7 +119,6 @@
             </div>
         </details>
 
-        <!-- NUEVO: CAMBIAR NOMBRE -->
         <details class="faq-details">
             <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
             <div class="faq-content">
@@ -142,7 +148,9 @@
         <div class="form-container">
             <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
                 <div class="col-md-12 text-center">
-                    <span style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></span>
+                    <div style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></div>
+                    <!-- CONTENEDOR DE VERIFICADOS DEBAJO DEL NOMBRE -->
+                    <div id="displayBadges" style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-top:10px;"></div>
                 </div>
             </div>
             
@@ -202,6 +210,11 @@
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
+// --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
+// Mientras tanto, utiliza el tic oficial en diferentes colores automáticamente.
+const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
+// --------------------------------------------------------
+
 let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
 let intervalCountdown = null;
 let globalHistorialData = [];
@@ -213,6 +226,15 @@ function formatFecha(ts) {
     if(!ts) return "";
     let d = new Date(ts);
     return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+function getBadgeCSS(type) {
+    if(type === 'admin') return 'badge-icon badge-admin';
+    if(type === 'staff') return 'badge-icon badge-staff';
+    if(type === 'entrenador') return 'badge-icon badge-entrenador';
+    if(type === 'jugador') return 'badge-icon badge-jugador';
+    if(type === 'exjugador') return 'badge-icon badge-exjugador';
+    return 'badge-icon';
 }
 
 // LÓGICA DE CAMBIO DE CONTRASEÑA
@@ -350,11 +372,8 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     ${infoAdicional}
                 </div>`;
 
-                if (esPasado) {
-                    htmlPasados = cardHtml + htmlPasados; 
-                } else {
-                    htmlProximos += cardHtml;
-                }
+                if (esPasado) { htmlPasados = cardHtml + htmlPasados; } 
+                else { htmlProximos += cardHtml; }
             });
 
             let finalHtml = "";
@@ -364,7 +383,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
-            
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
         } else {
@@ -392,8 +410,21 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} (@${usr})` : usr;
-            document.getElementById('displayJugador').innerText = "👤 " + displayNom;
+            // PINTAR NOMBRE REAL EN EL HEADER
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
+            document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
+            
+            // PINTAR INSIGNIAS APILADAS EN EL HEADER
+            let misInsignias = data.insignias[usr] || [];
+            let insigniasHeaderHtml = "";
+            misInsignias.forEach(b => {
+                let cssClass = getBadgeCSS(b.type);
+                insigniasHeaderHtml += `
+                <div style="display:flex; align-items:center; font-size:0.85rem; color:#555; background:#fff; padding:4px 12px; border-radius:20px; border:1px solid #ddd; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <img src="${URL_BADGE_GENERIC}" class="${cssClass}"> <b style="margin-left:6px;">${b.text}</b>
+                </div>`;
+            });
+            document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
             document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
 
@@ -483,7 +514,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 data.ligas.forEach(liga => {
                     clasifHtml += `<h4 style="margin-top:40px; color:var(--purple-dark);">🏆 Liga: ${liga}</h4>`;
                     clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:white; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
-                    <thead style="background:var(--purple-light); color:white;"><tr><th style="padding:14px;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
+                    <thead style="background:var(--purple-light); color:white;"><tr><th style="padding:14px; text-align:left;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
                     
                     let ranking = data.clasificaciones[liga] || [];
                     ranking.forEach((r, index) => {
@@ -491,9 +522,17 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
                         let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
                         
+                        // Iconos en tabla
+                        let uBadges = data.insignias[r.jugador] || [];
+                        let badgesHtmlTable = "";
+                        uBadges.forEach(b => {
+                             let cssClass = getBadgeCSS(b.type);
+                             badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="${cssClass}" title="${b.text}">`;
+                        });
+
                         let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
                         
-                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark); text-align:center;">${r.puntos}</td></tr>`;
+                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${badgesHtmlTable} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark); text-align:center;">${r.puntos}</td></tr>`;
                     });
                     clasifHtml += `</tbody></table></div>`;
                 });
