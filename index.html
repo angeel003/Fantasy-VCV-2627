@@ -60,6 +60,9 @@
     
     /* ESTILOS DE LOS VERIFICADOS */
     .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: help; }
+    .badge-header { width: 24px; height: 24px; cursor: help; transition: transform 0.2s; }
+    .badge-header:hover { transform: scale(1.1); }
+    
     .badge-admin { filter: hue-rotate(250deg); }
     .badge-staff { filter: hue-rotate(0deg); }
     .badge-entrenador { filter: hue-rotate(150deg); }
@@ -158,8 +161,8 @@
             <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
                 <div class="col-md-12 text-center">
                     <div style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></div>
-                    <!-- CONTENEDOR DE VERIFICADOS DEBAJO DEL NOMBRE -->
-                    <div id="displayBadges" style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-top:10px;"></div>
+                    <!-- CONTENEDOR DE VERIFICADOS DEBAJO DEL NOMBRE (Ahora en línea horizontal) -->
+                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; margin-top:10px;"></div>
                 </div>
             </div>
             
@@ -238,12 +241,12 @@ function formatFecha(ts) {
 }
 
 function getBadgeCSS(type) {
-    if(type === 'admin') return 'badge-icon badge-admin';
-    if(type === 'staff') return 'badge-icon badge-staff';
-    if(type === 'entrenador') return 'badge-icon badge-entrenador';
-    if(type === 'jugador') return 'badge-icon badge-jugador';
-    if(type === 'exjugador') return 'badge-icon badge-exjugador';
-    return 'badge-icon';
+    if(type === 'admin') return 'badge-admin';
+    if(type === 'staff') return 'badge-staff';
+    if(type === 'entrenador') return 'badge-entrenador';
+    if(type === 'jugador') return 'badge-jugador';
+    if(type === 'exjugador') return 'badge-exjugador';
+    return '';
 }
 
 // LÓGICA DE CAMBIO DE CONTRASEÑA
@@ -423,15 +426,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
-            // PINTAR INSIGNIAS APILADAS EN EL HEADER
+            // PINTAR INSIGNIAS EN EL HEADER (SOLO ICONOS GRANDES CON HOVER/TITLE)
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
             misInsignias.forEach(b => {
-                let cssClass = getBadgeCSS(b.type);
-                insigniasHeaderHtml += `
-                <div style="display:flex; align-items:center; font-size:0.85rem; color:#555; background:#fff; padding:4px 12px; border-radius:20px; border:1px solid #ddd; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <img src="${URL_BADGE_GENERIC}" class="${cssClass}"> <b style="margin-left:6px;">${b.text}</b>
-                </div>`;
+                let cssColorClass = getBadgeCSS(b.type);
+                // Usamos "badge-header" para darle más tamaño y juntarlas, y mostramos el texto en el 'title'
+                insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
@@ -531,12 +532,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
                         let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
                         
-                        // Iconos en tabla
+                        // Iconos en la tabla (se mantienen pequeños)
                         let uBadges = data.insignias[r.jugador] || [];
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
-                             let cssClass = getBadgeCSS(b.type);
-                             badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="${cssClass}" title="${b.text}">`;
+                             let cssColorClass = getBadgeCSS(b.type);
+                             // En la tabla usan la clase 'badge-icon' (más pequeñita, 16px)
+                             badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
                         let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
