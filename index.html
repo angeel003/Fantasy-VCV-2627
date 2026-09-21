@@ -85,7 +85,7 @@
     </div>
 
     <div class="faq-container">
-        <div class="faq-title">❓ Preguntas Frecuentes (FAQ)</div>
+        <div class="faq-title">❓ Preguntas Frecuentes y Gestión (FAQ)</div>
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
             <div class="faq-content">Es la competición privada del club donde competimos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
@@ -94,17 +94,44 @@
             <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
             <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos.</div>
         </details>
+        
+        <!-- NUEVO: CAMBIAR CONTRASEÑA -->
         <details class="faq-details">
-            <summary class="faq-summary">Crear una liga privada</summary>
-            <div class="faq-content">El Fantasy permite clasificaciones separadas (Club, tu equipo, amigos, etc.). Si quieres que se te incluya en una clasificación exclusiva con los miembros de tu equipo o algún amigo en concreto, infórmame al correo: <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a>.</div>
+            <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
+            <div class="faq-content">
+                <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
+                <div style="background:#f4f6f9; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
+                    <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
+                    <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
+                    <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite la nueva contraseña" required>
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnChangePwd" style="font-weight:bold;">Actualizar Contraseña</button>
+                    <div id="msgChangePwd" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+                <p class="mt-3">¿La has olvidado y no puedes entrar? Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca.</p>
+            </div>
         </details>
+
+        <!-- NUEVO: CAMBIAR NOMBRE -->
         <details class="faq-details">
-            <summary class="faq-summary">Aún no tengo cuenta</summary>
-            <div class="faq-content">¡Únete a la liga! Mándame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> indicando quién eres, a qué ligas quieres que se te añada, y los partidos de qué equipos quieres predecir.</div>
+            <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
+            <div class="faq-content">
+                <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
+                <div style="background:#f4f6f9; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
+                    <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
+                    <hr>
+                    <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (déjalo en blanco si no quieres cambiarlo)">
+                    <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (déjalo en blanco si no quieres cambiarlo)">
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnReqName" style="font-weight:bold;">Enviar Solicitud</button>
+                    <div id="msgReqName" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+            </div>
         </details>
+
         <details class="faq-details">
-            <summary class="faq-summary">He olvidado mi contraseña</summary>
-            <div class="faq-content">No pasa nada. Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca lo antes posible.</div>
+            <summary class="faq-summary">Crear una liga privada o unirme a una</summary>
+            <div class="faq-content">El Fantasy permite clasificaciones separadas. Si quieres que se te incluya en una clasificación con los miembros de tu equipo, o si aún no tienes cuenta y quieres unirte, infórmame al correo: <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a>.</div>
         </details>
     </div>
 </div>
@@ -187,6 +214,82 @@ function formatFecha(ts) {
     let d = new Date(ts);
     return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
 }
+
+// LÓGICA DE CAMBIO DE CONTRASEÑA
+document.getElementById('btnChangePwd').addEventListener('click', function(e) {
+    e.preventDefault();
+    const usr = document.getElementById('cpUsuario').value.trim();
+    const oldP = document.getElementById('cpOldPwd').value.trim();
+    const newP1 = document.getElementById('cpNewPwd').value.trim();
+    const newP2 = document.getElementById('cpNewPwd2').value.trim();
+    const msgBox = document.getElementById('msgChangePwd');
+    const btn = this;
+
+    if(!usr || !oldP || !newP1 || !newP2) {
+        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Por favor, rellena todos los campos."; msgBox.style.display = "block"; return;
+    }
+    if(newP1 !== newP2) {
+        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Las contraseñas nuevas no coinciden."; msgBox.style.display = "block"; return;
+    }
+
+    btn.disabled = true; btn.innerText = "Actualizando..."; msgBox.style.display = "none";
+
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'change_password', usuario: usr, old_password: oldP, new_password: newP1 }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if(data.status === "success") {
+            msgBox.className = "alert-box alert-success"; msgBox.innerText = data.message;
+            document.getElementById('cpOldPwd').value = ""; document.getElementById('cpNewPwd').value = ""; document.getElementById('cpNewPwd2').value = "";
+        } else {
+            msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
+        }
+    })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .finally(() => { btn.innerText = "Actualizar Contraseña"; btn.disabled = false; });
+});
+
+// LÓGICA DE PETICIÓN DE CAMBIO DE NOMBRE
+document.getElementById('btnReqName').addEventListener('click', function(e) {
+    e.preventDefault();
+    const usr = document.getElementById('rnUsuario').value.trim();
+    const pwd = document.getElementById('rnPwd').value.trim();
+    const newU = document.getElementById('rnNewUser').value.trim();
+    const newN = document.getElementById('rnNewName').value.trim();
+    const msgBox = document.getElementById('msgReqName');
+    const btn = this;
+
+    if(!usr || !pwd) {
+        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "El usuario y contraseña actuales son obligatorios."; msgBox.style.display = "block"; return;
+    }
+    if(!newU && !newN) {
+        msgBox.className = "alert-box alert-warning"; msgBox.innerText = "Debes rellenar al menos un dato nuevo para solicitar el cambio."; msgBox.style.display = "block"; return;
+    }
+
+    btn.disabled = true; btn.innerText = "Enviando..."; msgBox.style.display = "none";
+
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'request_name_change', usuario: usr, password: pwd, new_usuario: newU, new_nombre: newN }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if(data.status === "success") {
+            msgBox.className = "alert-box alert-success"; msgBox.innerText = data.message;
+            document.getElementById('rnNewUser').value = ""; document.getElementById('rnNewName').value = "";
+        } else {
+            msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
+        }
+    })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .finally(() => { btn.innerText = "Enviar Solicitud"; btn.disabled = false; });
+});
 
 // LOGICA MODO INVITADO
 document.getElementById('btnGuest').addEventListener('click', function(e) {
@@ -289,7 +392,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            // PINTAMOS EL NOMBRE REAL Y EL USUARIO JUNTOS
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} (@${usr})` : usr;
             document.getElementById('displayJugador').innerText = "👤 " + displayNom;
             
@@ -389,10 +491,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let medalla = pos === 1 ? "🥇" : (pos === 2 ? "🥈" : (pos === 3 ? "🥉" : ""));
                         let clase = pos === 1 ? "medal-1" : (pos === 2 ? "medal-2" : (pos === 3 ? "medal-3" : ""));
                         
-                        // Combinamos nombre real y usuario (@) en la tabla
                         let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
                         
-                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark; text-align:center;">${r.puntos}</td></tr>`;
+                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark); text-align:center;">${r.puntos}</td></tr>`;
                     });
                     clasifHtml += `</tbody></table></div>`;
                 });
