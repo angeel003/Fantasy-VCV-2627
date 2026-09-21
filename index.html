@@ -27,8 +27,7 @@
        3. CABECERAS Y TÍTULOS (Sin fuentes customizadas)
        --------------------------------------------------- */
     header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
-    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
-    header p { font-size: 1.1rem; opacity: 0.9; }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
     
     h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
     h2 { margin-bottom: 35px; text-align: center; }
@@ -498,7 +497,8 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 let valJornada = String(eq.jornada_eq || "").trim();
                 let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
                 let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
+                let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
+                let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
 
                 let infoAdicional = "";
                 let esPasado = false;
@@ -529,6 +529,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     ${categoryHtml}
                     <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                     ${infoLocFecha}
+                    ${infoPabellon}
                     ${infoAdicional}
                 </div>`;
 
@@ -583,7 +584,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let insigniasHeaderHtml = "";
             misInsignias.forEach(b => {
                 let cssColorClass = getBadgeCSS(b.type);
-                // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
@@ -612,10 +612,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     }
                     
                     let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                    let infoLocFecha = "";
-                    if(iconoLoc || eq.timestamp) {
-                        infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
-                    }
+                    let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
+                    let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
                     
                     let categoryHtml = getCategoryHTML(eq.categoria);
 
@@ -625,6 +623,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             ${categoryHtml}
                             <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
+                            ${infoPabellon}
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
@@ -656,10 +655,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
                         htmlPartidos += `
-                        <div class="p-3 mb-3 card-match" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
+                        <div class="p-3 mb-3 card-match" style="background: var(--bg-general); border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
                             ${categoryHtml}
                             <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
+                            ${infoPabellon}
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
                     }
@@ -705,7 +705,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
-                             // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
                         });
 
@@ -1090,13 +1089,18 @@ function renderizarHistorial() {
             let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin predicción</i>`;
             let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
             
+            let infoPabellon = p.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-top:2px;">📍 ${p.pabellon}</div>` : "";
+            
             // INSIGNIA DE CATEGORÍA PARA EL HISTORIAL
             let categoryHtml = getCategoryHTML(p.categoria);
 
             blockHtml += `
             <div class="card-match" style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px; padding-top: 10px;">
                 ${categoryHtml}
-                <div style="font-weight:bold; color:#444; margin-bottom:6px; padding-right: 90px;">🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}</div>
+                <div style="font-weight:bold; color:#444; margin-bottom:6px; padding-right: 90px;">
+                    🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}
+                    ${infoPabellon}
+                </div>
                 ${htmlReloj}
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:var(--bg-general); padding:12px; border-radius:6px; border-left: 4px solid var(--vcv-morado); margin-top:10px;">
                     <div style="margin-right:15px; margin-bottom:8px;">
