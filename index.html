@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Fantasy VCV 26/27</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -68,6 +67,29 @@
     .badge-staff { filter: hue-rotate(180deg) saturate(200%); }
     .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
     .badge-exjugador { filter: grayscale(100%) brightness(0%); }
+
+    /* ESTILOS DEL LOGO/TEXTO DE LA CATEGORÍA (Esquina superior derecha) */
+    .card-match { position: relative; } /* Para que el logo se posicione respecto a la tarjeta */
+    .cat-badge-img {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        max-height: 35px;
+        max-width: 80px;
+        object-fit: contain;
+    }
+    .cat-badge-text {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: #555;
+        background: #e9ecef;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
 </style>
 </head>
 <body>
@@ -191,7 +213,6 @@
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
@@ -254,6 +275,21 @@ function getBadgeCSS(type) {
     if(type === 'jugador') return 'badge-jugador';
     if(type === 'exjugador') return 'badge-exjugador';
     return '';
+}
+
+// NUEVA FUNCIÓN: Generar el logo o texto de la categoría
+function getCategoryHTML(catName) {
+    if (!catName) return "";
+    
+    // Normalizamos el nombre para buscar la foto: pasamos a minúsculas, quitamos tildes y cambiamos espacios por guiones bajos.
+    let safeName = catName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    
+    // !!! IMPORTANTE: CAMBIA ESTA URL POR LA RUTA REAL DE TU CARPETA EN GITHUB !!!
+    let baseUrl = "ENLACE_A_TU_CARPETA_DE_GITHUB/"; 
+    let imgUrl = baseUrl + safeName + ".png";
+    
+    // Si falla al cargar la imagen, el evento onerror dibuja una etiqueta de texto en su lugar.
+    return `<img src="${imgUrl}" class="cat-badge-img" alt="${catName}" title="${catName}" onerror="this.onerror=null; this.outerHTML='<div class=\\'cat-badge-text\\' title=\\'${catName}\\'>${catName}</div>';">`;
 }
 
 // LÓGICA DE CAMBIO DE CONTRASEÑA
@@ -389,10 +425,14 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 } else {
                     infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Próximamente</span></div>`;
                 }
+                
+                // INSIGNIA DE CATEGORÍA
+                let categoryHtml = getCategoryHTML(eq.categoria);
 
                 let cardHtml = `
-                <div class="p-3 mb-3" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                <div class="p-3 mb-3 card-match" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    ${categoryHtml}
+                    <h5 style="margin-bottom: 5px; color:var(--purple-dark); padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                     ${infoLocFecha}
                     ${infoAdicional}
                 </div>`;
@@ -435,7 +475,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
             let misInsignias = data.insignias[usr] || [];
@@ -474,17 +514,21 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     if(iconoLoc || eq.timestamp) {
                         infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:10px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
                     }
+                    
+                    // INSIGNIA DE CATEGORÍA
+                    let categoryHtml = getCategoryHTML(eq.categoria);
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
-                        <div class="p-3 mb-3 partido-activo" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <h5 style="margin-bottom: 5px; color:var(--purple-dark);">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                        <div class="p-3 mb-3 partido-activo card-match" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            ${categoryHtml}
+                            <h5 style="margin-bottom: 5px; color:var(--purple-dark); padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
                                     <label>Sets</label>
-                                    <select class="form-control" id="e${eq.id_partido}_sets">
+                                    <select class="form-control" id="e${eq.id_partido}_sets" style="border-color: #ddd;">
                                         <option value="">Elige...</option>
                                         <option value="3-0">Victoria 3-0</option>
                                         <option value="3-1">Victoria 3-1</option>
@@ -496,11 +540,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Puntos Dif.</label>
-                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0">
+                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" style="border-color: #ddd;">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Signo</label>
-                                    <select class="form-control" id="e${eq.id_partido}_signo">
+                                    <select class="form-control" id="e${eq.id_partido}_signo" style="border-color: #ddd;">
                                         <option value="">Elige...</option>
                                         <option value="A favor">A favor (+)</option>
                                         <option value="En contra">En contra (-)</option>
@@ -511,8 +555,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
                         htmlPartidos += `
-                        <div class="p-3 mb-3" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                            <h5 style="margin-bottom: 5px; color: #495057;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                        <div class="p-3 mb-3 card-match" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
+                            ${categoryHtml}
+                            <h5 style="margin-bottom: 5px; color: #495057; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
@@ -549,7 +594,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
-                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
+                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${r.jugador})</span>` : r.jugador;
                         
                         clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${badgesHtmlTable} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark); text-align:center;">${r.puntos}</td></tr>`;
                     });
@@ -917,10 +962,14 @@ function renderizarHistorial() {
 
             let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin predicción</i>`;
             let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
+            
+            // INSIGNIA DE CATEGORÍA PARA EL HISTORIAL
+            let categoryHtml = getCategoryHTML(p.categoria);
 
             blockHtml += `
-            <div style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px;">
-                <div style="font-weight:bold; color:#444; margin-bottom:6px;">🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}</div>
+            <div class="card-match" style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px; padding-top: 10px;">
+                ${categoryHtml}
+                <div style="font-weight:bold; color:#444; margin-bottom:6px; padding-right: 90px;">🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}</div>
                 ${htmlReloj}
                 <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
                     <div style="margin-right:15px; margin-bottom:8px;">
