@@ -5,59 +5,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Fantasy VCV 26/27</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Recuperamos la fuente Golos Text original -->
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+    /* ---------------------------------------------------
+       1. VARIABLES DE COLOR OFICIALES DEL VCV
+       --------------------------------------------------- */
     :root {
-        --purple-dark: #4a148c; 
-        --purple-light: #7b1fa2; 
-        --purple-bg: #f3e5f5; 
+        --vcv-morado: #783b7a; 
+        --vcv-blanco: #ffffff; 
+        --vcv-dorado: #cfb359; 
+        --vcv-rojo: #d24442; 
+        --vcv-negro: #000000;
+        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
     }
 
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; margin: 0; }
-    header { background: linear-gradient(135deg, var(--purple-dark), var(--purple-light)); color: white; padding: 60px 15px; text-align: center; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
+    
+    /* ---------------------------------------------------
+       3. CABECERAS Y TÍTULOS (Sin fuentes customizadas)
+       --------------------------------------------------- */
+    header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
     header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
     header p { font-size: 1.1rem; opacity: 0.9; }
+    
+    h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
+    h2 { margin-bottom: 35px; text-align: center; }
+
     section { padding: 50px 15px; text-align: center; }
     .section-alt { background: #e9ecef; }
-    h2 { margin-bottom: 35px; font-weight: 600; color: #333; }
     
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+    /* ---------------------------------------------------
+       4. TABLAS Y CAJAS
+       --------------------------------------------------- */
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
     th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
-    thead { background: var(--purple-light); color: white; text-align: center; }
+    thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
     .medal-2 { background: #f8f9fa; font-weight: bold; }
     .medal-3 { background: #fff4e6; font-weight: bold; }
 
-    .btn-primary { background-color: var(--purple-light); border-color: var(--purple-light); }
-    .btn-primary:hover { background-color: var(--purple-dark); border-color: var(--purple-dark); }
-    .btn-success { background-color: #388e3c; border-color: #388e3c; }
+    /* ---------------------------------------------------
+       5. BOTONES E INTERACCIONES
+       --------------------------------------------------- */
+    .btn-primary { background-color: var(--vcv-morado); border-color: var(--vcv-morado); color: var(--vcv-blanco); }
+    .btn-primary:hover, .btn-primary:focus { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
+    
+    .btn-success { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
+    .btn-success:hover { background-color: #b89c45; border-color: #b89c45; color: var(--vcv-negro); }
 
-    .form-container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
-    .form-group label { font-weight: bold; color: var(--purple-dark); }
+    .btn-outline-primary { border: 2px solid var(--vcv-morado); color: var(--vcv-morado); }
+    .btn-outline-primary:hover { background-color: var(--vcv-morado); color: var(--vcv-blanco); }
+
+    .form-container { max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
+    .form-group label { font-weight: bold; color: var(--vcv-morado); }
+    
+    /* ---------------------------------------------------
+       6. ALERTAS Y MENSAJES
+       --------------------------------------------------- */
     .alert-box { display: none; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 20px; }
-    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-    .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .alert-danger { background: #fde8e8; color: var(--vcv-rojo); border: 1px solid #f8caca; }
+    .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
+    .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
 
     #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
-    .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; }
+    .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
-    .faq-container { width: 100%; max-width: 800px; text-align: left; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; }
-    .faq-title { font-weight: bold; color: var(--purple-dark); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
+    .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
     .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
     .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .faq-summary { font-weight: 600; color: #444; cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
-    .faq-summary:hover { color: var(--purple-light); }
+    .faq-summary { font-weight: 600; color: var(--vcv-negro); cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
+    .faq-summary:hover { color: var(--vcv-dorado); }
     .faq-content { font-size: 0.95rem; color: #555; padding: 10px 5px 5px 15px; line-height: 1.6; }
-    .faq-email { font-weight: bold; color: var(--purple-light); }
+    .faq-email { font-weight: bold; color: var(--vcv-morado); }
     
-    footer { background: #343a40; color: white; padding: 20px 0; text-align: center; }
+    footer { background: var(--vcv-negro); color: var(--vcv-blanco); padding: 20px 0; text-align: center; border-top: 3px solid var(--vcv-dorado); }
 
-    .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:#f4f6f9; padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
+    .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:var(--bg-general); padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
     .filter-checkbox input { margin-right:6px; cursor:pointer; }
     
-    /* ESTILOS DE LOS VERIFICADOS */
+    /* ---------------------------------------------------
+       7. ESTILOS DE LOS VERIFICADOS
+       --------------------------------------------------- */
     .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: help; }
     .badge-header { width: 24px; height: 24px; cursor: help; transition: transform 0.2s; }
     .badge-header:hover { transform: scale(1.1); }
@@ -69,7 +100,7 @@
     .badge-exjugador { filter: grayscale(100%) brightness(0%); }
 
     /* ESTILOS DEL LOGO/TEXTO DE LA CATEGORÍA (Esquina superior derecha) */
-    .card-match { position: relative; } /* Para que el logo se posicione respecto a la tarjeta */
+    .card-match { position: relative; } 
     .cat-badge-img {
         position: absolute;
         top: 15px;
@@ -97,12 +128,13 @@
 <header>
     <div class="header-content">
         <h1 style="margin-bottom: 10px; line-height:1.2;">Fantasy VCV 26/27</h1>
+        <p style="font-size:1.1rem; margin-bottom: 0;">🏐🏐🏐</p>
     </div>
 </header>
 
 <div id="loginSection">
     <div class="login-card">
-        <h3 style="color: var(--purple-dark); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
+        <h3 style="color: var(--vcv-morado); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
         <div class="form-group text-left">
             <label>Usuario</label>
             <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
@@ -117,7 +149,7 @@
     </div>
 
     <div class="faq-container">
-        <div class="faq-title">❓ Preguntas Frecuentes y Gestión (FAQ)</div>
+        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
         <details class="faq-details">
             <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
             <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
@@ -131,7 +163,7 @@
             <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
             <div class="faq-content">
                 <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
-                <div style="background:#f4f6f9; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
                     <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
                     <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
                     <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
@@ -147,7 +179,7 @@
             <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
             <div class="faq-content">
                 <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
-                <div style="background:#f4f6f9; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
                     <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
                     <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
                     <hr>
@@ -179,9 +211,9 @@
     <section>
         <h2 id="tituloPrincipalSeccion">Mis Predicciones</h2>
         <div class="form-container">
-            <div class="row mb-3" style="background:var(--purple-bg); padding:15px; border-radius:8px; align-items:center;">
+            <div class="row mb-3" style="background:var(--bg-general); border: 2px solid var(--vcv-morado); padding:15px; border-radius:8px; align-items:center;">
                 <div class="col-md-12 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
-                    <div style="font-size:1.3rem; font-weight:bold; color:var(--purple-dark);" id="displayJugador"></div>
+                    <div style="font-size:1.4rem; font-weight:bold; color:var(--vcv-morado);" id="displayJugador"></div>
                     <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
                 </div>
             </div>
@@ -190,8 +222,8 @@
                 <hr>
                 <div id="contenedorPartidos"></div>
 
-                <div id="warningPredicciones" style="background-color:#ffebee; border: 1px solid #f5c6cb; border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
-                    <p style="color:#d32f2f; font-size:0.95rem; font-weight:bold; margin:0;">
+                <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
+                    <p style="color:var(--vcv-rojo); font-size:0.95rem; font-weight:bold; margin:0;">
                         ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
                     </p>
                 </div>
@@ -212,10 +244,11 @@
         <h2>📊 Clasificaciones Oficiales (Federación)</h2>
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
-            <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="border: 2px solid var(--purple-light); color: var(--purple-dark); font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
+            <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
+            <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
         </div>
     </section>
 
@@ -225,8 +258,8 @@
         <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">🔒 Cargar mi historial</button>
         <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
         
-        <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
-            <div style="font-weight:bold; color:var(--purple-dark); margin-bottom:12px; font-size:1.1rem;">Filtrar por Equipo:</div>
+        <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:var(--vcv-blanco); padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
+            <div style="font-weight:bold; color:var(--vcv-morado); margin-bottom:12px; font-size:1.1rem;">Filtrar por Equipo:</div>
             <div id="filterEquiposContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
             <hr style="margin:15px 0;">
             <button id="btnToggleSort" class="btn btn-outline-dark btn-sm" style="font-weight:bold;">⬇️ Orden Descendente (Nuevos primero)</button>
@@ -238,7 +271,7 @@
     <section id="prediccionesTotalesSection" style="display:none;">
         <h2 style="margin-bottom:15px;">🎯 Predicciones Finales de Temporada</h2>
         <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos totales que conseguirá cada equipo a final de temporada. ¡Esta sección es exclusiva!</p>
-        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left;">
+        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; border-top: 5px solid var(--vcv-dorado);">
             <!-- Se rellenará automáticamente -->
         </div>
     </section>
@@ -285,7 +318,7 @@ function getCategoryHTML(catName) {
     let safeName = catName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
     
     // !!! IMPORTANTE: CAMBIA ESTA URL POR LA RUTA REAL DE TU CARPETA EN GITHUB !!!
-    let baseUrl = "ENLACE_A_TU_CARPETA_DE_GITHUB/"; 
+    let baseUrl = "files/categories/"; 
     let imgUrl = baseUrl + safeName + ".png";
     
     // Si falla al cargar la imagen, el evento onerror dibuja una etiqueta de texto en su lugar.
@@ -411,12 +444,12 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     esPasado = true;
                     let sL = parseInt(eq.oficial_sets.split("-")[0]);
                     let sV = parseInt(eq.oficial_sets.split("-")[1]);
-                    let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:#dc3545; font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
+                    let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:var(--vcv-rojo); font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
                     
                     infoAdicional = `
-                    <div style="margin-top:10px; background:#f8f9fa; border-left:4px solid var(--purple-light); padding:10px; border-radius:4px;">
+                    <div style="margin-top:10px; background:var(--bg-general); border-left:4px solid var(--vcv-morado); padding:10px; border-radius:4px;">
                         <span style="font-size:0.85rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span><br>
-                        <b style="font-size:1.1rem; color:var(--purple-dark);">${eq.oficial_sets}</b> ${textoRes} <br>
+                        <b style="font-size:1.1rem; color:var(--vcv-negro);">${eq.oficial_sets}</b> ${textoRes} <br>
                         <span style="font-size:0.9rem; color:#555;">(${eq.oficial_parciales})</span>
                     </div>`;
                 } else if (eq.estado === "CERRADO" || eq.visibilidad === "OCULTAR") {
@@ -430,9 +463,9 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 let categoryHtml = getCategoryHTML(eq.categoria);
 
                 let cardHtml = `
-                <div class="p-3 mb-3 card-match" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div class="p-3 mb-3 card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     ${categoryHtml}
-                    <h5 style="margin-bottom: 5px; color:var(--purple-dark); padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                    <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                     ${infoLocFecha}
                     ${infoAdicional}
                 </div>`;
@@ -442,8 +475,8 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             });
 
             let finalHtml = "";
-            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--purple-dark); margin-bottom:15px; text-align:left; border-bottom:2px solid #ddd; padding-bottom:5px;">Próximos Partidos</h4>` + htmlProximos;
-            if(htmlPasados !== "") finalHtml += `<h4 style="color:var(--purple-dark); margin-top:30px; margin-bottom:15px; text-align:left; border-bottom:2px solid #ddd; padding-bottom:5px;">Últimos Resultados</h4>` + htmlPasados;
+            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Próximos Partidos</h4>` + htmlProximos;
+            if(htmlPasados !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-top:30px; margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Últimos Resultados</h4>` + htmlPasados;
             
             if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
 
@@ -475,7 +508,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${usr})</span>` : usr;
             document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
             
             let misInsignias = data.insignias[usr] || [];
@@ -496,7 +529,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             equiposTotalesInfo = data.equipos;
 
-            let htmlPartidos = `<h4 style="color: var(--purple-dark); margin-bottom: 20px;">Cartelera de Partidos</h4>`;
+            let htmlPartidos = `<h4 style="color: var(--vcv-morado); margin-bottom: 20px;">Cartelera de Partidos</h4>`;
             let equiposPermitidos = 0;
             let equiposCerrados = 0;
             
@@ -520,9 +553,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
-                        <div class="p-3 mb-3 partido-activo card-match" style="background: white; border-radius: 8px; border: 1px solid #e9ecef; border-left: 5px solid var(--purple-light); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <div class="p-3 mb-3 partido-activo card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid var(--vcv-dorado); border-left: 5px solid var(--vcv-dorado); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             ${categoryHtml}
-                            <h5 style="margin-bottom: 5px; color:var(--purple-dark); padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                            <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
@@ -555,9 +588,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
                         htmlPartidos += `
-                        <div class="p-3 mb-3 card-match" style="background: #f1f3f5; border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
+                        <div class="p-3 mb-3 card-match" style="background: var(--bg-general); border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
                             ${categoryHtml}
-                            <h5 style="margin-bottom: 5px; color: #495057; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                            <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                         </div>`;
@@ -577,9 +610,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             if(data.ligas.length === 0) { clasifHtml = `<div class="alert-box alert-warning" style="display:block;">No estás asignado a ninguna liga privada todavía.</div>`; } 
             else {
                 data.ligas.forEach(liga => {
-                    clasifHtml += `<h4 style="margin-top:40px; color:var(--purple-dark);">🏆 Liga: ${liga}</h4>`;
-                    clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:white; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
-                    <thead style="background:var(--purple-light); color:white;"><tr><th style="padding:14px; text-align:left;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
+                    clasifHtml += `<h4 style="margin-top:40px; color:var(--vcv-morado);">🏆 Liga: ${liga}</h4>`;
+                    clasifHtml += `<div class="table-responsive"><table class="table-custom" style="width:100%; max-width:900px; margin:0 auto 20px auto; border-collapse:collapse; background:var(--vcv-blanco); box-shadow:0 4px 6px rgba(0,0,0,0.05); border-radius:8px; overflow:hidden;">
+                    <thead style="background:var(--vcv-morado); color:var(--vcv-blanco);"><tr><th style="padding:14px; text-align:left;">Posición y Jugador</th><th style="padding:14px; text-align:center;">Puntos Totales</th></tr></thead><tbody>`;
                     
                     let ranking = data.clasificaciones[liga] || [];
                     ranking.forEach((r, index) => {
@@ -594,9 +627,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}">`;
                         });
 
-                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${r.jugador})</span>` : r.jugador;
+                        let txtJugador = r.nombre_real !== r.jugador ? `${r.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal;">(@${r.jugador})</span>` : r.jugador;
                         
-                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${badgesHtmlTable} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--purple-dark); text-align:center;">${r.puntos}</td></tr>`;
+                        clasifHtml += `<tr class="${clase}"><td style="padding:14px; border-bottom:1px solid #ddd; line-height:1.4;"><strong>${pos}</strong> - ${txtJugador} ${badgesHtmlTable} ${medalla}</td><td style="padding:14px; border-bottom:1px solid #ddd; font-weight:bold; font-size:1.1rem; color:var(--vcv-dorado); text-align:center;">${r.puntos}</td></tr>`;
                     });
                     clasifHtml += `</tbody></table></div>`;
                 });
@@ -624,7 +657,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         listaOtros += `
                         <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
                             <span>👤 ${porra.nombre}</span>
-                            <span style="font-weight:bold; color:var(--purple-dark);">${porra.puntos} pts</span>
+                            <span style="font-weight:bold; color:var(--vcv-morado);">${porra.puntos} pts</span>
                         </div>`;
                     });
 
@@ -634,13 +667,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     if (isClosed) {
                         let textoMiPrediccion = misPts !== "" ? `${misPts} pts` : "No participaste";
                         miCajonHTML = `
-                        <div style="background:white; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
+                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
                             <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
-                            <div style="font-size:1.2rem; font-weight:bold; color:var(--purple-dark);">${textoMiPrediccion}</div>
+                            <div style="font-size:1.2rem; font-weight:bold; color:var(--vcv-morado);">${textoMiPrediccion}</div>
                         </div>`;
                     } else {
                         miCajonHTML = `
-                        <div style="background:white; padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
+                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
                             <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
                             <div style="display:flex; gap:10px;">
                                 <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
@@ -649,8 +682,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     }
 
                     htmlTot += `
-                    <div style="background:#f4f6f9; border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--purple-light);">
-                        <h4 style="color:var(--purple-dark); margin-bottom:5px;">${eq}</h4>
+                    <div style="background:var(--bg-general); border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--vcv-dorado);">
+                        <h4 style="color:var(--vcv-morado); margin-bottom:5px; font-weight:bold;">${eq}</h4>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                             <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos reales</span>
                         </div>
@@ -658,8 +691,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         ${miCajonHTML}
 
                         <details>
-                            <summary style="font-weight:bold; color:var(--purple-light); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
-                            <div style="margin-top:10px; background:white; padding:10px 15px; border-radius:5px; border:1px solid #eee;">
+                            <summary style="font-weight:bold; color:var(--vcv-morado); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
+                            <div style="margin-top:10px; background:var(--vcv-blanco); padding:10px 15px; border-radius:5px; border:1px solid #eee;">
                                 ${listaOtros}
                             </div>
                         </details>
@@ -669,7 +702,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 htmlTot += `<div id="msgPrediccionesTotales" class="alert-box mt-3" style="padding:10px;"></div>`;
                 
                 if (!isClosed) {
-                    htmlTot += `<button class="btn btn-primary btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Predicciones</button>`;
+                    htmlTot += `<button class="btn btn-success btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Predicciones</button>`;
                 }
 
                 document.getElementById('contenedorPrediccionesTotales').innerHTML = htmlTot;
@@ -725,7 +758,7 @@ function iniciarRelojes() {
 
             if (diff <= limite && diff > -14400000) { 
                 el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
-                el.style.backgroundColor = "#ffebee"; el.style.color = "#c62828";
+                el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
                 if(eqId && !isGuestMode) {
                     const divInputs = document.getElementById(`inputs_eq_${eqId}`);
                     if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
@@ -756,8 +789,8 @@ function iniciarRelojTotales() {
         const diff = deadline - now;
         if(diff <= 0) {
             el.innerHTML = "🔒 PLAZO CERRADO. Las predicciones son definitivas.";
-            el.style.color = "#c62828";
-            el.style.backgroundColor = "#ffebee";
+            el.style.color = "var(--vcv-rojo)";
+            el.style.backgroundColor = "#fde8e8";
         } else {
             let d = Math.floor(diff / (1000 * 60 * 60 * 24));
             let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -901,8 +934,8 @@ function renderizarHistorial() {
         });
 
         let esActual = (ronda.ronda == currentJornadaGlobal);
-        let blockHtml = `<div style="background:white; border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0;">`;
-        blockHtml += `<h4 style="color:var(--purple-dark); border-bottom:2px solid var(--purple-bg); padding-bottom:10px; margin-top:0;">Ronda ${ronda.ronda}</h4>`;
+        let blockHtml = `<div style="background:var(--vcv-blanco); border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0; border-left: 5px solid var(--vcv-dorado);">`;
+        blockHtml += `<h4 style="color:var(--vcv-morado); border-bottom:2px solid var(--bg-general); padding-bottom:10px; margin-top:0; font-weight:bold;">Ronda ${ronda.ronda}</h4>`;
         
         let hayDatosEnEsteBloque = false;
         
@@ -917,8 +950,8 @@ function renderizarHistorial() {
             if (p.oficial_sets && p.oficial_sets.includes("-")) {
                 let sL = parseInt(p.oficial_sets.split("-")[0]);
                 let sV = parseInt(p.oficial_sets.split("-")[1]);
-                let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:#dc3545; font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
-                ofText = `<b style="color:#333; font-size:1.05rem;">${p.oficial_sets}</b> ${textoRes} <br><span style="font-size:0.85rem;">(${p.oficial_parciales})</span>`;
+                let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:var(--vcv-rojo); font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
+                ofText = `<b style="color:var(--vcv-negro); font-size:1.05rem;">${p.oficial_sets}</b> ${textoRes} <br><span style="font-size:0.85rem;">(${p.oficial_parciales})</span>`;
             }
             
             let valJornada = String(p.jornada_eq || "").trim();
@@ -944,8 +977,8 @@ function renderizarHistorial() {
             if (p.oficial_sets && p.oficial_parciales) {
                 let pts = p.puntos_partido !== undefined ? p.puntos_partido : "?";
                 let mot = p.motivos || "Cálculo pendiente";
-                let bgColor = pts > 0 ? "#e8f5e9" : "#ffebee";
-                let textColor = pts > 0 ? "#2e7d32" : "#c62828";
+                let bgColor = pts > 0 ? "#e8f5e9" : "#fde8e8";
+                let textColor = pts > 0 ? "#2e7d32" : "var(--vcv-rojo)";
                 if (mot === "No pronosticado") { bgColor = "#eeeeee"; textColor = "#666666"; }
                 
                 puntosInfo = `
@@ -971,10 +1004,10 @@ function renderizarHistorial() {
                 ${categoryHtml}
                 <div style="font-weight:bold; color:#444; margin-bottom:6px; padding-right: 90px;">🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}</div>
                 ${htmlReloj}
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:#f8f9fa; padding:12px; border-radius:6px; border-left: 4px solid var(--purple-light); margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:var(--bg-general); padding:12px; border-radius:6px; border-left: 4px solid var(--vcv-morado); margin-top:10px;">
                     <div style="margin-right:15px; margin-bottom:8px;">
                         <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Predicción</span>
-                        <span style="font-weight:bold; color:var(--purple-dark); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
+                        <span style="font-weight:bold; color:var(--vcv-morado); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
                     </div>
                     <div>
                         <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span>
