@@ -312,13 +312,21 @@
                     </summary>
                     <div style="margin-top: 20px;">
                         
-                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                             <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
-                            <!-- PON AQUÍ EL ENLACE A TU GOOGLE SHEETS -->
-                            <a href="https://docs.google.com/spreadsheets/d/AQUI_TU_ENLACE_SI_QUIERES" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
+                            <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
+                        </div>
+
+                        <!-- NUEVA SECCIÓN DE CREAR USUARIOS -->
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h5>
+                        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
+                            <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
+                            <input type="text" id="addUsrReal" class="form-control form-control-sm mb-2" placeholder="Nombre real (Opcional)">
+                            <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
                         </div>
                         
-                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">Subir Resultados Rápidos</h5>
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
                         <div id="adminListaPartidos"></div>
                         
                     </div>
@@ -385,6 +393,7 @@
         <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
@@ -478,7 +487,6 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Función para mostrar la notificación de Toast
 function mostrarToast(mensaje) {
     const toast = document.getElementById('toastNotification');
     toast.innerText = mensaje;
@@ -564,6 +572,35 @@ window.guardarResultadoAdmin = function(e, idPart) {
         else { alert("Error: " + d.message); }
     })
     .finally(() => { btn.disabled = false; btn.innerText = "💾 Subir Resultado"; });
+}
+
+window.crearUsuarioAdmin = function(e) {
+    e.preventDefault();
+    const btn = e.target;
+    const nu = document.getElementById('addUsrName').value.trim();
+    const np = document.getElementById('addUsrPwd').value.trim();
+    const nr = document.getElementById('addUsrReal').value.trim();
+    
+    if(!nu || !np) { alert("Usuario y Contraseña son obligatorios"); return; }
+    
+    btn.disabled = true; btn.innerText = "Creando...";
+    
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: nr }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { 
+            mostrarToast(d.message); 
+            document.getElementById('addUsrName').value = "";
+            document.getElementById('addUsrPwd').value = "";
+            document.getElementById('addUsrReal').value = "";
+        } 
+        else { alert("Error: " + d.message); }
+    })
+    .finally(() => { btn.disabled = false; btn.innerText = "➕ Crear Usuario"; });
 }
 // ------------------------------------------------------------------
 
@@ -676,7 +713,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('appSection').style.display = "block";
             document.getElementById('btnReload').style.display = "flex"; 
             document.querySelector('#prediccionForm > div').style.display = "none"; 
-            document.getElementById('adminPanelWrapper').style.display = "none"; // Ocultamos intranet
+            document.getElementById('adminPanelWrapper').style.display = "none";
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
@@ -776,7 +813,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
-            // --- CARGAR REGLAS DE PUNTUACIÓN DESDE EL SERVIDOR ---
             if(data.reglas) {
                 let listaReglas = document.getElementById('listaReglasPuntuacion');
                 if(listaReglas) {
@@ -797,16 +833,15 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let isAdmin = false;
             
             misInsignias.forEach(b => {
-                if (b.type === 'admin') isAdmin = true; // DETECTAMOS SI ES ADMIN
+                if (b.type === 'admin') isAdmin = true;
                 let cssColorClass = getBadgeCSS(b.type);
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
-            // SI ES ADMIN, MOSTRAMOS LA INTRANET
             if (isAdmin) {
                 document.getElementById('adminPanelWrapper').style.display = "block";
-                renderAdminPanel(data.equipos); // Renderizamos la lista de partidos para meter resultados
+                renderAdminPanel(data.equipos); 
             } else {
                 document.getElementById('adminPanelWrapper').style.display = "none";
             }
@@ -1044,7 +1079,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex"; // Mostramos botón de recarga
+            document.getElementById('btnReload').style.display = "flex"; 
             cargarDatosAntiguos();
             iniciarRelojTotales();
         } else {
