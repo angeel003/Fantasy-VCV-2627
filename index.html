@@ -24,7 +24,7 @@
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
     
     /* ---------------------------------------------------
-       3. CABECERAS Y TÍTULOS (Sin fuentes customizadas)
+       3. CABECERAS Y TÍTULOS
        --------------------------------------------------- */
     header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
     header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
@@ -100,7 +100,6 @@
     .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
     .badge-exjugador { filter: grayscale(100%) brightness(0%); }
 
-    /* Estilos del Bocadillo Flotante (Tooltip) para Móviles */
     #mobileTooltip {
         position: fixed;
         background: var(--vcv-morado);
@@ -144,12 +143,66 @@
         border-radius: 4px;
         border: 1px solid #ddd;
     }
+
+    /* ---------------------------------------------------
+       8. BOTÓN FLOTANTE DE RECARGA Y AVISOS
+       --------------------------------------------------- */
+    #btnReload {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background-color: var(--vcv-dorado);
+        color: var(--vcv-morado);
+        border: 2px solid var(--vcv-morado);
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+        display: none; /* Oculto hasta que inicias sesión */
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        cursor: pointer;
+        z-index: 9999;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+        padding: 0;
+        outline: none;
+    }
+    #btnReload:hover {
+        background-color: #b89c45;
+        transform: scale(1.1);
+    }
+    .spin-anim {
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); } 
+    }
+    #toastNotification {
+        position: fixed;
+        bottom: 90px;
+        right: 25px;
+        background: var(--vcv-morado);
+        color: var(--vcv-blanco);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 9998;
+        border: 1px solid var(--vcv-dorado);
+    }
 </style>
 </head>
 <body>
 
-<!-- DIV OCULTO PARA EL BOCADILLO DE LOS VERIFICADOS Y DUDAS -->
+<!-- COMPONENTES FLOTANTES -->
 <div id="mobileTooltip"></div>
+<button id="btnReload" title="Sincronizar y recargar datos">🔄</button>
+<div id="toastNotification">✅ Datos actualizados</div>
 
 <header>
     <div class="header-content">
@@ -250,7 +303,6 @@
             
             <form id="prediccionForm">
                 
-                <!-- NUEVO DESPLEGABLE EXPLICATIVO -->
                 <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;">
                     <details>
                         <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
@@ -393,7 +445,7 @@ function showMobileTooltip(e, text) {
     clearTimeout(tooltip.timeoutId);
     tooltip.timeoutId = setTimeout(() => {
         tooltip.classList.remove('show');
-    }, 3500); // 3.5 segundos para dar tiempo a leer
+    }, 3500); 
 }
 
 document.addEventListener('click', function(e) {
@@ -401,6 +453,42 @@ document.addEventListener('click', function(e) {
     if (tooltip && tooltip.classList.contains('show')) {
         tooltip.classList.remove('show');
     }
+});
+
+// Función para mostrar la notificación de Toast
+function mostrarToast(mensaje) {
+    const toast = document.getElementById('toastNotification');
+    toast.innerText = mensaje;
+    toast.style.opacity = "1";
+    setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+}
+
+// ------------------------------------------------------------------
+// BOTÓN DE RECARGAR
+// ------------------------------------------------------------------
+document.getElementById('btnReload').addEventListener('click', function() {
+    const btn = this;
+    if(btn.classList.contains('spin-anim')) return; // Evitar multiples clicks
+    btn.classList.add('spin-anim');
+    
+    if (isGuestMode) {
+        document.getElementById('btnGuest').click();
+    } else {
+        // Rellenamos inputs por si acaso y simulamos click
+        document.getElementById('loginUsuario').value = currentUser;
+        document.getElementById('loginPassword').value = currentPassword;
+        document.getElementById('btnLogin').click();
+    }
+    
+    // Chequear cuando termine de cargar
+    let checkInterval = setInterval(() => {
+        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
+        if (!targetBtn.disabled) {
+            btn.classList.remove('spin-anim');
+            clearInterval(checkInterval);
+            mostrarToast("✅ Datos sincronizados");
+        }
+    }, 300);
 });
 // ------------------------------------------------------------------
 
@@ -510,6 +598,10 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
             document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
+            document.getElementById('appSection').style.display = "block";
+            document.getElementById('btnReload').style.display = "flex"; // Mostramos botón de recarga
+            document.querySelector('#prediccionForm > div').style.display = "none"; // Ocultar ayuda de predicción
+            
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
             document.getElementById('clasificacionesSection').style.display = "none";
@@ -577,10 +669,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
             document.getElementById('loginSection').style.display = "none";
-            document.getElementById('appSection').style.display = "block";
-            
-            // Ocultamos la caja de ayuda en modo invitado por si acaso
-            document.querySelector('#prediccionForm > div').style.display = "none"; 
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
@@ -756,7 +844,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let badgesHtmlTable = "";
                         uBadges.forEach(b => {
                              let cssColorClass = getBadgeCSS(b.type);
-                             // AÑADIDO ONCLICK PARA EL TOOLTIP MÓVIL
                              badgesHtmlTable += `<img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
                         });
 
@@ -870,6 +957,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
+            document.getElementById('btnReload').style.display = "flex"; // Mostramos botón de recarga
             cargarDatosAntiguos();
             iniciarRelojTotales();
         } else {
