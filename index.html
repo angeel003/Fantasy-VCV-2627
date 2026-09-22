@@ -27,8 +27,7 @@
        3. CABECERAS Y TÍTULOS
        --------------------------------------------------- */
     header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
-    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 10px; }
-    header p { font-size: 1.1rem; opacity: 0.9; }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
     
     h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
     h2 { margin-bottom: 35px; text-align: center; }
@@ -158,7 +157,7 @@
         width: 55px;
         height: 55px;
         font-size: 1.6rem;
-        display: none; /* Oculto hasta que inicias sesión */
+        display: none;
         align-items: center;
         justify-content: center;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -195,11 +194,15 @@
         z-index: 9998;
         border: 1px solid var(--vcv-dorado);
     }
+
+    /* ESTILO INTRANET */
+    .admin-match-box {
+        background: #fff3e0; border: 1px solid #ffcc80; border-left: 5px solid #ff9800; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+    }
 </style>
 </head>
 <body>
 
-<!-- COMPONENTES FLOTANTES -->
 <div id="mobileTooltip"></div>
 <button id="btnReload" title="Sincronizar y recargar datos">🔄</button>
 <div id="toastNotification">✅ Datos actualizados</div>
@@ -301,6 +304,27 @@
                 </div>
             </div>
             
+            <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
+            <div id="adminPanelWrapper" style="display: none; background: #343a40; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--vcv-dorado);">
+                <details>
+                    <summary style="font-weight:bold; color:var(--vcv-dorado); font-size:1.2rem; cursor:pointer; outline:none; text-align:center;">
+                        🛠️ INTRANET ADMINISTRADOR
+                    </summary>
+                    <div style="margin-top: 20px;">
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
+                            <!-- PON AQUÍ EL ENLACE A TU GOOGLE SHEETS -->
+                            <a href="https://docs.google.com/spreadsheets/d/AQUI_TU_ENLACE_SI_QUIERES" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
+                        </div>
+                        
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">Subir Resultados Rápidos</h5>
+                        <div id="adminListaPartidos"></div>
+                        
+                    </div>
+                </details>
+            </div>
+            
             <form id="prediccionForm">
                 
                 <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;">
@@ -329,7 +353,6 @@
                             
                             <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
                             <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
-                                <!-- Se llena automáticamente desde el servidor -->
                                 <li>Cargando sistema de puntuación...</li>
                             </ul>
                         </div>
@@ -468,19 +491,12 @@ function mostrarToast(mensaje) {
 // ------------------------------------------------------------------
 document.getElementById('btnReload').addEventListener('click', function() {
     const btn = this;
-    if(btn.classList.contains('spin-anim')) return; // Evitar multiples clicks
+    if(btn.classList.contains('spin-anim')) return; 
     btn.classList.add('spin-anim');
     
-    if (isGuestMode) {
-        document.getElementById('btnGuest').click();
-    } else {
-        // Rellenamos inputs por si acaso y simulamos click
-        document.getElementById('loginUsuario').value = currentUser;
-        document.getElementById('loginPassword').value = currentPassword;
-        document.getElementById('btnLogin').click();
-    }
+    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
+    else { document.getElementById('btnLogin').click(); }
     
-    // Chequear cuando termine de cargar
     let checkInterval = setInterval(() => {
         let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
         if (!targetBtn.disabled) {
@@ -490,6 +506,65 @@ document.getElementById('btnReload').addEventListener('click', function() {
         }
     }, 300);
 });
+
+// ------------------------------------------------------------------
+// FUNCIONES INTRANET ADMINISTRADOR
+// ------------------------------------------------------------------
+function renderAdminPanel(equipos) {
+    let html = "";
+    equipos.forEach(eq => {
+        html += `
+        <div class="admin-match-box">
+            <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="Sets (3-1)" value="${eq.oficial_sets}">
+                <input type="text" id="adm_parc_${eq.id_partido}" class="form-control form-control-sm" placeholder="Parc (25-20,25-23...)" value="${eq.oficial_parciales}">
+            </div>
+            <button class="btn btn-sm btn-dark mt-2" style="font-weight:bold;" onclick="guardarResultadoAdmin(event, '${eq.id_partido}')">💾 Subir Resultado</button>
+        </div>`;
+    });
+    if (html === "") html = "<div style='color:white; font-size:0.9rem;'>No hay partidos disponibles.</div>";
+    document.getElementById('adminListaPartidos').innerHTML = html;
+}
+
+document.getElementById('btnAdminSync').addEventListener('click', function(e) {
+    e.preventDefault();
+    const btn = this;
+    btn.disabled = true; btn.innerText = "⏳ Sincronizando...";
+    
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'sync_permisos', usuario: currentUser, password: currentPassword }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { mostrarToast(d.message); } 
+        else { alert("Error: " + d.message); }
+    })
+    .finally(() => { btn.disabled = false; btn.innerText = "🔄 Auto-Permisos"; });
+});
+
+window.guardarResultadoAdmin = function(e, idPart) {
+    e.preventDefault();
+    const btn = e.target;
+    const sets = document.getElementById(`adm_sets_${idPart}`).value.trim();
+    const parc = document.getElementById(`adm_parc_${idPart}`).value.trim();
+    
+    btn.disabled = true; btn.innerText = "Subiendo...";
+    
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'save_resultado_admin', usuario: currentUser, password: currentPassword, id_partido: idPart, sets: sets, parciales: parc }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { mostrarToast("✅ Resultado subido al Excel"); } 
+        else { alert("Error: " + d.message); }
+    })
+    .finally(() => { btn.disabled = false; btn.innerText = "💾 Subir Resultado"; });
+}
 // ------------------------------------------------------------------
 
 function getCategoryHTML(catName) {
@@ -599,8 +674,9 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex"; // Mostramos botón de recarga
-            document.querySelector('#prediccionForm > div').style.display = "none"; // Ocultar ayuda de predicción
+            document.getElementById('btnReload').style.display = "flex"; 
+            document.querySelector('#prediccionForm > div').style.display = "none"; 
+            document.getElementById('adminPanelWrapper').style.display = "none"; // Ocultamos intranet
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
@@ -718,12 +794,23 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
+            let isAdmin = false;
+            
             misInsignias.forEach(b => {
+                if (b.type === 'admin') isAdmin = true; // DETECTAMOS SI ES ADMIN
                 let cssColorClass = getBadgeCSS(b.type);
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
             });
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
+            // SI ES ADMIN, MOSTRAMOS LA INTRANET
+            if (isAdmin) {
+                document.getElementById('adminPanelWrapper').style.display = "block";
+                renderAdminPanel(data.equipos); // Renderizamos la lista de partidos para meter resultados
+            } else {
+                document.getElementById('adminPanelWrapper').style.display = "none";
+            }
+
             document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
 
             data.equipos.sort((a, b) => {
