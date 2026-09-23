@@ -1,23 +1,29 @@
 {
   "name": "Fantasy VCV 26/27",
   "short_name": "Fantasy VCV",
-  "start_url": "./index.html?v=v2",
+  "start_url": "./index.html?v=v3",
   "display": "standalone",
   "background_color": "#f4f6f9",
   "theme_color": "#783b7a",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "files/images/logo_vcv_circle.png",
-      "sizes": "any",
-      "type": "image/png"
+      "src": "files/images/icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "files/images/logo_vcv_2048x1024.png",
-      "sizes": "any",
+      "src": "files/images/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "files/images/icon_512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ]
 }
-
