@@ -221,7 +221,7 @@
 <div id="toastNotification">✅ Datos actualizados</div>
 
 <header>
-    <button id="btnLogout" style="display:none; position:absolute; left:15px; top:15px; background:transparent; border:none; color:rgba(255,255,255,0.7); font-size:1.5rem; cursor:pointer; padding:0; outline:none; text-shadow:none;" title="Volver atrás">&#10094;</button>
+    <button id="btnLogout" style="display:none; position:absolute; left:5px; top:max(15px, env(safe-area-inset-top)); background:transparent; border:none; color:rgba(255,255,255,0.9); font-size:2.2rem; cursor:pointer; padding:15px 25px; outline:none; text-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:9999;" title="Volver atrás">&#10094;</button>
     <div class="header-content">
         <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
@@ -445,103 +445,19 @@
 <footer><p>© Fantasy VCV 2026-2027</p></footer>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzM7QuqH1yFRL9rSA7CAUHZX3cogU6AH3PAW36mQkWhMw2ZDnA3JhI-U2bC7TQyNOHz/exec";
 
-// --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
-const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
-// --------------------------------------------------------
-
-let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
-let intervalCountdown = null;
-let intervalTotalesCountdown = null;
-let globalHistorialData = [];
-let isSortDesc = true;
-let currentJornadaGlobal = 0;
+// POLYFILL PARA REINTENTOS AUTOMATICOS (Soluciona los errores 500 y timeouts del primer login)
+const fetchSeguro = (url, options, retries = 1) => {
+    return fetch(url, options)
+        .then(res => res.json().then(data => ({ json: () => Promise.resolve(data) })))
+        .catch(err => {
+            if (retries > 0) return new Promise(r => setTimeout(r, 1000)).then(() => fetchSeguro(url, options, retries - 1));
+            throw new Error("El servidor de Google está saturado (Timeout). Vuelve a pulsar el botón.");
+        });
+};
 
 
-  let isGuestMode = false;
-
-
-
-function formatFecha(ts) {
-    if(!ts) return "";
-    let d = new Date(ts);
-    return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
-}
-
-function getBadgeCSS(type) {
-    if(type === 'admin') return 'badge-admin';
-    if(type === 'staff') return 'badge-staff';
-    if(type === 'entrenador') return 'badge-entrenador';
-    if(type === 'jugador') return 'badge-jugador';
-    if(type === 'exjugador') return 'badge-exjugador';
-    return '';
-}
-
-// ------------------------------------------------------------------
-// LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES
-// ------------------------------------------------------------------
-function showMobileTooltip(e, text) {
-    e.stopPropagation(); 
-    const tooltip = document.getElementById('mobileTooltip');
-    tooltip.innerText = text;
-    
-    const rect = e.target.getBoundingClientRect();
-    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
-    tooltip.style.top = rect.top + 'px';
-    
-    tooltip.classList.add('show');
-    
-    clearTimeout(tooltip.timeoutId);
-    tooltip.timeoutId = setTimeout(() => {
-        tooltip.classList.remove('show');
-    }, 3500); 
-}
-
-document.addEventListener('click', function(e) {
-    const tooltip = document.getElementById('mobileTooltip');
-    if (tooltip && tooltip.classList.contains('show')) {
-        tooltip.classList.remove('show');
-    }
-});
-
-function mostrarToast(mensaje) {
-    const toast = document.getElementById('toastNotification');
-    toast.innerText = mensaje;
-    toast.style.opacity = "1";
-    setTimeout(() => { toast.style.opacity = "0"; }, 2500);
-}
-
-// ------------------------------------------------------------------
-// BOTÓN DE RECARGAR
-// ------------------------------------------------------------------
-document.getElementById('btnReload').addEventListener('click', function() {
-    const btn = this;
-    if(btn.classList.contains('spin-anim')) return; 
-    btn.classList.add('spin-anim');
-    
-    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
-    else { document.getElementById('btnLogin').click(); }
-    
-    let checkInterval = setInterval(() => {
-        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
-        if (!targetBtn.disabled) {
-            btn.classList.remove('spin-anim');
-            clearInterval(checkInterval);
-            mostrarToast("✅ Datos sincronizados");
-        }
-    }, 300);
-});
-
-// ------------------------------------------------------------------
-// FUNCIONES INTRANET ADMINISTRADOR
-// ------------------------------------------------------------------
-function renderAdminPanel(equipos) {
-    let html = "";
-    let now = new Date().getTime();
-    equipos.forEach(eq => {
-        let ts = eq.timestamp || Infinity;
-        if (now - ts < 48 * 60 * 60 * 1000) {
+< 48 * 60 * 60 * 1000) {
             html += `
             <div class="admin-match-box">
                 <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
@@ -692,7 +608,7 @@ document.getElementById('btnChangePwd').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Actualizar Contraseña"; btn.disabled = false; });
 });
 
@@ -732,7 +648,7 @@ document.getElementById('btnReqName').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Enviar Solicitud"; btn.disabled = false; });
 });
 
@@ -757,7 +673,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Entrando...'; 
     msgBox.style.display = "none";
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login_guest' }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login_guest' }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
@@ -845,7 +761,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "👀 Entrar como Invitado"; 
         btn.disabled = false; 
@@ -865,7 +781,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Accediendo...'; 
     msgBox.style.display = "none";
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
@@ -1132,7 +1048,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         btnT.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
                         msgT.style.display = "none";
 
-                        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+                        fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save_totales', usuario: currentUser, password: currentPassword, predicciones_totales: prediccionesTot }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
                         .then(res => res.json())
                         .then(d => {
                             msgT.style.display = "block";
@@ -1153,7 +1069,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "Entrar al Fantasy"; 
         btn.disabled = false; 
@@ -1218,7 +1134,7 @@ function iniciarRelojTotales() {
 }
 
 function cargarDatosAntiguos() {
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'load', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
@@ -1269,14 +1185,14 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
     btnSubmit.disabled = true; 
     btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         msgBox.style.display = "block";
         if (data.status === "success") { msgBox.className = "alert-box alert-success"; msgBox.innerText = "✅ " + data.message; } 
         else { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "❌ " + data.message; }
     })
-    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
 });
 
@@ -1298,7 +1214,7 @@ document.getElementById('btnHistory').addEventListener('click', function(e) {
     btnHist.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando historial...'; 
     msgBox.style.display = "none";
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'get_history', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'get_history', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
