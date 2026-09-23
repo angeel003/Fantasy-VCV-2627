@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Fantasy VCV 26/27</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#783b7a">
@@ -222,7 +224,7 @@
 <div id="toastNotification">✅ Datos actualizados</div>
 
 <header>
-    <button id="btnLogout" style="display:none; position:absolute; left:5px; top:max(15px, env(safe-area-inset-top)); background:transparent; border:none; color:rgba(255,255,255,0.9); font-size:2.2rem; cursor:pointer; padding:15px 25px; outline:none; text-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:9999;" title="Volver atrás">&#10094;</button>
+    <button id="btnLogout" style="display:none; position:absolute; left:5px; top:calc(15px + env(safe-area-inset-top, 20px)); background:transparent; border:none; color:rgba(255,255,255,0.9); font-size:2.2rem; cursor:pointer; padding:15px 25px; outline:none; text-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:9999;" title="Volver atrás">&#10094;</button>
     <div class="header-content">
         <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
