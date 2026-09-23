@@ -71,3 +71,5 @@
 [2026-09-23 13:57] - Fix definitivo en el parseo de fechas desde el CacheService. Eliminada por completo toda la lógica de MVP (Jugador Destacado) en frontend y backend para aligerar la carga y mejorar la velocidad de lectura inicial.
 
 [2026-09-23 18:42] - Solucionado el error de estado corrupto de SPA al volver atros en la app (el botn flecha ahora hace un window.location.reload). Restaurada la configuracin limpia original de fetch() para evitar bloqueos CORS y colisiones de cookies con Apps Script.
+
+[2026-09-23 19:09] - Arreglado el bug de inicio de sesin provocado por la inyeccin de invalidacin de cach. Implementado con xito el TTL de cach de 6 horas con limpieza inteligente solo en escrituras. Arreglados los colores feos de Bootstrap (azul/verde) al dejar de enfocar botones deshabilitados/cargando en dev.html e index.html.

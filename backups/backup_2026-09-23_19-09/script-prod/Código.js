@@ -18,8 +18,8 @@ function sincronizarPermisosLigas() {
   }
 
   // 1. AUTO-AÑADIR USUARIOS A LA PESTAÑA DE PERMISOS SI NO ESTÁN
-  var usuariosData = getSafeData(shUsuarios);
-  var permisosData = getSafeData(shPermisos);
+  var usuariosData = shUsuarios.getDataRange().getValues();
+  var permisosData = shPermisos.getDataRange().getValues();
   var nombresEnPermisos = [];
   
   for (var p = 1; p < permisosData.length; p++) {
@@ -37,9 +37,9 @@ function sincronizarPermisosLigas() {
       }
   }
 
-  permisosData = getSafeData(shPermisos);
-  var dataLigas = getSafeData(shLigas);
-  var dataLigasEq = getSafeData(shLigasEq);
+  permisosData = shPermisos.getDataRange().getValues();
+  var dataLigas = shLigas.getDataRange().getValues();
+  var dataLigasEq = shLigasEq.getDataRange().getValues();
 
   var ligasHeaders = dataLigas[0];
   var ligasEqHeaders = dataLigasEq[0];
@@ -100,64 +100,10 @@ function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({"status": "ok"})).setMimeType(ContentService.MimeType.JSON);
 }
 
-
-
-  // HELPER PARA EVITAR QUE GOOGLE SHEETS ROMPA TEXTOS COMO "3-1" O "25-20" CONVIRTIENDOLOS A FECHAS
-  function parseSheetText(val) {
-      if (val && typeof val.getDate === 'function') {
-          return val.getDate() + "-" + (val.getMonth() + 1);
-      } else if (val !== undefined && val !== null) {
-          return val.toString().trim();
-      }
-      return "";
-  }
-
-  function getSafeData(sheet) {
-    if (!sheet) return [];
-    var cache = CacheService.getScriptCache();
-    var sheetName = sheet.getName();
-    var cacheKey = "vcv_sheet_" + sheetName;
-    
-    var cached = cache.get(cacheKey);
-    if (cached) {
-        try { return JSON.parse(cached); } catch(e) {}
-    }
-    
-    var lr = sheet.getLastRow();
-    var lc = sheet.getLastColumn();
-    var data = [];
-    if (lr > 0 && lc > 0) {
-        data = sheet.getRange(1, 1, lr, lc).getValues();
-    }
-    
-    if (data.length > 0) {
-        try {
-            var str = JSON.stringify(data);
-            if (str.length < 90000) { cache.put(cacheKey, str, 21600); } // 15 second cache
-        } catch(e) {}
-    }
-    return data;
-}
-
-function clearAllCache() {
-    var keys = ["vcv_sheet_Usuarios", "vcv_sheet_Ajustes", "vcv_sheet_Permisos_Equipos", "vcv_sheet_Ligas", "vcv_sheet_Ligas_Equipos", "vcv_sheet_Porras", "vcv_sheet_Resultados Oficiales", "vcv_sheet_Reglas_Puntuacion", "vcv_sheet_Insignias", "vcv_sheet_Peticiones_Nombre", "vcv_sheet_Predicciones_Secretas", "vcv_sheet_Permisos_Secreta"];
-    try { CacheService.getScriptCache().removeAll(keys); } catch(e) {}
-}
-
 function doPost(e) {
-
   try {
     var params = JSON.parse(e.postData.contents);
     var action = params.action;
-      var isWriteAction = ["save", "save_resultado_admin", "add_user", "sync_permisos", "change_password", "request_name_change", "save_totales"].indexOf(action) !== -1;
-
-      // ACCIÓN DE PING (PRE-FETCHING)
-      if (action === "ping") {
-          // Leer una celda cualquiera para asegurar que la conexión a Google Sheets se despierte
-          try { SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Ajustes").getRange("A1").getValue(); } catch(e){}
-          return ContentService.createTextOutput(JSON.stringify({"status": "ok"})).setMimeType(ContentService.MimeType.JSON);
-      }
-
     var usuario = params.usuario;
     var password = params.password;
     
@@ -174,12 +120,12 @@ function doPost(e) {
     // VALIDACIÓN RÁPIDA DE USUARIO (Para acciones de Admin)
     var esAdminAutenticado = false;
     if (usuario && password) {
-        var dataU = getSafeData(sheetUsuarios);
+        var dataU = sheetUsuarios.getDataRange().getValues();
         for (var i = 1; i < dataU.length; i++) {
             if (dataU[i][0] == usuario && dataU[i][1] == password) {
                 var shIns = ss.getSheetByName("Insignias");
                 if (shIns) {
-                    var dataIns = getSafeData(shIns);
+                    var dataIns = shIns.getDataRange().getValues();
                     for(var j=1; j<dataIns.length; j++) {
                         if(dataIns[j][0] == usuario && dataIns[j][5] && dataIns[j][5].toString().toUpperCase() === "X") {
                             esAdminAutenticado = true; break;
@@ -195,8 +141,8 @@ function doPost(e) {
     if (action === "sync_permisos") {
         if (!esAdminAutenticado) return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Permiso denegado."})).setMimeType(ContentService.MimeType.JSON);
         
-        var usuariosData = getSafeData(sheetUsuarios);
-        var permisosData = getSafeData(sheetPermisos);
+        var usuariosData = sheetUsuarios.getDataRange().getValues();
+        var permisosData = sheetPermisos.getDataRange().getValues();
         var nombresEnPermisos = [];
         for (var p = 1; p < permisosData.length; p++) { if(permisosData[p][0]) nombresEnPermisos.push(permisosData[p][0].toString()); }
         
@@ -211,9 +157,9 @@ function doPost(e) {
             }
         }
         
-        permisosData = getSafeData(sheetPermisos);
-        var dataLigas = getSafeData(sheetLigas);
-        var dataLigasEq = getSafeData(sheetLigasEq);
+        permisosData = sheetPermisos.getDataRange().getValues();
+        var dataLigas = sheetLigas.getDataRange().getValues();
+        var dataLigasEq = sheetLigasEq.getDataRange().getValues();
         var ligasHeaders = dataLigas[0];
         var ligasEqHeaders = dataLigasEq[0];
         var permHeaders = permisosData[0];
@@ -255,9 +201,9 @@ function doPost(e) {
         
         if (updatesAdmin) {
             sheetPermisos.getRange(1, 1, permisosData.length, permisosData[0].length).setValues(permisosData);
-            clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Sincronizado (" + usuariosAñadidos + " usuarios nuevos)." })).setMimeType(ContentService.MimeType.JSON);
+            return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Sincronizado (" + usuariosAñadidos + " usuarios nuevos)." })).setMimeType(ContentService.MimeType.JSON);
         } else if (usuariosAñadidos > 0) {
-            clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Añadidos " + usuariosAñadidos + " usuarios nuevos." })).setMimeType(ContentService.MimeType.JSON);
+            return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Añadidos " + usuariosAñadidos + " usuarios nuevos." })).setMimeType(ContentService.MimeType.JSON);
         } else {
             return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Todo al día. Nada que sincronizar." })).setMimeType(ContentService.MimeType.JSON);
         }
@@ -274,7 +220,7 @@ function doPost(e) {
             return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "El usuario y la contraseña son obligatorios."})).setMimeType(ContentService.MimeType.JSON);
         }
         
-        var dataUsr = getSafeData(sheetUsuarios);
+        var dataUsr = sheetUsuarios.getDataRange().getValues();
         for(var i=1; i<dataUsr.length; i++) {
             if(dataUsr[i][0] && dataUsr[i][0].toString().toLowerCase() === newU.toLowerCase()) {
                 return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "❌ El usuario ya existe en la base de datos."})).setMimeType(ContentService.MimeType.JSON);
@@ -283,41 +229,39 @@ function doPost(e) {
         
         // Lo añade a la pestaña Usuarios
         sheetUsuarios.appendRow([newU, newP, newN]);
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Usuario '" + newU + "' creado correctamente."})).setMimeType(ContentService.MimeType.JSON);
+        return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Usuario '" + newU + "' creado correctamente."})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "save_resultado_admin") {
         if (!esAdminAutenticado) return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Permiso denegado."})).setMimeType(ContentService.MimeType.JSON);
         
         var idPart = params.id_partido;
-        var sets = params.sets || "";
-        var parciales = params.parciales || "";
-        var streaming = params.streaming || "";
-          
-          if (!sheetResultados) {
-              sheetResultados = ss.insertSheet("Resultados Oficiales");
-              sheetResultados.appendRow(["ID_Partido", "Sets", "Parciales", "Frase_MVP", "Streaming"]);
-          }
-          var dataResAdmin = getSafeData(sheetResultados);
-          var rowFound = -1;
-          for(var r=1; r<dataResAdmin.length; r++) {
-              if(dataResAdmin[r][0].toString().trim() === idPart) { rowFound = r + 1; break; }
-          }
-          if(rowFound !== -1) {
-              sheetResultados.getRange(rowFound, 2).setValue(sets);
-              sheetResultados.getRange(rowFound, 3).setValue(parciales);
-              sheetResultados.getRange(rowFound, 5).setValue(streaming);
-          } else {
-              sheetResultados.appendRow([idPart, sets, parciales, "", streaming]);
-          }
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+        var sets = params.sets;
+        var parciales = params.parciales;
+        
+        if (!sheetResultados) {
+            sheetResultados = ss.insertSheet("Resultados Oficiales");
+            sheetResultados.appendRow(["ID_Partido", "Sets", "Parciales"]);
+        }
+        var dataResAdmin = sheetResultados.getDataRange().getValues();
+        var rowFound = -1;
+        for(var r=1; r<dataResAdmin.length; r++) {
+            if(dataResAdmin[r][0].toString().trim() === idPart) { rowFound = r + 1; break; }
+        }
+        if(rowFound !== -1) {
+            sheetResultados.getRange(rowFound, 2).setValue(sets);
+            sheetResultados.getRange(rowFound, 3).setValue(parciales);
+        } else {
+            sheetResultados.appendRow([idPart, sets, parciales]);
+        }
+        return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
     }
 
     // --- ACCIONES DE GESTIÓN DE CONTRASEÑA Y NOMBRE ---
     if (action === "change_password") {
         var oldPwd = params.old_password;
         var newPwd = params.new_password;
-        var dataU = getSafeData(sheetUsuarios);
+        var dataU = sheetUsuarios.getDataRange().getValues();
         var found = false;
         for (var i = 1; i < dataU.length; i++) {
             if (dataU[i][0] == usuario && dataU[i][1] == oldPwd) {
@@ -326,14 +270,14 @@ function doPost(e) {
                 break;
             }
         }
-        if (found) { clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Contraseña actualizada con éxito!"})).setMimeType(ContentService.MimeType.JSON); } 
+        if (found) { return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Contraseña actualizada con éxito!"})).setMimeType(ContentService.MimeType.JSON); } 
         else { return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Usuario o contraseña actual incorrectos."})).setMimeType(ContentService.MimeType.JSON); }
     }
 
     if (action === "request_name_change") {
         var newUsr = params.new_usuario ? params.new_usuario.trim() : "";
         var newName = params.new_nombre ? params.new_nombre.trim() : "";
-        var dataU = getSafeData(sheetUsuarios);
+        var dataU = sheetUsuarios.getDataRange().getValues();
         var validReq = false;
         var userExists = false;
         for (var i = 1; i < dataU.length; i++) {
@@ -349,7 +293,7 @@ function doPost(e) {
             sheetPeticiones.getRange("A1:E1").setFontWeight("bold").setBackground("#d9d2e9");
         }
         sheetPeticiones.appendRow([new Date(), usuario, newUsr, newName, "Escribe OK para aprobar"]);
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "Solicitud enviada. El administrador revisará tu petición."})).setMimeType(ContentService.MimeType.JSON);
+        return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "Solicitud enviada. El administrador revisará tu petición."})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "save_totales") {
@@ -362,7 +306,7 @@ function doPost(e) {
             sheetPrediccionesTotales.appendRow(["Fecha", "Usuario", "Equipo", "Puntos Predichos"]);
             sheetPrediccionesTotales.getRange("A1:D1").setFontWeight("bold").setBackground("#cfe2f3");
         }
-        var pData = getSafeData(sheetPrediccionesTotales);
+        var pData = sheetPrediccionesTotales.getDataRange().getValues();
         for (var i = pData.length - 1; i >= 1; i--) {
             if (pData[i][1] == usuario && params.predicciones_totales[pData[i][2]] !== undefined) { sheetPrediccionesTotales.deleteRow(i + 1); }
         }
@@ -370,18 +314,18 @@ function doPost(e) {
             var pts = params.predicciones_totales[eq];
             if (pts !== "") { sheetPrediccionesTotales.appendRow([new Date(), usuario, eq, pts]); }
         }
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Tus predicciones a final de temporada han sido guardadas!"})).setMimeType(ContentService.MimeType.JSON);
+        return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Tus predicciones a final de temporada han sido guardadas!"})).setMimeType(ContentService.MimeType.JSON);
     }
 
     // LEER RESULTADOS OFICIALES
-    var resData = getSafeData(sheetResultados);
+    var resData = sheetResultados.getDataRange().getDisplayValues();
     var resultadosMap = {}; 
     for(var i=1; i<resData.length; i++) {
-        if(resData[i][0]) { resultadosMap[resData[i][0].toString().trim()] = { sets: parseSheetText(resData[i][1]), parciales: parseSheetText(resData[i][2]), streaming: resData[i][4] ? resData[i][4].toString().trim() : '' }; }
+        if(resData[i][0]) { resultadosMap[resData[i][0].toString().trim()] = { sets: resData[i][1], parciales: resData[i][2] }; }
     }
 
     // LEER TODOS LOS PARTIDOS (AJUSTES)
-    var ajustesData = getSafeData(sheetAjustes);
+    var ajustesData = sheetAjustes.getDataRange().getValues();
     var partidos = [];
     var nowMs = new Date().getTime();
     var changesMade = false;
@@ -407,7 +351,7 @@ function doPost(e) {
         var nuevaVisibilidad = visibilidadActual;
 
         if(rTimestamp && nowMs >= (rTimestamp - 15 * 60 * 1000)) { nuevoEstado = "CERRADO"; }
-        if(rTimestamp && nowMs >= (rTimestamp + 48 * 60 * 60 * 1000)) {
+        if((rTimestamp && nowMs >= (rTimestamp + 24 * 60 * 60 * 1000)) || (resultadosMap[idPart] && resultadosMap[idPart].sets)) {
             nuevoEstado = "CERRADO"; nuevaVisibilidad = "OCULTAR";
         }
         if(nuevoEstado !== estadoActual || nuevaVisibilidad !== visibilidadActual) { changesMade = true; }
@@ -429,11 +373,11 @@ function doPost(e) {
         });
     }
 
-    if(changesMade && updatesColumnas.length > 0) { sheetAjustes.getRange(2, 8, updatesColumnas.length, 2).setValues(updatesColumnas); clearAllCache(); }
+    if(changesMade && updatesColumnas.length > 0) { sheetAjustes.getRange(2, 8, updatesColumnas.length, 2).setValues(updatesColumnas); }
 
     // ACCIÓN ESPECIAL: INVITADO
     if (action === "login_guest") {
-        var dataPermisos = getSafeData(sheetPermisos);
+        var dataPermisos = sheetPermisos.getDataRange().getValues();
         var eqHeaders = dataPermisos[0]; 
         var misPermisosInvitado = {}; 
         var rowPermisosInvitado = -1;
@@ -449,28 +393,23 @@ function doPost(e) {
     }
 
     // ACCIONES DE USUARIO REGISTRADO
-    var dataUsuarios = getSafeData(sheetUsuarios);
+    var dataUsuarios = sheetUsuarios.getDataRange().getValues();
     var valid = false;
     var mapNombresReales = {}; 
-    var filaUsuario = -1;
     for (var i = 1; i < dataUsuarios.length; i++) {
       var u = dataUsuarios[i][0];
       if(u) { mapNombresReales[u] = dataUsuarios[i][2] ? dataUsuarios[i][2].toString().trim() : u; }
-      if (u == usuario && dataUsuarios[i][1] == password) { 
-          valid = true; 
-          filaUsuario = i + 1;
-      }
+      if (u == usuario && dataUsuarios[i][1] == password) { valid = true; }
     }
     if (!valid) return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Usuario o contraseña incorrectos."})).setMimeType(ContentService.MimeType.JSON);
     
-    // Registrar Último Acceso si es login o get_data
     var miNombreReal = mapNombresReales[usuario] || usuario;
 
     // LEER INSIGNIAS/VERIFICADOS
     var sheetInsignias = ss.getSheetByName("Insignias");
     var insigniasMap = {};
     if (sheetInsignias) {
-        var dataIns = getSafeData(sheetInsignias);
+        var dataIns = sheetInsignias.getDataRange().getValues();
         for(var i=1; i<dataIns.length; i++) {
             var usrRow = dataIns[i][0];
             if(!usrRow) continue;
@@ -497,7 +436,7 @@ function doPost(e) {
     var ptsDiff5 = parseInt(reglas[3][0]) || 0;
 
     // LÓGICA DE PERMISOS COMBINADOS (LIGAS + EXPLÍCITOS)
-    var dataLigas = getSafeData(sheetLigas);
+    var dataLigas = sheetLigas.getDataRange().getValues();
     var headersLigas = dataLigas[0];
     var misLigas = [];
     var rowLigas = -1;
@@ -508,7 +447,7 @@ function doPost(e) {
        }
     }
 
-    var ligasEqData = getSafeData(sheetLigasEq);
+    var ligasEqData = sheetLigasEq.getDataRange().getValues();
     var ligasEqHeaders = ligasEqData[0]; 
     var ligasMap = {}; 
     var misEquiposPorLiga = {}; 
@@ -524,7 +463,7 @@ function doPost(e) {
         }
     }
 
-    var dataPermisos = getSafeData(sheetPermisos);
+    var dataPermisos = sheetPermisos.getDataRange().getValues();
     var eqHeaders = dataPermisos[0]; 
     var misPermisos = {}; 
     var rowPermisos = -1;
@@ -533,7 +472,7 @@ function doPost(e) {
     if (rowPermisos === -1) {
         var nuevaFilaPermiso = new Array(eqHeaders.length).fill("");
         nuevaFilaPermiso[0] = usuario;
-        sheetPermisos.appendRow(nuevaFilaPermiso); clearAllCache();
+        sheetPermisos.appendRow(nuevaFilaPermiso);
         rowPermisos = dataPermisos.length; 
         dataPermisos.push(nuevaFilaPermiso);
     }
@@ -558,16 +497,16 @@ function doPost(e) {
         partidos[p].permitido = (misPermisos[eqLoc] === true);
     }
 
-    var porrasData = getSafeData(sheetPorras);
+    var porrasData = sheetPorras.getDataRange().getDisplayValues();
     var porrasMap = {}; 
     for(var i=1; i<porrasData.length; i++) {
         var pUser = porrasData[i][1];
         var pIdPart = porrasData[i][2].toString().trim();
         if(!porrasMap[pUser]) porrasMap[pUser] = {};
-        porrasMap[pUser][pIdPart] = { sets: parseSheetText(porrasData[i][3]), puntos: porrasData[i][4], signo: porrasData[i][5] };
+        porrasMap[pUser][pIdPart] = { sets: porrasData[i][3], puntos: porrasData[i][4], signo: porrasData[i][5] };
     }
 
-    if (action === "login" || action === "get_data") {
+    if (action === "login") {
         
         // PREDICCIONES SECRETA (PUNTOS TOTALES)
         var sheetPermisosGen = ss.getSheetByName("Permisos_Secreta");
@@ -575,7 +514,7 @@ function doPost(e) {
         var misEquiposTotales = [];
         
         if (sheetPermisosGen) {
-            var dataPG = getSafeData(sheetPermisosGen);
+            var dataPG = sheetPermisosGen.getDataRange().getValues();
             var headersPG = dataPG[0];
             var rowPG = -1;
             for(var i=1; i<dataPG.length; i++){ if(dataPG[i][0] == usuario) { rowPG = i; break; } }
@@ -601,7 +540,7 @@ function doPost(e) {
 
         var prediccionesTotalesMap = {};
         if (sheetPrediccionesTotales && misEquiposTotales.length > 0) {
-            var ptData = getSafeData(sheetPrediccionesTotales);
+            var ptData = sheetPrediccionesTotales.getDataRange().getValues();
             for (var i=1; i<ptData.length; i++) {
                 var uPT = ptData[i][1];
                 var eqPT = ptData[i][2];
@@ -679,13 +618,6 @@ function doPost(e) {
         var cartelera = [];
         for(var i=0; i<partidos.length; i++) { if(partidos[i].visibilidad === "MOSTRAR" && partidos[i].permitido) { cartelera.push(partidos[i]); } }
 
-        // ASOCIAR STREAMING A CADA PARTIDO
-        for (var c = 0; c < cartelera.length; c++) {
-            var cp = cartelera[c];
-            var oRes = resultadosMap[cp.id_partido];
-            cp.streaming = (oRes && oRes.streaming) ? oRes.streaming : "";
-        }
-
         var rondaAbierta = sheetAjustes.getRange("B2").getValue() || "1";
 
         return ContentService.createTextOutput(JSON.stringify({ 
@@ -704,14 +636,13 @@ function doPost(e) {
     }
 
     if (action === "save") {
-        var pData = getSafeData(sheetPorras);
+        var pData = sheetPorras.getDataRange().getValues();
         for (var i = pData.length - 1; i >= 1; i--) { if (pData[i][1] == usuario && params.predicciones[pData[i][2].toString()]) { sheetPorras.deleteRow(i + 1); } }
         for (var idPart in params.predicciones) {
             var p = params.predicciones[idPart];
             if (p.sets) { sheetPorras.appendRow([new Date(), usuario, idPart, p.sets, p.puntos, p.signo]); }
         }
-        clearAllCache();
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Predicciones guardadas!"})).setMimeType(ContentService.MimeType.JSON);
+        return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Predicciones guardadas!"})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "load") {
@@ -801,7 +732,7 @@ function onEdit(e) {
         var sheetUsuarios = ss.getSheetByName("Usuarios");
         
         if (sheetUsuarios && usuarioActual) {
-          var usuariosData = getSafeData(sheetUsuarios);
+          var usuariosData = sheetUsuarios.getDataRange().getValues();
           var userRow = -1;
           
           for (var i = 1; i < usuariosData.length; i++) { 
@@ -824,7 +755,7 @@ function onEdit(e) {
               for (var s = 0; s < sheetsColA.length; s++) {
                 var sh = ss.getSheetByName(sheetsColA[s]);
                 if (sh) {
-                  var d = getSafeData(sh);
+                  var d = sh.getDataRange().getValues();
                   for (var r = 1; r < d.length; r++) { 
                       var celdaU = d[r][0] ? d[r][0].toString().trim() : "";
                       if (celdaU.toLowerCase() === usuarioActual.toLowerCase()) { 
@@ -838,7 +769,7 @@ function onEdit(e) {
               for (var s = 0; s < sheetsColB.length; s++) {
                 var sh = ss.getSheetByName(sheetsColB[s]);
                 if (sh) {
-                  var d = getSafeData(sh);
+                  var d = sh.getDataRange().getValues();
                   for (var r = 1; r < d.length; r++) { 
                       var celdaU = d[r][1] ? d[r][1].toString().trim() : "";
                       if (celdaU.toLowerCase() === usuarioActual.toLowerCase()) { 
@@ -877,7 +808,7 @@ function onEdit(e) {
         for (var s = 0; s < sheetsColA.length; s++) {
           var sh = ss.getSheetByName(sheetsColA[s]);
           if (sh) {
-            var d = getSafeData(sh);
+            var d = sh.getDataRange().getValues();
             for (var r = 1; r < d.length; r++) { 
                 var celdaU = d[r][0] ? d[r][0].toString().trim() : "";
                 if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
@@ -891,7 +822,7 @@ function onEdit(e) {
         for (var s = 0; s < sheetsColB.length; s++) {
           var sh = ss.getSheetByName(sheetsColB[s]);
           if (sh) {
-            var d = getSafeData(sh);
+            var d = sh.getDataRange().getValues();
             for (var r = 1; r < d.length; r++) { 
                 var celdaU = d[r][1] ? d[r][1].toString().trim() : "";
                 if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
@@ -901,8 +832,7 @@ function onEdit(e) {
           }
         }
         
-        clearAllCache();
-          ss.toast("Se ha actualizado el usuario '" + usuarioAntiguo + "' a '" + usuarioNuevo + "' en todas las pestañas.", "✅ Actualización Mágica", 5);
+        ss.toast("Se ha actualizado el usuario '" + usuarioAntiguo + "' a '" + usuarioNuevo + "' en todas las pestañas.", "✅ Actualización Mágica", 5);
       }
     }
   }
