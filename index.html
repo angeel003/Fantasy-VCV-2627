@@ -220,6 +220,49 @@
     .admin-match-box {
         background: #fff3e0; border: 1px solid #ffcc80; border-left: 5px solid #ff9800; padding: 15px; border-radius: 8px; margin-bottom: 10px;
     }
+
+    /* ---------------------------------------------------
+       5. BOTON ATRAS (Pestaña flotante)
+       --------------------------------------------------- */
+    #btnLogout {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--vcv-dorado);
+        border: none;
+        border-radius: 0 12px 12px 0;
+        color: var(--vcv-morado);
+        font-size: 1.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 20px 12px 20px 8px;
+        box-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+        z-index: 99999;
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    #btnLogout:hover {
+        transform: translateY(-50%) translateX(8px);
+    }
+    
+    @keyframes slideOutRight {
+        0% { opacity: 1; transform: none; }
+        100% { opacity: 0; transform: translateX(50px); }
+    }
+    
+    @keyframes slideInLeft {
+        0% { opacity: 0; transform: translateX(-50px); }
+        100% { opacity: 1; transform: none; }
+    }
+    .slide-in-left {
+        animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    .slide-out-right {
+        animation: slideOutRight 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    }
+
 </style>
 </head>
 <body>
@@ -462,7 +505,14 @@ const fetchSeguro = (url, options, retries = 1) => {
         });
 };
 
-const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
+
+  // Comprobar si venimos de darle al botón Atrás para hacer la animación de la izquierda
+  if (sessionStorage.getItem('vcv_slide_left') === 'true') {
+      document.getElementById('loginSection').classList.add('slide-in-left');
+      sessionStorage.removeItem('vcv_slide_left');
+  }
+  
+  const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 // --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
 const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
