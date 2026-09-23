@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -494,7 +494,7 @@
 
 // POLYFILL PARA REINTENTOS AUTOMATICOS (Soluciona los errores 500 y timeouts del primer login)
 const fetchSeguro = (url, options, retries = 1) => {
-    return fetch(url, options)
+    const bustUrl = url + (url.includes('?') ? '&' : '?') + 't=' + new Date().getTime(); return fetch(bustUrl, options)
         .then(res => res.json().then(data => ({ json: () => Promise.resolve(data) })))
         .catch(err => {
             if (retries > 0) return new Promise(r => setTimeout(r, 1000)).then(() => fetchSeguro(url, options, retries - 1));
@@ -675,7 +675,7 @@ window.guardarResultadoAdmin = function(e, idPart) {
     })
     .catch(err => {
         console.error("Error al guardar:", err);
-        alert("¡Guardado en Excel con éxito! (El servidor tardó mucho en confirmarlo, recarga la página si lo necesitas).");
+        alert("ï¿½Guardado en Excel con ï¿½xito! (El servidor tardï¿½ mucho en confirmarlo, recarga la pï¿½gina si lo necesitas).");
     })
     .finally(() => { 
         btn.disabled = false; 
@@ -814,7 +814,7 @@ document.getElementById('btnLogout').addEventListener('click', function() {
     this.style.transform = 'translateY(-50%) translateX(-100%)';
     
     setTimeout(() => {
-        window.location.reload();
+        window.location.href = window.location.pathname + '?v=' + new Date().getTime();
     }, 280);
 });
 
