@@ -258,43 +258,13 @@
         animation: slideOutRight 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
     }
 
-
-    /* ---------------------------------------------------
-       6. MODO ADMIN OSCURO
-       --------------------------------------------------- */
-    body.admin-dark-mode {
-        background: #121212 !important;
-        color: #eee !important;
-    }
-    body.admin-dark-mode header {
-        background: #000 !important;
-        border-bottom: 5px solid var(--vcv-dorado) !important;
-    }
-    body.admin-dark-mode .admin-panel {
-        background: #1e1e1e !important;
-        color: #ddd !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-    }
-    body.admin-dark-mode .admin-match-box {
-        background: #2a2a2a !important;
-        border: 1px solid #444 !important;
-    }
-    body.admin-dark-mode h4, body.admin-dark-mode h5, body.admin-dark-mode label {
-        color: var(--vcv-dorado) !important;
-    }
-
 </style>
 </head>
 <body>
 
 <div id="mobileTooltip"></div>
 <button id="btnReload" title="Sincronizar y recargar datos">🔄</button>
-
-      <div id="sheetsLinkDiv" style="display:none; margin-top: 20px; text-align:center; padding-top: 15px;">
-          <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-outline-warning btn-sm" style="font-weight:bold; border-width:2px; font-size:1.1rem; padding:10px 20px; background:var(--vcv-dorado); color:var(--vcv-morado);">📄 Abrir Base de Datos (Google Sheets)</a>
-      </div>
-
-  <div id="toastNotification">✅ Datos actualizados</div>
+<div id="toastNotification">✅ Datos actualizados</div>
 
 <header>
     <button id="btnLogout" title="Volver atrás">&#10094;</button>
@@ -302,13 +272,6 @@
         <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
 </header>
-
-  <div id="adminToggleContainer" style="display:none; text-align:center; padding: 12px; background:#111; color:white; border-bottom: 2px solid var(--vcv-dorado);">
-      <label style="cursor:pointer; display:inline-flex; align-items:center; margin:0; font-weight:bold; color:var(--vcv-dorado);">
-          <input type="checkbox" id="adminSwitch" style="margin-right:10px; transform:scale(1.4);"> MODO ADMINISTRADOR
-      </label>
-  </div>
-
 
 <div id="loginSection">
     <div class="login-card">
@@ -420,7 +383,7 @@
                         <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                             <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
                             <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
-                            <input type="text" id="addUsrReal" class="form-control form-control-sm mb-2" placeholder="Nombre real (Opcional)">
+                            
                             <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
                         </div>
                         
@@ -528,34 +491,6 @@
 <footer><p>© Fantasy VCV 2026-2027</p></footer>
 
 <script>
-
-document.getElementById('adminSwitch').addEventListener('change', function(e) {
-    if(e.target.checked) {
-        document.body.classList.add('admin-dark-mode');
-        document.getElementById('app-tabs').style.display = 'none';
-        document.getElementById('clasificacionesSection').style.display = 'none';
-        document.getElementById('historialSection').style.display = 'none';
-        document.getElementById('prediccionesTotalesSection').style.display = 'none';
-        document.getElementById('btnSubmit').style.display = 'none';
-        document.getElementById('warningPredicciones').style.display = 'none';
-        document.getElementById('prediccionesList').style.display = 'none';
-        document.getElementById('tituloPrincipalSeccion').style.display = 'none';
-        
-        document.getElementById('adminPanelWrapper').style.display = 'block';
-        document.getElementById('sheetsLinkDiv').style.display = 'block';
-    } else {
-        document.body.classList.remove('admin-dark-mode');
-        document.getElementById('app-tabs').style.display = 'flex';
-        // Restore active tab logic roughly (default to predicciones)
-        document.getElementById('prediccionesList').style.display = 'block';
-        document.getElementById('tituloPrincipalSeccion').style.display = 'block';
-        document.getElementById('btnSubmit').style.display = 'block';
-        
-        document.getElementById('adminPanelWrapper').style.display = 'none';
-        document.getElementById('sheetsLinkDiv').style.display = 'none';
-    }
-});
-
 
 // POLYFILL PARA REINTENTOS AUTOMATICOS (Soluciona los errores 500 y timeouts del primer login)
 const fetchSeguro = (url, options, retries = 1) => {
@@ -752,7 +687,7 @@ window.crearUsuarioAdmin = function(e) {
     const btn = e.target;
     const nu = document.getElementById('addUsrName').value.trim();
     const np = document.getElementById('addUsrPwd').value.trim();
-    const nr = document.getElementById('addUsrReal').value.trim();
+    
     
     if(!nu || !np) { alert("Usuario y Contraseña son obligatorios"); return; }
     
@@ -760,7 +695,7 @@ window.crearUsuarioAdmin = function(e) {
     
     fetch(scriptURL + '?t=' + new Date().getTime(), { 
         method: 'POST', 
-        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: nr }), 
+        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: "" }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     })
     .then(res => res.json())
@@ -769,7 +704,7 @@ window.crearUsuarioAdmin = function(e) {
             mostrarToast(d.message); 
             document.getElementById('addUsrName').value = "";
             document.getElementById('addUsrPwd').value = "";
-            document.getElementById('addUsrReal').value = "";
+            
         } 
         else { alert("Error: " + d.message); }
     })
@@ -906,7 +841,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('btnReload').style.display = "flex";
             document.getElementById('btnLogout').style.display = "block";
             document.querySelector('#prediccionForm > div').style.display = "none"; 
-            document.getElementById('adminToggleContainer').style.display = "none";
+            document.getElementById('adminPanelWrapper').style.display = "none";
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
@@ -1036,10 +971,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
             
             if (isAdmin) {
-                document.getElementById('adminToggleContainer').style.display = "block";
+                document.getElementById('adminPanelWrapper').style.display = "block";
                 renderAdminPanel(data.equipos); 
             } else {
-                document.getElementById('adminToggleContainer').style.display = "none";
+                document.getElementById('adminPanelWrapper').style.display = "none";
             }
 
             document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
