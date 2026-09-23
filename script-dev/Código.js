@@ -296,7 +296,7 @@ function doPost(e) {
           
           if (!sheetResultados) {
               sheetResultados = ss.insertSheet("Resultados Oficiales");
-              sheetResultados.appendRow(["ID_Partido", "Sets", "Parciales", "Frase_MVP", "Streaming"]);
+              sheetResultados.appendRow(["ID_Partido", "Sets", "Parciales", "Streaming"]);
           }
           var dataResAdmin = getSafeData(sheetResultados);
           var rowFound = -1;
@@ -306,9 +306,9 @@ function doPost(e) {
           if(rowFound !== -1) {
               sheetResultados.getRange(rowFound, 2).setValue(sets);
               sheetResultados.getRange(rowFound, 3).setValue(parciales);
-              sheetResultados.getRange(rowFound, 5).setValue(streaming);
+              sheetResultados.getRange(rowFound, 4).setValue(streaming);
           } else {
-              sheetResultados.appendRow([idPart, sets, parciales, "", streaming]);
+              sheetResultados.appendRow([idPart, sets, parciales, streaming]);
           }
         clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
     }
@@ -377,7 +377,7 @@ function doPost(e) {
     var resData = getSafeData(sheetResultados);
     var resultadosMap = {}; 
     for(var i=1; i<resData.length; i++) {
-        if(resData[i][0]) { resultadosMap[resData[i][0].toString().trim()] = { sets: parseSheetText(resData[i][1]), parciales: parseSheetText(resData[i][2]), streaming: resData[i][4] ? resData[i][4].toString().trim() : '' }; }
+        if(resData[i][0]) { resultadosMap[resData[i][0].toString().trim()] = { sets: parseSheetText(resData[i][1]), parciales: parseSheetText(resData[i][2]), streaming: resData[i][3] ? resData[i][3].toString().trim() : '' }; }
     }
 
     // LEER TODOS LOS PARTIDOS (AJUSTES)

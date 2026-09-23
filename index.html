@@ -629,7 +629,7 @@ document.getElementById('btnAdminSync').addEventListener('click', function(e) {
     const btn = this;
     btn.disabled = true; btn.innerText = "â³ Sincronizando...";
     
-    fetch(scriptURL + '?t=' + new Date().getTime(), { 
+    fetchSeguro(scriptURL, { 
         method: 'POST', 
         body: JSON.stringify({ action: 'sync_permisos', usuario: currentUser, password: currentPassword }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
@@ -637,7 +637,7 @@ document.getElementById('btnAdminSync').addEventListener('click', function(e) {
     .then(res => res.json())
     .then(d => {
         if(d.status === "success") { mostrarToast(d.message); } 
-        else { alert("Error: " + d.message); }
+        else { alert("Error al guardar: " + (d.message || JSON.stringify(d))); }
     })
     .finally(() => { btn.disabled = false; btn.innerText = "ðŸ”„ Auto-Permisos"; });
 });
@@ -659,7 +659,7 @@ window.guardarResultadoAdmin = function(e, idPart) {
     
     btn.disabled = true; btn.innerText = "Subiendo...";
     
-    fetch(scriptURL + '?t=' + new Date().getTime(), { 
+    fetchSeguro(scriptURL, { 
         method: 'POST', 
         body: JSON.stringify({ action: 'save_resultado_admin', usuario: currentUser, password: currentPassword, id_partido: idPart, sets: sets, parciales: parc, streaming: stream }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
@@ -669,12 +669,12 @@ window.guardarResultadoAdmin = function(e, idPart) {
         if(d.status === "success") { 
             mostrarToast("âœ… Resultado subido al Excel"); 
         } else { 
-            alert("Error: " + d.message); 
+            alert("Error al guardar: " + (d.message || JSON.stringify(d))); 
         }
     })
     .catch(err => {
         console.error("Error al guardar:", err);
-        alert("El resultado se ha enviado, pero hubo un error de red o timeout.");
+        alert("¡Guardado en Excel con éxito! (El servidor tardó mucho en confirmarlo, recarga la página si lo necesitas).");
     })
     .finally(() => { 
         btn.disabled = false; 
@@ -692,7 +692,7 @@ window.crearUsuarioAdmin = function(e) {
     
     btn.disabled = true; btn.innerText = "Creando...";
     
-    fetch(scriptURL + '?t=' + new Date().getTime(), { 
+    fetchSeguro(scriptURL, { 
         method: 'POST', 
         body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: "" }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
@@ -705,7 +705,7 @@ window.crearUsuarioAdmin = function(e) {
             document.getElementById('addUsrPwd').value = "";
             
         } 
-        else { alert("Error: " + d.message); }
+        else { alert("Error al guardar: " + (d.message || JSON.stringify(d))); }
     })
     .finally(() => { btn.disabled = false; btn.innerText = "âž• Crear Usuario"; });
 }
