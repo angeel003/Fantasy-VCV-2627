@@ -1499,5 +1499,15 @@ function renderizarHistorial() {
     iniciarRelojes(); 
 }
 </script>
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    reg.update(); // Forzar actualizacin siempre
+                }).catch(err => console.log('SW Error:', err));
+            });
+        }
+    </script>
 </body>
 </html>
