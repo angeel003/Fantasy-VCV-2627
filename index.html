@@ -216,11 +216,6 @@
         border: 1px solid var(--vcv-dorado);
     }
 
-    /* ESTILO INTRANET */
-    .admin-match-box {
-        background: #fff3e0; border: 1px solid #ffcc80; border-left: 5px solid #ff9800; padding: 15px; border-radius: 8px; margin-bottom: 10px;
-    }
-
     /* ---------------------------------------------------
        5. BOTON ATRAS (Pestaña flotante)
        --------------------------------------------------- */
@@ -272,6 +267,7 @@
 <div id="toastNotification">✅ Datos actualizados</div>
 
 <header>
+    <button id="btnLogout" title="Volver atrás">&#10094;</button>
     <div class="header-content">
         <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
@@ -366,6 +362,7 @@
                     <div style="font-size:1.4rem; font-weight:bold; color:var(--vcv-morado);" id="displayJugador"></div>
                     <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
                 </div>
+                
             </div>
             
             <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
@@ -511,8 +508,8 @@ const fetchSeguro = (url, options, retries = 1) => {
       document.getElementById('loginSection').classList.add('slide-in-left');
       sessionStorage.removeItem('vcv_slide_left');
   }
-  
-  const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
 
 // --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
 const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
@@ -524,7 +521,11 @@ let intervalTotalesCountdown = null;
 let globalHistorialData = [];
 let isSortDesc = true;
 let currentJornadaGlobal = 0;
-let isGuestMode = false;
+
+
+  let isGuestMode = false;
+
+
 
 function formatFecha(ts) {
     if(!ts) return "";
@@ -755,7 +756,7 @@ document.getElementById('btnChangePwd').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Actualizar Contraseña"; btn.disabled = false; });
 });
 
@@ -795,8 +796,26 @@ document.getElementById('btnReqName').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Enviar Solicitud"; btn.disabled = false; });
+});
+
+
+// ------------------------------------------------------------------
+// LOGICA DE BOTON VOLVER ATRAS / SALIR
+// ------------------------------------------------------------------
+document.getElementById('btnLogout').addEventListener('click', function() {
+    localStorage.removeItem('vcv_cache_data');
+    localStorage.removeItem('vcv_cache_type');
+    localStorage.removeItem('vcv_cache_creds');
+    sessionStorage.setItem('vcv_slide_left', 'true');
+    
+    document.getElementById('appSection').classList.add('slide-out-right');
+    this.style.transform = 'translateY(-50%) translateX(-100%)';
+    
+    setTimeout(() => {
+        window.location.href = window.location.pathname + '?v=' + new Date().getTime();
+    }, 280);
 });
 
 // LOGICA MODO INVITADO
@@ -813,12 +832,14 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
+            
             isGuestMode = true;
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
             document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex"; 
+            document.getElementById('btnReload').style.display = "flex";
+            document.getElementById('btnLogout').style.display = "block";
             document.querySelector('#prediccionForm > div').style.display = "none"; 
             document.getElementById('adminPanelWrapper').style.display = "none";
             
@@ -841,7 +862,8 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 let valJornada = String(eq.jornada_eq || "").trim();
                 let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
                 let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
+                let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+                  let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
                 let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
 
                 let infoAdicional = "";
@@ -874,6 +896,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                     ${infoLocFecha}
                     ${infoPabellon}
+                    
                     ${infoAdicional}
                 </div>`;
 
@@ -893,7 +916,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "👀 Entrar como Invitado"; 
         btn.disabled = false; 
@@ -917,6 +940,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
+            
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
@@ -966,6 +990,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let htmlPartidos = `<h4 style="color: var(--vcv-morado); margin-bottom: 20px;">Cartelera de Partidos</h4>`;
             let equiposPermitidos = 0;
             let equiposCerrados = 0;
+            let nowMs = new Date().getTime();
             
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.visibilidad === "MOSTRAR") {
@@ -977,13 +1002,15 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     }
                     
                     let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                    let infoLocFecha = "";
-                    if(iconoLoc || eq.timestamp) {
-                        infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
-                    }
+                    let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+                    let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
                     let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
                     
                     let categoryHtml = getCategoryHTML(eq.categoria);
+
+                    // --- LOGICA JUGADOR DESTACADO ---
+                      let destacadoHtml = "";
+                      // --- FIN LOGICA JUGADOR DESTACADO ---
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
@@ -992,6 +1019,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             ${infoPabellon}
+                            
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
@@ -1019,6 +1047,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     </select>
                                 </div>
                             </div>
+                            ${destacadoHtml}
                         </div>`;
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
@@ -1028,7 +1057,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             ${infoPabellon}
+                            
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
+                            ${destacadoHtml}
                         </div>`;
                     }
                 }
@@ -1186,14 +1217,14 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex"; 
-            cargarDatosAntiguos();
+            document.getElementById('btnReload').style.display = "flex";
+            document.getElementById('btnLogout').style.display = "block";
             iniciarRelojTotales();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "Entrar al Fantasy"; 
         btn.disabled = false; 
@@ -1316,7 +1347,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
         if (data.status === "success") { msgBox.className = "alert-box alert-success"; msgBox.innerText = "✅ " + data.message; } 
         else { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "❌ " + data.message; }
     })
-    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
+    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
 });
 
@@ -1422,13 +1453,14 @@ function renderizarHistorial() {
                 infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
             }
 
-            let infoLocFecha = "";
+            let streamIconHist = p.streaming ? ` <a href="${p.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+            let infoLocFecha = streamIconHist ? `<span style="margin-left:10px;">${streamIconHist}</span>` : "";
             let htmlReloj = "";
             let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
             
             if (esActual) {
                 if(iconoLoc || p.timestamp) {
-                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
+                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}${streamIconHist}</span>`;
                 }
                 if(p.timestamp && p.estado === "ABIERTO") {
                     htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
@@ -1499,6 +1531,10 @@ function renderizarHistorial() {
     iniciarRelojes(); 
 }
 </script>
+
+
+
+
     <script>
         // Registrar Service Worker para PWA
         if ('serviceWorker' in navigator) {
