@@ -25,6 +25,7 @@
         --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
     }
 
+    html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
 
     /* ---------------------------------------------------
@@ -32,7 +33,7 @@
        --------------------------------------------------- */
     @keyframes fadeScaleIn {
         0% { opacity: 0; transform: scale(0.98) translateY(15px); }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
+        100% { opacity: 1; transform: none; }
     }
     #loginSection, #appSection, #adminPanelWrapper {
         animation: fadeScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -456,8 +457,103 @@ const fetchSeguro = (url, options, retries = 1) => {
         });
 };
 
+const scriptURL = "https://script.google.com/macros/s/AKfycbzM7QuqH1yFRL9rSA7CAUHZX3cogU6AH3PAW36mQkWhMw2ZDnA3JhI-U2bC7TQyNOHz/exec";
 
-< 48 * 60 * 60 * 1000) {
+// --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
+const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
+// --------------------------------------------------------
+
+let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
+let intervalCountdown = null;
+let intervalTotalesCountdown = null;
+let globalHistorialData = [];
+let isSortDesc = true;
+let currentJornadaGlobal = 0;
+
+
+  let isGuestMode = false;
+
+
+
+function formatFecha(ts) {
+    if(!ts) return "";
+    let d = new Date(ts);
+    return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+function getBadgeCSS(type) {
+    if(type === 'admin') return 'badge-admin';
+    if(type === 'staff') return 'badge-staff';
+    if(type === 'entrenador') return 'badge-entrenador';
+    if(type === 'jugador') return 'badge-jugador';
+    if(type === 'exjugador') return 'badge-exjugador';
+    return '';
+}
+
+// ------------------------------------------------------------------
+// LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES
+// ------------------------------------------------------------------
+function showMobileTooltip(e, text) {
+    e.stopPropagation(); 
+    const tooltip = document.getElementById('mobileTooltip');
+    tooltip.innerText = text;
+    
+    const rect = e.target.getBoundingClientRect();
+    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    tooltip.style.top = rect.top + 'px';
+    
+    tooltip.classList.add('show');
+    
+    clearTimeout(tooltip.timeoutId);
+    tooltip.timeoutId = setTimeout(() => {
+        tooltip.classList.remove('show');
+    }, 3500); 
+}
+
+document.addEventListener('click', function(e) {
+    const tooltip = document.getElementById('mobileTooltip');
+    if (tooltip && tooltip.classList.contains('show')) {
+        tooltip.classList.remove('show');
+    }
+});
+
+function mostrarToast(mensaje) {
+    const toast = document.getElementById('toastNotification');
+    toast.innerText = mensaje;
+    toast.style.opacity = "1";
+    setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+}
+
+// ------------------------------------------------------------------
+// BOTÓN DE RECARGAR
+// ------------------------------------------------------------------
+document.getElementById('btnReload').addEventListener('click', function() {
+    const btn = this;
+    if(btn.classList.contains('spin-anim')) return; 
+    btn.classList.add('spin-anim');
+    
+    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
+    else { document.getElementById('btnLogin').click(); }
+    
+    let checkInterval = setInterval(() => {
+        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
+        if (!targetBtn.disabled) {
+            btn.classList.remove('spin-anim');
+            clearInterval(checkInterval);
+            mostrarToast("✅ Datos sincronizados");
+        }
+    }, 300);
+});
+
+// ------------------------------------------------------------------
+// FUNCIONES INTRANET ADMINISTRADOR
+// ------------------------------------------------------------------
+function renderAdminPanel(equipos) {
+    let html = "";
+    let now = new Date().getTime();
+    equipos.forEach(eq => {
+        let ts = eq.timestamp || Infinity;
+        if (now - ts < 48 * 60 * 60 * 1000) {
             html += `
             <div class="admin-match-box">
                 <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
