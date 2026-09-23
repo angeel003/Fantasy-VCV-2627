@@ -1,0 +1,67 @@
+# Registro de Cambios (Changelog) - Fantasy VCV 26/27
+
+2026-09-23 02:17:00
+- CreaciÃ³n del archivo `enlaces_guardados.txt` para respaldar las URLs de Google Apps Script y otras referencias externas de los archivos `dev.html` e `index.html`.
+
+2026-09-23 02:20:00
+- ActualizaciÃ³n de `enlaces_guardados.txt` para mantener exclusivamente las URLs de los Google Apps Script (backend) de desarrollo y producciÃ³n, evitando confusiones.
+
+2026-09-23 02:21:00
+- EliminaciÃ³n del enlace a la "Superliga Masculina 2 (Grupo A)" en la secciÃ³n de Clasificaciones Oficiales tanto en `dev.html` como en `index.html`.
+
+2026-09-23 02:24:00
+- CreaciÃ³n de una copia de seguridad (`backups/backup_2026-09-23_02-24`) conteniendo el entorno de producciÃ³n (`index.html` y `script-prod`).
+- Establecimiento de la regla de trabajar exclusivamente en el entorno de desarrollo (`dev.html` y `script-dev`) a menos que se indique lo contrario.
+
+2026-09-23 02:32:00
+- RestauraciÃ³n del archivo `dev.html` y los scripts de `script-dev` a partir de sus versiones de producciÃ³n (`index.html` y `script-prod`), manteniendo la URL del backend de desarrollo. Esto con el fin de reiniciar la implementaciÃ³n del MVP desde un estado limpio y funcional.
+
+2026-09-23 02:40:00
+- CreaciÃ³n de este registro de cambios (`changelog.txt`) para documentar paso a paso las modificaciones realizadas.
+
+
+2026-09-23 02:50:00
+- Creación del archivo instrucciones_excel.md con los pasos a seguir en Google Sheets.
+- Inicio de implementación de carga en 2 fases (Asíncrona) y funcionalidad de Jugador Destacado.
+
+2026-09-23 03:19:00
+- Optimización de login a petición única unificada (eliminando doble petición HTTP).
+- Integración completa y limpia de la funcionalidad Jugador Destacado (lectura de Plantillas, Votos_Destacado y Resultados Oficiales).
+- Verificación de sintaxis de dev.html y script-dev/Código.js.
+
+2026-09-23 03:26:00
+- Corrección en dev.html para renderizar el bloque de Jugador Destacado tanto en partidos ABIERTOS como CERRADOS (votación activa de 1h a 24h tras inicio).
+- Verificación de ejecución exitosa en Live Server.
+
+2026-09-23 03:36:00
+- Añadido botón 'Salir / Volver atrás' en dev.html para desconectarse sin recargar la página.
+- Modificado script-dev/Código.js para registrar automáticamente la fecha y hora de último acceso en la columna D de la pestaña 'Usuarios'.
+
+2026-09-23 03:52:00
+- Modificado botón de cerrar sesión a un icono discreto en la esquina superior izquierda.
+- Arreglado bug visual del login (restaurado a display flex).
+- Añadida lógica para mostrar un botón de Streaming Oficial en cada partido si está disponible.
+- Ampliada la pestaña de Administrador para editar un partido hasta 48 horas después de su inicio.
+- Añadidos campos en Intranet para que el Admin pueda introducir/editar el enlace de streaming y la frase del Jugador Destacado.
+
+2026-09-23 04:00:00
+- Arreglado bug en guardarResultadoAdmin que dejaba el botón pillado en 'Subiendo...'.
+- Modificado renderAdminPanel para inyectar correctamente los campos Streaming y Frase con límite de 48h.
+
+2026-09-23 04:10:00
+- (Corregido) El botón de salir ahora sí es una pequeña flecha en la esquina superior izquierda de la cabecera.
+- Modificada la lógica de visibilidad en el backend: los partidos ahora aguantan en estado MOSTRAR (visibles en cartelera y panel admin) hasta 48 horas después del inicio del partido, y luego pasan a OCULTAR automáticamente.
+
+2026-09-23 04:24:00
+- Implementado sistema de Caché 'Stale-While-Revalidate' para cargar la página al instante mientras se actualiza de fondo.
+- Ocultada la flecha de volver atrás en usuarios normales (solo visible para modo Invitado).
+- Rediseñada la flecha de volver atrás a una silueta más sutil (color tenue).
+- Añadido un discreto enlace 'Cerrar sesión' debajo del nombre de usuario para que los usuarios puedan salir de la cuenta cacheada si lo desean.
+
+2026-09-23 04:41:00
+- (Revertido) Se ha eliminado el sistema de caché localStorage debido a conflictos asíncronos y errores en la carga de datos (Cannot read properties of null).
+- (Corregido) La flecha de volver atrás ahora vuelve a aparecer para todos los usuarios (invitados y registrados) en el mismo lugar y formato sutil, permitiendo salir sin problemas.
+
+2026-09-23 05:03:00
+- Sincronizados archivos de desarrollo (dev.html y script-dev) con producción (index.html y script-prod).
+- Commit y push al repositorio de GitHub.

@@ -1,450 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Fantasy VCV 26/27</title>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-<!-- Recuperamos la fuente Golos Text original -->
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-    /* ---------------------------------------------------
-       1. VARIABLES DE COLOR OFICIALES DEL VCV
-       --------------------------------------------------- */
-    :root {
-        --vcv-morado: #783b7a; 
-        --vcv-blanco: #ffffff; 
-        --vcv-dorado: #cfb359; 
-        --vcv-rojo: #d24442; 
-        --vcv-negro: #000000;
-        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
-    }
-
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
-    
-    /* ---------------------------------------------------
-       3. CABECERAS Y TÍTULOS
-       --------------------------------------------------- */
-    header { background: var(--vcv-morado); color: var(--vcv-blanco); padding: 60px 15px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
-    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
-    
-    h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
-    h2 { margin-bottom: 35px; text-align: center; }
-
-    section { padding: 50px 15px; text-align: center; }
-    .section-alt { background: #e9ecef; }
-    
-    /* ---------------------------------------------------
-       4. TABLAS Y CAJAS
-       --------------------------------------------------- */
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
-    th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
-    thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
-    .medal-1 { background: #fff8e1; font-weight: bold; }
-    .medal-2 { background: #f8f9fa; font-weight: bold; }
-    .medal-3 { background: #fff4e6; font-weight: bold; }
-
-    /* ---------------------------------------------------
-       5. BOTONES E INTERACCIONES
-       --------------------------------------------------- */
-    .btn-primary { background-color: var(--vcv-morado); border-color: var(--vcv-morado); color: var(--vcv-blanco); }
-    .btn-primary:hover, .btn-primary:focus { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
-    
-    .btn-success { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
-    .btn-success:hover { background-color: #b89c45; border-color: #b89c45; color: var(--vcv-negro); }
-
-    .btn-outline-primary { border: 2px solid var(--vcv-morado); color: var(--vcv-morado); }
-    .btn-outline-primary:hover { background-color: var(--vcv-morado); color: var(--vcv-blanco); }
-
-    .form-container { max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
-    .form-group label { font-weight: bold; color: var(--vcv-morado); }
-    
-    /* ---------------------------------------------------
-       6. ALERTAS Y MENSAJES
-       --------------------------------------------------- */
-    .alert-box { display: none; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 20px; }
-    .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-    .alert-danger { background: #fde8e8; color: var(--vcv-rojo); border: 1px solid #f8caca; }
-    .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
-    .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
-
-    #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
-    .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
-    
-    .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
-    .faq-title { font-weight: bold; color: var(--vcv-morado); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
-    .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
-    .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .faq-summary { font-weight: 600; color: var(--vcv-negro); cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
-    .faq-summary:hover { color: var(--vcv-dorado); }
-    .faq-content { font-size: 0.95rem; color: #555; padding: 10px 5px 5px 15px; line-height: 1.6; }
-    .faq-email { font-weight: bold; color: var(--vcv-morado); }
-    
-    footer { background: var(--vcv-negro); color: var(--vcv-blanco); padding: 20px 0; text-align: center; border-top: 3px solid var(--vcv-dorado); }
-
-    .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:var(--bg-general); padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
-    .filter-checkbox input { margin-right:6px; cursor:pointer; }
-    
-    /* ---------------------------------------------------
-       7. ESTILOS DE LOS VERIFICADOS Y TOOLTIP FLOTANTE
-       --------------------------------------------------- */
-    .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: pointer; }
-    .badge-header { width: 24px; height: 24px; cursor: pointer; transition: transform 0.2s; }
-    .badge-header:hover { transform: scale(1.1); }
-    
-    .badge-jugador { filter: none; }
-    .badge-entrenador { filter: hue-rotate(270deg) saturate(150%); }
-    .badge-staff { filter: hue-rotate(180deg) saturate(200%); }
-    .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
-    .badge-exjugador { filter: grayscale(100%) brightness(0%); }
-
-    #mobileTooltip {
-        position: fixed;
-        background: var(--vcv-morado);
-        color: var(--vcv-blanco);
-        padding: 8px 14px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        z-index: 9999;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        transform: translate(-50%, calc(-100% - 10px));
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        white-space: normal;
-        max-width: 250px;
-        text-align: center;
-        font-weight: bold;
-        border: 1px solid var(--vcv-dorado);
-    }
-    #mobileTooltip.show { opacity: 1; }
-
-    /* ESTILOS DEL LOGO/TEXTO DE LA CATEGORÍA */
-    .card-match { position: relative; } 
-    .cat-badge-img {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        max-height: 35px;
-        max-width: 80px;
-        object-fit: contain;
-    }
-    .cat-badge-text {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        color: #555;
-        background: #e9ecef;
-        padding: 4px 8px;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-    }
-
-    /* ---------------------------------------------------
-       8. BOTÓN FLOTANTE DE RECARGA Y AVISOS
-       --------------------------------------------------- */
-    #btnReload {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background-color: var(--vcv-dorado);
-        color: var(--vcv-morado);
-        border: 2px solid var(--vcv-morado);
-        border-radius: 50%;
-        width: 55px;
-        height: 55px;
-        font-size: 1.6rem;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        cursor: pointer;
-        z-index: 9999;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-        padding: 0;
-        outline: none;
-    }
-    #btnReload:hover {
-        background-color: #b89c45;
-        transform: scale(1.1);
-    }
-    .spin-anim {
-        animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); } 
-    }
-    #toastNotification {
-        position: fixed;
-        bottom: 90px;
-        right: 25px;
-        background: var(--vcv-morado);
-        color: var(--vcv-blanco);
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        z-index: 9998;
-        border: 1px solid var(--vcv-dorado);
-    }
-
-    
-    /* ESTILOS DEL JUGADOR DESTACADO */
-    .mvp-box { background: #fdfbf7; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-top: 15px; }
-    .mvp-title { font-weight: bold; color: var(--vcv-dorado); font-size: 1.05rem; margin-bottom: 10px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); }
-    .mvp-bar-bg { background: #e9ecef; border-radius: 4px; height: 22px; width: 100%; position: relative; overflow: hidden; margin-bottom: 6px; }
-    .mvp-bar-fill { background: linear-gradient(90deg, var(--vcv-morado), #9b59b6); height: 100%; width: 0%; transition: width 0.5s ease; }
-    .mvp-bar-text { position: absolute; top: 0; left: 8px; line-height: 22px; font-size: 0.8rem; color: #fff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); z-index: 2; }
-    .mvp-bar-pct { position: absolute; top: 0; right: 8px; line-height: 22px; font-size: 0.8rem; color: #333; font-weight: bold; z-index: 2; }
-    .mvp-winner-box { background: linear-gradient(135deg, var(--vcv-morado), #5e2e60); color: white; border-radius: 8px; padding: 15px; margin-top: 15px; text-align: center; border: 2px solid var(--vcv-dorado); }
-    .mvp-quote { font-style: italic; color: #f1c40f; margin-top: 8px; font-size: 0.95rem; }
-    .mvp-quote::before { content: "«"; font-size: 1.2rem; }
-    .mvp-quote::after { content: "»"; font-size: 1.2rem; }
-
-    /* ESTILO INTRANET */
-    .admin-match-box {
-        background: #fff3e0; border: 1px solid #ffcc80; border-left: 5px solid #ff9800; padding: 15px; border-radius: 8px; margin-bottom: 10px;
-    }
-</style>
-</head>
-<body>
-
-<div id="mobileTooltip"></div>
-<button id="btnReload" title="Sincronizar y recargar datos">🔄</button>
-<div id="toastNotification">✅ Datos actualizados</div>
-
-<header>
-    <button id="btnLogout" style="display:none; position:absolute; left:15px; top:15px; background:transparent; border:none; color:rgba(255,255,255,0.7); font-size:1.5rem; cursor:pointer; padding:0; outline:none; text-shadow:none;" title="Volver atrás">&#10094;</button>
-    <div class="header-content">
-        <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
-    </div>
-</header>
-
-<div id="loginSection">
-    <div class="login-card">
-        <h3 style="color: var(--vcv-morado); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
-        <div class="form-group text-left">
-            <label>Usuario</label>
-            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
-        </div>
-        <div class="form-group text-left">
-            <label>Contraseña</label>
-            <input type="password" id="loginPassword" class="form-control" placeholder="Tu contraseña" required>
-        </div>
-        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar al Fantasy</button>
-        <button id="btnGuest" class="btn btn-outline-secondary btn-block mt-2" style="font-weight:bold;">👀 Entrar como Invitado</button>
-        <div id="loginMessage" class="alert-box mt-3"></div>
-    </div>
-
-    <div class="faq-container">
-        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
-        <details class="faq-details">
-            <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
-            <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
-        </details>
-        <details class="faq-details">
-            <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
-            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
-        </details>
-        
-        <details class="faq-details">
-            <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
-            <div class="faq-content">
-                <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
-                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
-                    
-                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
-                        ⚠️ <b>Atención:</b> Por motivos de seguridad, te rogamos encarecidamente que <b>NO utilices la misma contraseña que usas para cosas importantes</b> (como tu correo electrónico, banco o redes sociales). Esta es una plataforma lúdica.
-                    </div>
-
-                    <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
-                    <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
-                    <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
-                    <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite la nueva contraseña" required>
-                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnChangePwd" style="font-weight:bold;">Actualizar Contraseña</button>
-                    <div id="msgChangePwd" class="alert-box mt-3" style="padding:10px;"></div>
-                </div>
-                <p class="mt-3">¿La has olvidado y no puedes entrar? Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca.</p>
-            </div>
-        </details>
-
-        <details class="faq-details">
-            <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
-            <div class="faq-content">
-                <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
-                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
-                    <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
-                    <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
-                    <hr>
-                    <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (déjalo en blanco si no quieres cambiarlo)">
-                    <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (déjalo en blanco si no quieres cambiarlo)">
-                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnReqName" style="font-weight:bold;">Enviar Solicitud</button>
-                    <div id="msgReqName" class="alert-box mt-3" style="padding:10px;"></div>
-                </div>
-            </div>
-        </details>
-
-        <details class="faq-details">
-            <summary class="faq-summary">🆕 Aún no tengo cuenta / Crear cuenta</summary>
-            <div class="faq-content">
-                <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
-                <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li><b>Nombre de usuario</b> deseado (necesario para iniciar sesión).</li>
-                    <li><b>Nombre real o alias</b> (opcional, si quieres que se muestre en la clasificación).</li>
-                    <li><b>Tu relación con el club:</b> si eres jugador (indica de qué equipo), entrenador, exjugador, etc., para añadirte tu logo de verificado.</li>
-                    <li><b>Ligas privadas:</b> si quieres unirte a alguna clasificación en concreto ya creada con tus amigos/equipo.</li>
-                    <li><b>Equipos a predecir:</b> a qué equipos quieres poder mandar predicciones (por defecto se te asignarán las categorías más altas del VCV).</li>
-                </ul>
-            </div>
-        </details>
-    </div>
-</div>
-
-<div id="appSection" style="display: none;">
-    <section>
-        <h2 id="tituloPrincipalSeccion">Mis Predicciones</h2>
-        <div class="form-container">
-            <div class="row mb-3" style="background:var(--bg-general); border: 2px solid var(--vcv-morado); padding:15px; border-radius:8px; align-items:center;">
-                <div class="col-md-12 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
-                    <div style="font-size:1.4rem; font-weight:bold; color:var(--vcv-morado);" id="displayJugador"></div>
-                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
-                </div>
-                
-            </div>
-            
-            <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
-            <div id="adminPanelWrapper" style="display: none; background: #343a40; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--vcv-dorado);">
-                <details>
-                    <summary style="font-weight:bold; color:var(--vcv-dorado); font-size:1.2rem; cursor:pointer; outline:none; text-align:center;">
-                        🛠️ INTRANET ADMINISTRADOR
-                    </summary>
-                    <div style="margin-top: 20px;">
-                        
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
-                            <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
-                        </div>
-
-                        <!-- NUEVA SECCIÓN DE CREAR USUARIOS -->
-                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h5>
-                        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
-                            <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
-                            <input type="text" id="addUsrReal" class="form-control form-control-sm mb-2" placeholder="Nombre real (Opcional)">
-                            <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
-                        </div>
-                        
-                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
-                        <div id="adminListaPartidos"></div>
-                        
-                    </div>
-                </details>
-            </div>
-            
-            <form id="prediccionForm">
-                
-                <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;">
-                    <details>
-                        <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
-                            ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
-                        </summary>
-                        <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                            <p style="margin-bottom: 8px;"><b>1. Diferencia de Puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
-                            <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
-                                <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
-                                • Set 1: VCV gana de 5<br>
-                                • Set 2: VCV pierde de 2<br>
-                                • Set 3: VCV gana de 10<br>
-                                • Set 4: VCV gana de 3<br>
-                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica.
-                            </div>
-                            
-                            <p style="margin-bottom: 8px;"><b>2. Signo <span style="color:var(--vcv-rojo);">(¡VITAL!)</span>:</b> Indica si esa diferencia de puntos será a favor del VCV o del equipo rival.</p>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px dashed #ffeeba; margin-bottom: 12px; font-size: 0.85rem; color: #856404;">
-                                <b>En el ejemplo anterior:</b> Como el VCV ha ganado el partido por una diferencia global de 16 puntos, tendrías que elegir <b>"A favor (+)"</b>. <br>
-                                ⚠️ Si escribes 16 pero marcas <i>"En contra (-)"</i>, tu predicción fallará por completo, ya que el sistema entenderá que creías que el VCV iba a <b>perder</b> por 16 puntos de diferencia. ¡Asegúrate de poner el signo correcto!
-                            </div>
-                            
-                            <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
-                            
-                            <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
-                            <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
-                                <li>Cargando sistema de puntuación...</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
-                
-                <hr>
-                <div id="contenedorPartidos"></div>
-
-                <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
-                    <p style="color:var(--vcv-rojo); font-size:0.95rem; font-weight:bold; margin:0;">
-                        ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
-                    </p>
-                </div>
-
-                <div id="appMessage" class="alert-box"></div>
-
-                <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
-            </form>
-        </div>
-    </section>
-
-    <section class="section-alt" id="clasificacionesSection">
-        <h2>Clasificaciones Privadas</h2>
-        <div id="tablasClasificacionContainer"></div>
-    </section>
-
-    <section>
-        <h2>📊 Clasificaciones Oficiales (Federación)</h2>
-        <p style="color:#555; margin-bottom:25px;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales:</p>
-        <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
-            <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
-            <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
-        </div>
-    </section>
-
-    <section class="section-alt" id="historialSection">
-        <h2>Mi Historial Privado</h2>
-        <p>Consulta tus predicciones, los resultados oficiales y los puntos que ganaste.</p>
-        <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">
-            🔒 Cargar mi historial
-        </button>
-        <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
-        
-        <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:var(--vcv-blanco); padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
-            <div style="font-weight:bold; color:var(--vcv-morado); margin-bottom:12px; font-size:1.1rem;">Filtrar por Equipo:</div>
-            <div id="filterEquiposContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
-            <hr style="margin:15px 0;">
-            <button id="btnToggleSort" class="btn btn-outline-dark btn-sm" style="font-weight:bold;">⬇️ Orden Descendente (Nuevos primero)</button>
-        </div>
-
-        <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
-    </section>
-    
-    <section id="prediccionesTotalesSection" style="display:none;">
-        <h2 style="margin-bottom:15px;">🎯 Predicciones Finales de Temporada</h2>
-        <p style="color:#555; max-width:600px; margin:0 auto 30px auto;">Aquí puedes predecir los puntos totales que conseguirá cada equipo a final de temporada. ¡Esta sección es exclusiva!</p>
-        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; border-top: 5px solid var(--vcv-dorado);">
-            <!-- Se rellenará automáticamente -->
-        </div>
-    </section>
-
-</div>
-
-<footer><p>© Fantasy VCV 2026-2027</p></footer>
-
-<script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbzM7QuqH1yFRL9rSA7CAUHZX3cogU6AH3PAW36mQkWhMw2ZDnA3JhI-U2bC7TQyNOHz/exec";
 
 // --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
@@ -480,7 +34,7 @@ window.votarDestacado = function(e, idPart) {
         } else { alert("Error: " + d.message); btn.disabled = false; btn.innerText = "Votar"; }
     })
     .catch(() => { alert("Error de conexión."); btn.disabled = false; btn.innerText = "Votar"; });
-};
+}
 
 function formatFecha(ts) {
     if(!ts) return "";
@@ -557,26 +111,18 @@ document.getElementById('btnReload').addEventListener('click', function() {
 // ------------------------------------------------------------------
 function renderAdminPanel(equipos) {
     let html = "";
-    let now = new Date().getTime();
     equipos.forEach(eq => {
-        let ts = eq.timestamp || Infinity;
-        if (now - ts < 48 * 60 * 60 * 1000) {
-            html += `
-            <div class="admin-match-box">
-                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="Sets (3-1)" value="${eq.oficial_sets || ''}">
-                        <input type="text" id="adm_parc_${eq.id_partido}" class="form-control form-control-sm" placeholder="Parc (25-20...)" value="${eq.oficial_parciales || ''}">
-                    </div>
-                    <input type="text" id="adm_stream_${eq.id_partido}" class="form-control form-control-sm" placeholder="Link Streaming YouTube/Twitch" value="${eq.streaming || ''}">
-                    <input type="text" id="adm_frase_${eq.id_partido}" class="form-control form-control-sm" placeholder="Frase del Jugador Destacado (opcional)" value="${eq.frase_destacado || ''}">
-                </div>
-                <button class="btn btn-sm btn-dark mt-2" style="font-weight:bold;" onclick="guardarResultadoAdmin(event, '${eq.id_partido}')">💾 Guardar Todo</button>
-            </div>`;
-        }
+        html += `
+        <div class="admin-match-box">
+            <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="Sets (3-1)" value="${eq.oficial_sets}">
+                <input type="text" id="adm_parc_${eq.id_partido}" class="form-control form-control-sm" placeholder="Parc (25-20,25-23...)" value="${eq.oficial_parciales}">
+            </div>
+            <button class="btn btn-sm btn-dark mt-2" style="font-weight:bold;" onclick="guardarResultadoAdmin(event, '${eq.id_partido}')">💾 Subir Resultado</button>
+        </div>`;
     });
-    if (html === "") html = "<div style='color:white; font-size:0.9rem;'>No hay partidos disponibles o han pasado más de 48h.</div>";
+    if (html === "") html = "<div style='color:white; font-size:0.9rem;'>No hay partidos disponibles.</div>";
     document.getElementById('adminListaPartidos').innerHTML = html;
 }
 
@@ -600,43 +146,25 @@ document.getElementById('btnAdminSync').addEventListener('click', function(e) {
 
 window.guardarResultadoAdmin = function(e, idPart) {
     e.preventDefault();
-    const btn = e.currentTarget || e.target;
-    
-    // Leer valores, protegiendo si no existen los nuevos inputs
-    const elSets = document.getElementById(`adm_sets_${idPart}`);
-    const elParc = document.getElementById(`adm_parc_${idPart}`);
-    const elStream = document.getElementById(`adm_stream_${idPart}`);
-    const elFrase = document.getElementById(`adm_frase_${idPart}`);
-    
-    const sets = elSets ? elSets.value.trim() : "";
-    const parc = elParc ? elParc.value.trim() : "";
-    const stream = elStream ? elStream.value.trim() : "";
-    const frase = elFrase ? elFrase.value.trim() : "";
+    const btn = e.target;
+    const sets = document.getElementById(`adm_sets_${idPart}`).value.trim();
+    const parc = document.getElementById(`adm_parc_${idPart}`).value.trim();
     
     btn.disabled = true; btn.innerText = "Subiendo...";
     
     fetch(scriptURL, { 
         method: 'POST', 
-        body: JSON.stringify({ action: 'save_resultado_admin', usuario: currentUser, password: currentPassword, id_partido: idPart, sets: sets, parciales: parc, streaming: stream, frase: frase }), 
+        body: JSON.stringify({ action: 'save_resultado_admin', usuario: currentUser, password: currentPassword, id_partido: idPart, sets: sets, parciales: parc }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     })
     .then(res => res.json())
     .then(d => {
-        if(d.status === "success") { 
-            mostrarToast("✅ Resultado subido al Excel"); 
-        } else { 
-            alert("Error: " + d.message); 
-        }
+        if(d.status === "success") { mostrarToast("✅ Resultado subido al Excel"); } 
+        else { alert("Error: " + d.message); }
     })
-    .catch(err => {
-        console.error("Error al guardar:", err);
-        alert("El resultado se ha enviado, pero hubo un error de red o timeout.");
-    })
-    .finally(() => { 
-        btn.disabled = false; 
-        btn.innerText = "💾 Guardar Todo"; 
-    });
+    .finally(() => { btn.disabled = false; btn.innerText = "💾 Subir Resultado"; });
 }
+
 window.crearUsuarioAdmin = function(e) {
     e.preventDefault();
     const btn = e.target;
@@ -711,7 +239,7 @@ document.getElementById('btnChangePwd').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Actualizar Contraseña"; btn.disabled = false; });
 });
 
@@ -751,31 +279,8 @@ document.getElementById('btnReqName').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message;
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { btn.innerText = "Enviar Solicitud"; btn.disabled = false; });
-});
-
-
-// ------------------------------------------------------------------
-// LOGICA DE BOTON VOLVER ATRAS / SALIR
-// ------------------------------------------------------------------
-document.getElementById('btnLogout').addEventListener('click', function() {
-    localStorage.removeItem('vcv_cache_data');
-    localStorage.removeItem('vcv_cache_type');
-    localStorage.removeItem('vcv_cache_creds');
-    localStorage.removeItem('vcv_cache_data');
-    localStorage.removeItem('vcv_cache_type');
-    localStorage.removeItem('vcv_cache_creds');
-    currentUser = null;
-    currentPassword = null;
-    isGuestMode = false;
-    document.getElementById('loginUsuario').value = '';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('appSection').style.display = 'none';
-    document.getElementById('btnReload').style.display = 'none';
-    document.getElementById('btnLogout').style.display = 'none';
-    document.getElementById('loginMessage').style.display = 'none';
-    document.getElementById('loginSection').style.display = 'flex';
 });
 
 // LOGICA MODO INVITADO
@@ -792,14 +297,12 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
-            
             isGuestMode = true;
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
             document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
-            document.getElementById('btnLogout').style.display = "block";
+            document.getElementById('btnReload').style.display = "flex"; 
             document.querySelector('#prediccionForm > div').style.display = "none"; 
             document.getElementById('adminPanelWrapper').style.display = "none";
             
@@ -822,8 +325,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 let valJornada = String(eq.jornada_eq || "").trim();
                 let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
                 let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="color:#d32f2f; text-decoration:none; margin-left:6px; font-size:1.1rem;" title="Ver Streaming Oficial">▶️</a>` : "";
-                  let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
+                let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>` : "";
                 let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
 
                 let infoAdicional = "";
@@ -856,7 +358,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                     ${infoLocFecha}
                     ${infoPabellon}
-                    
                     ${infoAdicional}
                 </div>`;
 
@@ -876,7 +377,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "👀 Entrar como Invitado"; 
         btn.disabled = false; 
@@ -896,11 +397,30 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Accediendo...'; 
     msgBox.style.display = "none";
 
-    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login_auth', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
-    .then(data => {
+    .then(dataAuth => {
+        if (dataAuth.status !== "success") {
+            msgBox.className = "alert-box alert-danger"; msgBox.innerText = dataAuth.message; msgBox.style.display = "block";
+            btn.disabled = false; btn.innerText = "Entrar al Fantasy"; return;
+        }
+        currentUser = usr; currentPassword = pwd;
+        document.getElementById('displayJugador').innerHTML = "👤 " + (dataAuth.nombre_real || usr);
+        let misInsignias = dataAuth.insignias[usr] || [];
+        let insigniasHeaderHtml = ""; let isAdmin = false;
+        misInsignias.forEach(b => {
+            if (b.type === 'admin') isAdmin = true;
+            insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${getBadgeCSS(b.type)}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
+        });
+        document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
+        if (isAdmin) { document.getElementById('adminPanelWrapper').style.display = "block"; }
+        
+        msgBox.className = "alert-box alert-success"; msgBox.innerText = "¡Credenciales correctas! Descargando cartelera de partidos..."; msgBox.style.display = "block";
+        
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'get_data', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+        .then(res => res.json())
+        .then(data => {
         if(data.status === "success") {
-            
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
             
@@ -950,7 +470,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             let htmlPartidos = `<h4 style="color: var(--vcv-morado); margin-bottom: 20px;">Cartelera de Partidos</h4>`;
             let equiposPermitidos = 0;
             let equiposCerrados = 0;
-            let nowMs = new Date().getTime();
             
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.visibilidad === "MOSTRAR") {
@@ -962,53 +481,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     }
                     
                     let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
-                    let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="color:#d32f2f; text-decoration:none; margin-left:6px; font-size:1.1rem;" title="Ver Streaming Oficial">▶️</a>` : "";
-                    let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
+                    let infoLocFecha = "";
+                    if(iconoLoc || eq.timestamp) {
+                        infoLocFecha = `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}</div>`;
+                    }
                     let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
                     
                     let categoryHtml = getCategoryHTML(eq.categoria);
-
-                    // --- LOGICA JUGADOR DESTACADO ---
-                    let destacadoHtml = "";
-                    let ts1h = eq.timestamp ? (eq.timestamp + (60 * 60 * 1000)) : 0;
-                    let ts24h = eq.timestamp ? (eq.timestamp + (24 * 60 * 60 * 1000)) : 0;
-                    
-                    if (eq.timestamp && nowMs < ts1h) {
-                        let d = new Date(ts1h);
-                        let h1 = d.getHours().toString().padStart(2, '0'); let m1 = d.getMinutes().toString().padStart(2, '0');
-                        destacadoHtml = `<div class="mvp-box"><div style="color:#666; font-size:0.9rem; text-align:center;">⏳ La votación del <b>Jugador Destacado</b> se abrirá a las ${h1}:${m1}</div></div>`;
-                    } else if (eq.timestamp && nowMs >= ts1h && nowMs < ts24h) {
-                        if (eq.plantilla && eq.plantilla.length > 0) {
-                            if (eq.votos_data && eq.votos_data.my_voto) {
-                                let resultsArray = Object.keys(eq.votos_data.votos).map(j => { return { nombre: j, votos: eq.votos_data.votos[j] }; });
-                                resultsArray.sort((a,b) => b.votos - a.votos);
-                                let totalVotos = eq.votos_data.total || 1;
-                                let barras = resultsArray.map(res => {
-                                    let pct = Math.round((res.votos / totalVotos) * 100);
-                                    let highlight = (res.nombre === eq.votos_data.my_voto) ? 'box-shadow: 0 0 5px var(--vcv-dorado); border: 1px solid var(--vcv-dorado);' : '';
-                                    return `<div class="mvp-bar-bg" style="${highlight}"><div class="mvp-bar-fill" style="width: ${pct}%;"></div><div class="mvp-bar-text">${res.nombre} ${res.nombre === eq.votos_data.my_voto ? '(Tú)' : ''}</div><div class="mvp-bar-pct">${pct}% (${res.votos})</div></div>`;
-                                }).join("");
-                                destacadoHtml = `<div class="mvp-box"><div class="mvp-title">📊 Resultados Jugador Destacado</div>${barras}</div>`;
-                            } else {
-                                let opciones = `<option value="">Selecciona un jugador...</option>` + eq.plantilla.map(j => `<option value="${j}">${j}</option>`).join("");
-                                destacadoHtml = `<div class="mvp-box" style="border-color: var(--vcv-dorado); background: #fffdf5;"><div class="mvp-title">⭐ ¡Vota al Jugador Destacado!</div><div style="display:flex; gap:10px;"><select class="form-control" id="sel_destacado_${eq.id_partido}">${opciones}</select><button class="btn btn-primary" style="font-weight:bold; white-space:nowrap;" onclick="votarDestacado(event, '${eq.id_partido}')">Votar</button></div></div>`;
-                            }
-                        } else {
-                            destacadoHtml = `<div class="mvp-box"><div style="color:#888; font-size:0.85rem; text-align:center;">Plantilla no disponible para votación.</div></div>`;
-                        }
-                    } else if (eq.timestamp && nowMs >= ts24h && eq.votos_data && eq.votos_data.total > 0) {
-                        let resultsArray = Object.keys(eq.votos_data.votos).map(j => { return { nombre: j, votos: eq.votos_data.votos[j] }; });
-                        resultsArray.sort((a,b) => b.votos - a.votos);
-                        let ganador = resultsArray[0];
-                        let pct = Math.round((ganador.votos / eq.votos_data.total) * 100);
-                        let fraseHtml = eq.frase_destacado ? `<div class="mvp-quote">${eq.frase_destacado}</div>` : "";
-                        
-                        let photoUrl = `files/jugadores/${ganador.nombre.replace(/ /g, '_')}.png`;
-                        let photoHtml = `<img src="${photoUrl}" onerror="this.style.display='none'" style="width:60px; height:60px; border-radius:50%; border:2px solid var(--vcv-dorado); background:#fff; margin-bottom:10px; object-fit:cover;">`;
-                        
-                        destacadoHtml = `<div class="mvp-winner-box"><div style="font-size:0.85rem; color:#f8f9fa; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">⭐ Jugador Destacado ⭐</div>${photoHtml}<div style="font-size:1.3rem; font-weight:bold; color:var(--vcv-dorado);">${ganador.nombre}</div><div style="font-size:0.8rem; color:#eee; margin-top:2px;">Elegido con el ${pct}% de los votos</div>${fraseHtml}</div>`;
-                    }
-                    // --- FIN LOGICA JUGADOR DESTACADO ---
 
                     if (eq.estado === "ABIERTO") {
                         htmlPartidos += `
@@ -1017,7 +496,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             ${infoPabellon}
-                            
                             <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
                             <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="form-group col-md-4">
@@ -1045,7 +523,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     </select>
                                 </div>
                             </div>
-                            ${destacadoHtml}
                         </div>`;
                     } else if (eq.estado === "CERRADO") {
                         equiposCerrados++;
@@ -1055,9 +532,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
                             ${infoLocFecha}
                             ${infoPabellon}
-                            
                             <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
-                            ${destacadoHtml}
                         </div>`;
                     }
                 }
@@ -1215,15 +690,14 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
-            document.getElementById('btnLogout').style.display = "block";
+            document.getElementById('btnReload').style.display = "flex"; 
             cargarDatosAntiguos();
             iniciarRelojTotales();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message; msgBox.style.display = "block";
         }
     })
-    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { 
         btn.innerText = "Entrar al Fantasy"; 
         btn.disabled = false; 
@@ -1346,7 +820,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
         if (data.status === "success") { msgBox.className = "alert-box alert-success"; msgBox.innerText = "✅ " + data.message; } 
         else { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "❌ " + data.message; }
     })
-    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + err.stack; msgBox.style.display = "block"; })
+    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error de conexión."; msgBox.style.display = "block"; })
     .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
 });
 
@@ -1452,14 +926,13 @@ function renderizarHistorial() {
                 infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
             }
 
-            let streamIconHist = p.streaming ? ` <a href="${p.streaming}" target="_blank" style="color:#d32f2f; text-decoration:none; margin-left:6px; font-size:1.1rem;" title="Ver Streaming Oficial">▶️</a>` : "";
-            let infoLocFecha = streamIconHist ? `<span style="margin-left:10px;">${streamIconHist}</span>` : "";
+            let infoLocFecha = "";
             let htmlReloj = "";
             let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
             
             if (esActual) {
                 if(iconoLoc || p.timestamp) {
-                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}${streamIconHist}</span>`;
+                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}</span>`;
                 }
                 if(p.timestamp && p.estado === "ABIERTO") {
                     htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
@@ -1529,10 +1002,3 @@ function renderizarHistorial() {
     container.style.display = "block";
     iniciarRelojes(); 
 }
-</script>
-
-
-
-
-</body>
-</html>
