@@ -450,13 +450,18 @@ function doPost(e) {
         var carteleraInvitado = [];
         var idsEnInvitado = {};
         for(var p=0; p<partidos.length; p++) {
-            if(misPermisosInvitado[partidos[p].equipo_local] === true) {
+            var esLoc = misPermisosInvitado[partidos[p].equipo_local] === true;
+            var esRiv = misPermisosInvitado[partidos[p].rival] === true;
+            if(esLoc || esRiv) {
                 var pId = partidos[p].id_partido;
+                var pCopy = JSON.parse(JSON.stringify(partidos[p]));
+                if(esLoc && esRiv) pCopy.es_derby = true;
+                
                 if(!idsEnInvitado[pId]) {
-                    carteleraInvitado.push(partidos[p]);
-                    idsEnInvitado[pId] = partidos[p];
+                    carteleraInvitado.push(pCopy);
+                    idsEnInvitado[pId] = pCopy;
                 } else {
-                    idsEnInvitado[pId].es_derby = true;
+                    if(esLoc && esRiv) idsEnInvitado[pId].es_derby = true;
                 }
             }
         }
@@ -570,7 +575,7 @@ function doPost(e) {
                 sheetPermisos.getRange(rowPermisos + 1, colIndex + 1).setValue("X");
             }
         }
-        partidos[p].permitido = (misPermisos[eqLoc] === true);
+        partidos[p].permitido = (misPermisos[partidos[p].equipo_local] === true || misPermisos[partidos[p].rival] === true);
     }
 
     var porrasData = getSafeData(sheetPorras);
@@ -715,22 +720,35 @@ function doPost(e) {
         var idsEnTodos = {};
         
         for(var i=0; i<partidos.length; i++) { 
-            if(partidos[i].permitido) {
+            // We want to allow the match if they follow eqLoc OR rival.
+            // But since 'permitido' is only checking eqLoc right now, we should check both explicitly here!
+            var esLoc = misPermisos[partidos[i].equipo_local] === true;
+            var esRiv = misPermisos[partidos[i].rival] === true;
+            
+            if(esLoc || esRiv) {
                 var pId = partidos[i].id_partido;
+                var pCopy = JSON.parse(JSON.stringify(partidos[i]));
                 
-                if(!idsEnTodos[pId]) {
-                    todosPartidos.push(partidos[i]);
-                    idsEnTodos[pId] = partidos[i];
-                } else {
-                    idsEnTodos[pId].es_derby = true;
+                // Set the UI names properly. If they only follow the away team, make the away team local in their UI?
+                // No, the UI is fine as long as they see the match.
+                // The crucial part: Mark as derby if they follow BOTH teams!
+                if(esLoc && esRiv) {
+                    pCopy.es_derby = true;
                 }
                 
-                if(partidos[i].visibilidad === "MOSTRAR") {
+                if(!idsEnTodos[pId]) {
+                    todosPartidos.push(pCopy);
+                    idsEnTodos[pId] = pCopy;
+                } else {
+                    if(esLoc && esRiv) idsEnTodos[pId].es_derby = true;
+                }
+                
+                if(pCopy.visibilidad === "MOSTRAR") {
                     if(!idsEnCartelera[pId]) {
-                        cartelera.push(partidos[i]);
-                        idsEnCartelera[pId] = partidos[i];
+                        cartelera.push(pCopy);
+                        idsEnCartelera[pId] = pCopy;
                     } else {
-                        idsEnCartelera[pId].es_derby = true;
+                        if(esLoc && esRiv) idsEnCartelera[pId].es_derby = true;
                     }
                 }
             } 
@@ -785,7 +803,11 @@ function doPost(e) {
     if (action === "get_history") {
         var miHistorial = [];
         var matchdaysMap = {};
+        var idsEnHistorial = {};
         for(var i=0; i<partidos.length; i++) {
+            if(idsEnHistorial[partidos[i].id_partido]) continue;
+            idsEnHistorial[partidos[i].id_partido] = true;
+
             var p = partidos[i];
             if(!p.permitido) continue; 
             var rg = p.ronda_global;
