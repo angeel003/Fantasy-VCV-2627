@@ -448,8 +448,17 @@ function doPost(e) {
             for(var j=1; j<eqHeaders.length; j++) { misPermisosInvitado[eqHeaders[j]] = (dataPermisos[rowPermisosInvitado][j] && dataPermisos[rowPermisosInvitado][j].toString().toUpperCase() === "X"); }
         }
         var carteleraInvitado = [];
+        var idsEnInvitado = {};
         for(var p=0; p<partidos.length; p++) {
-            if(misPermisosInvitado[partidos[p].equipo_local] === true) { carteleraInvitado.push(partidos[p]); }
+            if(misPermisosInvitado[partidos[p].equipo_local] === true) {
+                var pId = partidos[p].id_partido;
+                if(!idsEnInvitado[pId]) {
+                    carteleraInvitado.push(partidos[p]);
+                    idsEnInvitado[pId] = partidos[p];
+                } else {
+                    idsEnInvitado[pId].es_derby = true;
+                }
+            }
         }
         return ContentService.createTextOutput(JSON.stringify({ "status": "success", "equipos": carteleraInvitado })).setMimeType(ContentService.MimeType.JSON);
     }
@@ -702,11 +711,27 @@ function doPost(e) {
 
         var cartelera = [];
         var todosPartidos = [];
+        var idsEnCartelera = {};
+        var idsEnTodos = {};
+        
         for(var i=0; i<partidos.length; i++) { 
             if(partidos[i].permitido) {
-                todosPartidos.push(partidos[i]);
+                var pId = partidos[i].id_partido;
+                
+                if(!idsEnTodos[pId]) {
+                    todosPartidos.push(partidos[i]);
+                    idsEnTodos[pId] = partidos[i];
+                } else {
+                    idsEnTodos[pId].es_derby = true;
+                }
+                
                 if(partidos[i].visibilidad === "MOSTRAR") {
-                    cartelera.push(partidos[i]);
+                    if(!idsEnCartelera[pId]) {
+                        cartelera.push(partidos[i]);
+                        idsEnCartelera[pId] = partidos[i];
+                    } else {
+                        idsEnCartelera[pId].es_derby = true;
+                    }
                 }
             } 
         }
