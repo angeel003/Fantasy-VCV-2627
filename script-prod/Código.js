@@ -682,8 +682,17 @@ function doPost(e) {
             clasificacionesFormateadas[nombreLiga] = ranking;
         }
 
+
         var cartelera = [];
-        for(var i=0; i<partidos.length; i++) { if(partidos[i].visibilidad === "MOSTRAR" && partidos[i].permitido) { cartelera.push(partidos[i]); } }
+        var todosPartidos = [];
+        for(var i=0; i<partidos.length; i++) { 
+            if(partidos[i].permitido) {
+                todosPartidos.push(partidos[i]);
+                if(partidos[i].visibilidad === "MOSTRAR") {
+                    cartelera.push(partidos[i]);
+                }
+            } 
+        }
 
         // ASOCIAR STREAMING A CADA PARTIDO
         for (var c = 0; c < cartelera.length; c++) {
@@ -691,13 +700,19 @@ function doPost(e) {
             var oRes = resultadosMap[cp.id_partido];
             cp.streaming = (oRes && oRes.streaming) ? oRes.streaming : "";
         }
+        for (var c = 0; c < todosPartidos.length; c++) {
+            var tp = todosPartidos[c];
+            var oRes = resultadosMap[tp.id_partido];
+            tp.streaming = (oRes && oRes.streaming) ? oRes.streaming : "";
+        }
+
 
         var rondaAbierta = sheetAjustes.getRange("B2").getValue() || "1";
 
         return ContentService.createTextOutput(JSON.stringify({ 
             "status": "success", 
             "jornada": rondaAbierta, 
-            "equipos": cartelera, 
+            "equipos": cartelera, "todos_partidos": todosPartidos, 
             "ligas": misLigas, 
             "clasificaciones": clasificacionesFormateadas,
             "nombre_real": miNombreReal,
