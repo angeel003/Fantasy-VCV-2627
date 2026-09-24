@@ -759,11 +759,18 @@ window.crearUsuarioAdmin = function(e) {
     
     if(!nu || !np) { alert("Usuario y Contraseña son obligatorios"); return; }
     
+    
+    const checkboxes = document.querySelectorAll('#adminLigasCheckboxes input[type="checkbox"]');
+    const selectedLigas = [];
+    checkboxes.forEach(cb => {
+        if (cb.checked) selectedLigas.push(cb.value);
+    });
+    
     btn.disabled = true; btn.innerText = "Creando...";
     
     fetchSeguro(scriptURL, { 
         method: 'POST', 
-        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: "" }), 
+        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: "" , ligas_seleccionadas: selectedLigas }), 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     })
     .then(res => res.json())

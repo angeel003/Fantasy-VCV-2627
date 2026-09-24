@@ -34,3 +34,4 @@ if old_js in text:
     print("Updated dev.html to use todas_las_ligas")
 else:
     print("Could not find old_js in dev.html")
+

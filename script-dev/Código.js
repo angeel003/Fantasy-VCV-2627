@@ -314,9 +314,12 @@ function doPost(e) {
                     var ligasSel = params.ligas_seleccionadas;
                     var ligasHeaders = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
                     for (var rL = 0; rL < ligasSel.length; rL++) {
-                        var cIdx = ligasHeaders.indexOf(ligasSel[rL]);
-                        if (cIdx !== -1) {
-                            sh.getRange(firstEmpty, cIdx + 1).setValue("X");
+                        var targetLiga = ligasSel[rL].toString().trim().toLowerCase();
+                        for (var col = 0; col < ligasHeaders.length; col++) {
+                            if (ligasHeaders[col] && ligasHeaders[col].toString().trim().toLowerCase() === targetLiga) {
+                                sh.getRange(firstEmpty, col + 1).setValue("X");
+                                break;
+                            }
                         }
                     }
                 }
