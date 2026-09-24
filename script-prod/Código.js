@@ -448,8 +448,22 @@ function doPost(e) {
             for(var j=1; j<eqHeaders.length; j++) { misPermisosInvitado[eqHeaders[j]] = (dataPermisos[rowPermisosInvitado][j] && dataPermisos[rowPermisosInvitado][j].toString().toUpperCase() === "X"); }
         }
         var carteleraInvitado = [];
+        var idsEnInvitado = {};
         for(var p=0; p<partidos.length; p++) {
-            if(misPermisosInvitado[partidos[p].equipo_local] === true) { carteleraInvitado.push(partidos[p]); }
+            var esLoc = misPermisosInvitado[partidos[p].equipo_local] === true;
+            var esRiv = misPermisosInvitado[partidos[p].rival] === true;
+            if(esLoc || esRiv) {
+                var pId = partidos[p].id_partido;
+                var pCopy = JSON.parse(JSON.stringify(partidos[p]));
+                if(esLoc && esRiv) pCopy.es_derby = true;
+                
+                if(!idsEnInvitado[pId]) {
+                    carteleraInvitado.push(pCopy);
+                    idsEnInvitado[pId] = pCopy;
+                } else {
+                    if(esLoc && esRiv) idsEnInvitado[pId].es_derby = true;
+                }
+            }
         }
         return ContentService.createTextOutput(JSON.stringify({ "status": "success", "equipos": carteleraInvitado })).setMimeType(ContentService.MimeType.JSON);
     }
@@ -561,7 +575,7 @@ function doPost(e) {
                 sheetPermisos.getRange(rowPermisos + 1, colIndex + 1).setValue("X");
             }
         }
-        partidos[p].permitido = (misPermisos[eqLoc] === true);
+        partidos[p].permitido = (misPermisos[partidos[p].equipo_local] === true || misPermisos[partidos[p].rival] === true);
     }
 
     var porrasData = getSafeData(sheetPorras);
@@ -629,6 +643,17 @@ function doPost(e) {
             if(u) { puntosPorUsuarioYLiga[u] = {}; for(var l=0; l<misLigas.length; l++){ puntosPorUsuarioYLiga[u][misLigas[l]] = 0; } }
         }
 
+        var permisosGlobalesMap = {};
+        for (var r=1; r<dataPermisos.length; r++) {
+            var usrPerm = dataPermisos[r][0];
+            if (usrPerm) {
+                permisosGlobalesMap[usrPerm] = {};
+                for(var j=1; j<eqHeaders.length; j++) {
+                    permisosGlobalesMap[usrPerm][eqHeaders[j]] = (dataPermisos[r][j] && dataPermisos[r][j].toString().toUpperCase() === "X");
+                }
+            }
+        }
+
         for(var pUser in porrasMap) {
             if(!puntosPorUsuarioYLiga[pUser]) continue;
             for(var pIdPart in porrasMap[pUser]) {
@@ -650,13 +675,19 @@ function doPost(e) {
                 var uDiff = parseInt(uPred.puntos) || 0;
                 if(uPred.signo === "En contra") uDiff = -uDiff;
 
+                var esDerby = permisosGlobalesMap[pUser] && permisosGlobalesMap[pUser][partidoInfo.equipo_local] === true && permisosGlobalesMap[pUser][partidoInfo.rival] === true;
+                var pS = esDerby ? ptsSets * 2 : ptsSets;
+                var pG = esDerby ? ptsGanador * 2 : ptsGanador;
+                var pDE = esDerby ? ptsDiffExacta * 2 : ptsDiffExacta;
+                var pD5 = esDerby ? ptsDiff5 * 2 : ptsDiff5;
+                
                 var ptsGanados = 0;
-                if(uPred.sets === oRes.sets) { ptsGanados += ptsSets; }
-                else if (uLocalWin === oLocalWin) { ptsGanados += ptsGanador; }
+                if(uPred.sets === oRes.sets) { ptsGanados += pS; }
+                else if (uLocalWin === oLocalWin) { ptsGanados += pG; }
 
                 var distancia = Math.abs(oDiff - uDiff);
-                if(distancia === 0) { ptsGanados += ptsDiffExacta; }
-                else if(distancia <= 5) { ptsGanados += ptsDiff5; }
+                if(distancia === 0) { ptsGanados += pDE; }
+                else if(distancia <= 5) { ptsGanados += pD5; }
 
                 for(var l=0; l<misLigas.length; l++){
                     var nombreLiga = misLigas[l];
@@ -685,11 +716,40 @@ function doPost(e) {
 
         var cartelera = [];
         var todosPartidos = [];
+        var idsEnCartelera = {};
+        var idsEnTodos = {};
+        
         for(var i=0; i<partidos.length; i++) { 
-            if(partidos[i].permitido) {
-                todosPartidos.push(partidos[i]);
-                if(partidos[i].visibilidad === "MOSTRAR") {
-                    cartelera.push(partidos[i]);
+            // We want to allow the match if they follow eqLoc OR rival.
+            // But since 'permitido' is only checking eqLoc right now, we should check both explicitly here!
+            var esLoc = misPermisos[partidos[i].equipo_local] === true;
+            var esRiv = misPermisos[partidos[i].rival] === true;
+            
+            if(esLoc || esRiv) {
+                var pId = partidos[i].id_partido;
+                var pCopy = JSON.parse(JSON.stringify(partidos[i]));
+                
+                // Set the UI names properly. If they only follow the away team, make the away team local in their UI?
+                // No, the UI is fine as long as they see the match.
+                // The crucial part: Mark as derby if they follow BOTH teams!
+                if(esLoc && esRiv) {
+                    pCopy.es_derby = true;
+                }
+                
+                if(!idsEnTodos[pId]) {
+                    todosPartidos.push(pCopy);
+                    idsEnTodos[pId] = pCopy;
+                } else {
+                    if(esLoc && esRiv) idsEnTodos[pId].es_derby = true;
+                }
+                
+                if(pCopy.visibilidad === "MOSTRAR") {
+                    if(!idsEnCartelera[pId]) {
+                        cartelera.push(pCopy);
+                        idsEnCartelera[pId] = pCopy;
+                    } else {
+                        if(esLoc && esRiv) idsEnCartelera[pId].es_derby = true;
+                    }
                 }
             } 
         }
@@ -743,7 +803,11 @@ function doPost(e) {
     if (action === "get_history") {
         var miHistorial = [];
         var matchdaysMap = {};
+        var idsEnHistorial = {};
         for(var i=0; i<partidos.length; i++) {
+            if(idsEnHistorial[partidos[i].id_partido]) continue;
+            idsEnHistorial[partidos[i].id_partido] = true;
+
             var p = partidos[i];
             if(!p.permitido) continue; 
             var rg = p.ronda_global;
@@ -768,12 +832,20 @@ function doPost(e) {
                     var uDiff = parseInt(uPred.puntos) || 0;
                     if(uPred.signo === "En contra") uDiff = -uDiff;
 
-                    if(uPred.sets === oRes.sets) { ptsGanados += ptsSets; motivos.push("Sets exactos (+" + ptsSets + ")"); }
-                    else if (uLocalWin === oLocalWin) { ptsGanados += ptsGanador; motivos.push("Acertar ganador (+" + ptsGanador + ")"); }
+                    var esDerby = misPermisos[p.equipo_local] === true && misPermisos[p.rival] === true;
+                    var pS = esDerby ? ptsSets * 2 : ptsSets;
+                    var pG = esDerby ? ptsGanador * 2 : ptsGanador;
+                    var pDE = esDerby ? ptsDiffExacta * 2 : ptsDiffExacta;
+                    var pD5 = esDerby ? ptsDiff5 * 2 : ptsDiff5;
+
+                    if(esDerby) motivos.push("🔥 DERBY (x2)");
+
+                    if(uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
+                    else if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Acertar ganador (+" + pG + ")"); }
 
                     var distancia = Math.abs(oDiff - uDiff);
-                    if(distancia === 0) { ptsGanados += ptsDiffExacta; motivos.push("Dif. exacta (+" + ptsDiffExacta + ")"); }
-                    else if(distancia <= 5) { ptsGanados += ptsDiff5; motivos.push("Dif. aproximada (+" + ptsDiff5 + ")"); }
+                    if(distancia === 0) { ptsGanados += pDE; motivos.push("Dif. exacta (+" + pDE + ")"); }
+                    else if(distancia <= 5) { ptsGanados += pD5; motivos.push("Dif. aproximada (+" + ptsDiff5 + ")"); }
                     if(ptsGanados === 0) { motivos.push("Sin aciertos"); }
                 }
             }

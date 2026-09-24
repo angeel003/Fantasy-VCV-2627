@@ -311,7 +311,7 @@
                 </div>
                 <div id="os-android" style="display:block;">
                     <p style="font-size:0.9rem; margin-bottom:10px;">Descarga el archivo APK e instálalo como una App nativa (acepta "Instalar de orígenes desconocidos" si tu móvil te avisa).</p>
-                    <a href="#" onclick="event.preventDefault();" class="btn btn-secondary btn-sm btn-block" style="font-weight:bold; border-radius:20px; cursor:not-allowed; opacity:0.7;">📥 Descargar APK Oficial (Próximamente)</a>
+                    <a href="#" onclick="event.preventDefault();" class="btn btn-secondary btn-sm btn-block" style="font-weight:bold; border-radius:20px; cursor:not-allowed; opacity:0.7;">🤖 Descargar APK Oficial (Próximamente)</a>
                 </div>
                 <div id="os-ios" style="display:none; text-align:left;">
                     <p style="font-size:0.9rem; margin-bottom:5px; color:#444;">Debido a las restricciones de Apple, instálala así:</p>
@@ -367,11 +367,11 @@
             <div class="faq-content">
                 <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
                 <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li><b>Nombre de usuario</b> deseado (necesario para iniciar sesión).</li>
-                    <li><b>Nombre real o alias</b> (opcional, si quieres que se muestre en la clasificación).</li>
-                    <li><b>Tu relación con el club:</b> si eres jugador (indica de qué equipo), entrenador, exjugador, etc., para añadirte tu logo de verificado.</li>
-                    <li><b>Ligas privadas:</b> si quieres unirte a alguna clasificación en concreto ya creada con tus amigos/equipo.</li>
-                    <li><b>Equipos a predecir:</b> a qué equipos quieres poder mandar predicciones (por defecto se te asignarán las categorías más altas del VCV).</li>
+                    <li><b>Nombre de usuario</b> deseado (ej: @juan_vcv).</li>
+                    <li><b>Contraseña</b> deseada.</li>
+                    <li><b>Relación con el club</b> (si juegas o entrenas, dinos en qué equipo/categoría) para añadir insignias a tu perfil.</li>
+                    <li><b>Equipos</b> que te gustaría seguir y predecir.</li>
+                    <li style="margin-top:5px;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con amigos. Escribe los usuarios de todos y los equipos que puntuarán en ella.</li>
                 </ul>
             </div>
         </details>
@@ -884,7 +884,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
-            document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
+            document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
             document.getElementById('btnReload').style.display = "flex";
@@ -897,8 +897,72 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('clasificacionesSection').style.display = "none";
             document.getElementById('historialSection').style.display = "none";
             document.getElementById('prediccionesTotalesSection').style.display = "none";
+            let calSec = document.getElementById('calendarioSection');
+            if (calSec) calSec.style.display = "none";
+            
+            // Mostrar banner promo de invitados
+            let promoDiv = document.getElementById('guestPromoBanner');
+            if (!promoDiv) {
+                promoDiv = document.createElement('div');
+                promoDiv.id = 'guestPromoBanner';
+                promoDiv.style = "background: linear-gradient(135deg, var(--vcv-morado), #1565c0); color: white; padding: 25px 20px; border-radius: 12px; margin-top: 30px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 2px solid var(--vcv-dorado);";
+                promoDiv.innerHTML = `
+                    <h3 style="color: var(--vcv-dorado); font-weight: bold; margin-bottom: 15px;">¿Quieres ver más? 🏐</h3>
+                    <p style="font-size: 1.05rem; margin-bottom: 15px;">Si quieres acceder a toda la información detallada, <b>resultados pasados</b>, <b>calendario completo de próximos partidos</b> de tus equipos favoritos y <b>jugar en la liga de pronósticos</b>, ¡tienes que registrarte!</p>
+                    <p style="font-size: 1rem; margin-bottom: 5px;">Envíanos un correo a <a href="mailto:adminfantasyvcv@gmail.com" style="color: var(--vcv-dorado); font-weight: bold; text-decoration: underline;">adminfantasyvcv@gmail.com</a> con:</p>
+                    <ul style="padding-left: 25px; margin-bottom: 15px; font-weight: bold; font-size: 0.95rem;">
+                        <li>Nombre de usuario (ej: @juan_vcv)</li>
+                        <li>Contraseña deseada</li>
+                        <li>Tu relación con el club (ej: jugador/entrenador, indicando de qué equipo y categoría) para añadir insignias a tu perfil.</li>
+                        <li>Qué equipos te gustaría seguir.</li>
+                        <li style="margin-top:8px; font-weight:normal;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con tus amigos. Escribe en el correo los nombres de usuario de todos los que os queráis unir y qué equipos puntuarán en vuestra clasificación.</li>
+                    </ul>
+                    <p style="font-size: 0.95rem; opacity: 0.9;"><i>Te crearemos la cuenta y te avisaremos enseguida para que puedas acceder al Fantasy VCV.</i></p>
+                `;
+                document.getElementById('prediccionForm').parentNode.appendChild(promoDiv);
+            }
+            promoDiv.style.display = "block";
+
+
+            
+            // FILTRO MODO INVITADO
+            let nowTime = new Date().getTime();
+            let limitTime = nowTime + (10 * 24 * 60 * 60 * 1000); // 10 days
+            
+            // Agrupar pasados por equipo para coger solo el más reciente
+            let pasadosPorEquipo = {};
+            let proximosFiltrados = [];
+            
+            data.equipos.forEach(eq => {
+                let esPasado = eq.oficial_sets && eq.oficial_sets.includes("-");
+                
+                if (esPasado) {
+                    if (!pasadosPorEquipo[eq.equipo_local]) {
+                        pasadosPorEquipo[eq.equipo_local] = eq;
+                    } else {
+                        // Keep the most recent (highest timestamp that is past, or just highest timestamp if multiple)
+                        let currentTs = pasadosPorEquipo[eq.equipo_local].timestamp || 0;
+                        let newTs = eq.timestamp || 0;
+                        if (newTs > currentTs) {
+                            pasadosPorEquipo[eq.equipo_local] = eq;
+                        }
+                    }
+                } else {
+                    // Es Próximo. Solo incluir si es en los próximos 10 días
+                    if (eq.timestamp && eq.timestamp <= limitTime) {
+                        proximosFiltrados.push(eq);
+                    } else if (!eq.timestamp) {
+                        // Si no tiene fecha, lo mostramos? El user dijo "que se vayan a jugar en los proximos 10 dias".
+                        // Lo ocultamos por si acaso, o lo mostramos? Mejor lo ocultamos si no hay fecha.
+                    }
+                }
+            });
+            
+            let pasadosFiltrados = Object.values(pasadosPorEquipo);
+            data.equipos = proximosFiltrados.concat(pasadosFiltrados);
 
             data.equipos.sort((a, b) => {
+
                 let tsA = a.timestamp || Infinity; 
                 let tsB = b.timestamp || Infinity;
                 return tsA - tsB; 
@@ -934,7 +998,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     esPasado = true;
                     infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#e2e3e5; color:#383d41; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🔒 Partido finalizado</span></div>`;
                 } else {
-                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Próximamente</span></div>`;
+                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Próximamente</span>${eq.timestamp ? `<div class="reloj-partido" data-ts="${eq.timestamp}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-left:10px;">Calculando tiempo...</div>` : ""}</div>`;
                 }
                 
                 let categoryHtml = getCategoryHTML(eq.categoria);
@@ -943,6 +1007,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 <div class="p-3 mb-3 card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     ${categoryHtml}
                     <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
                     ${infoLocFecha}
                     ${infoPabellon}
                     
@@ -954,13 +1019,14 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             });
 
             let finalHtml = "";
-            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Próximos Partidos</h4>` + htmlProximos;
+            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Partidos en los próximos 10 días</h4>` + htmlProximos;
             if(htmlPasados !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-top:30px; margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Últimos Resultados</h4>` + htmlPasados;
             
             if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
             document.getElementById('loginSection').style.display = "none";
+            if(typeof iniciarRelojes === 'function') iniciarRelojes();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
         }
@@ -991,6 +1057,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         if(data.status === "success") {
             
             currentUser = usr; currentPassword = pwd;
+            let calSec2 = document.getElementById('calendarioSection');
+            if (calSec2) calSec2.style.display = "block";
+            let promoDiv2 = document.getElementById('guestPromoBanner');
+            if (promoDiv2) promoDiv2.style.display = "none";
             currentJornadaGlobal = data.jornada;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
@@ -1028,7 +1098,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 document.getElementById('adminPanelWrapper').style.display = "none";
             }
 
-            document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
+            document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones"; document.getElementById('tituloPrincipalSeccion').style.display = 'block';
 
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
@@ -1068,6 +1138,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         <div class="p-3 mb-3 partido-activo card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid var(--vcv-dorado); border-left: 5px solid var(--vcv-dorado); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             ${categoryHtml}
                             <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
                             ${infoLocFecha}
                             ${infoPabellon}
                             
@@ -1077,12 +1148,12 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     <label>Sets</label>
                                     <select class="form-control" id="e${eq.id_partido}_sets" style="border-color: #ddd;">
                                         <option value="">Elige...</option>
-                                        <option value="3-0">Victoria 3-0</option>
-                                        <option value="3-1">Victoria 3-1</option>
-                                        <option value="3-2">Victoria 3-2</option>
-                                        <option value="2-3">Derrota 2-3</option>
-                                        <option value="1-3">Derrota 1-3</option>
-                                        <option value="0-3">Derrota 0-3</option>
+                                        <option value="3-0">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-0" : "Victoria 3-0"}</option>
+                                        <option value="3-1">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-1" : "Victoria 3-1"}</option>
+                                        <option value="3-2">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-2" : "Victoria 3-2"}</option>
+                                        <option value="2-3">${eq.es_derby ? "Gana " + eq.rival + " 3-2" : "Derrota 2-3"}</option>
+                                        <option value="1-3">${eq.es_derby ? "Gana " + eq.rival + " 3-1" : "Derrota 1-3"}</option>
+                                        <option value="0-3">${eq.es_derby ? "Gana " + eq.rival + " 3-0" : "Derrota 0-3"}</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -1090,11 +1161,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                     <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" style="border-color: #ddd;">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Signo <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, '¿Esa diferencia de puntos es a favor del VCV o en contra?')">❓</span></label>
+                                    <label>Signo <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, '¿Esa diferencia de puntos es a favor de quién?')">❓</span></label>
                                     <select class="form-control" id="e${eq.id_partido}_signo" style="border-color: #ddd;">
                                         <option value="">Elige...</option>
-                                        <option value="A favor">A favor (+)</option>
-                                        <option value="En contra">En contra (-)</option>
+                                        <option value="A favor">${eq.es_derby ? "A favor de " + eq.equipo_local : "A favor (+)"}</option>
+                                        <option value="En contra">${eq.es_derby ? "A favor de " + eq.rival : "En contra (-)"}</option>
                                     </select>
                                 </div>
                             </div>
@@ -1294,25 +1365,43 @@ function iniciarRelojes() {
             const diff = ts - now;
             const limite = 15 * 60 * 1000; 
 
-            if (diff <= limite && diff > -14400000) { 
-                el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
-                el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
-                if(eqId && !isGuestMode) {
-                    const divInputs = document.getElementById(`inputs_eq_${eqId}`);
-                    if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                        if (isGuestMode) {
+                if (diff <= 0 && diff > -14400000) {
+                    el.innerHTML = "⏱️ Partido en curso";
+                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
+                } else if (diff <= -14400000) {
+                    el.innerHTML = "🏁 Partido Finalizado";
+                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                } else {
+                    let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((diff % (1000 * 60)) / 1000);
+                    el.innerHTML = `⏳ Empieza en: ${d}d ${h}h ${m}m ${s}s`;
+                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
                 }
-            } else if (diff <= -14400000) {
-                el.innerHTML = "🏁 Partido en curso o Finalizado";
-                el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
             } else {
-                let diffToClose = diff - limite; 
-                let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
-                let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
-                let s = Math.floor((diffToClose % (1000 * 60)) / 1000);
-                el.innerHTML = `⏳ Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
-                el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                if (diff <= limite && diff > -14400000) { 
+                    el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
+                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
+                    if(eqId) {
+                        const divInputs = document.getElementById(`inputs_eq_${eqId}`);
+                        if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                    }
+                } else if (diff <= -14400000) {
+                    el.innerHTML = "🏁 Partido en curso o Finalizado";
+                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                } else {
+                    let diffToClose = diff - limite; 
+                    let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
+                    let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((diffToClose % (1000 * 60)) / 1000);
+                    el.innerHTML = `🔒 Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
+                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                }
             }
+        
         });
     }, 1000);
 }
