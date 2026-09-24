@@ -1118,10 +1118,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 
                 // POPULATE LIGAS
                 var ligasContainer = document.getElementById('adminLigasCheckboxes');
-                if (ligasContainer && data.clasificaciones) {
+                if (ligasContainer && data.todas_las_ligas) {
                     ligasContainer.innerHTML = '';
-                    var allLigas = Object.keys(data.clasificaciones);
+                    var allLigas = data.todas_las_ligas;
                     allLigas.forEach(function(liga) {
+                        if (!liga) return; // Skip empty columns
                         var div = document.createElement('div');
                         div.innerHTML = '<label style="margin:0; cursor:pointer;"><input type="checkbox" value="' + liga + '" style="margin-right:5px;"> ' + liga + '</label>';
                         ligasContainer.appendChild(div);
