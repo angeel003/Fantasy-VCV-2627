@@ -973,11 +973,30 @@ function onEdit(e) {
         var usuarioAntiguo = e.oldValue.toString().trim();
         var usuarioNuevo = e.value.toString().trim();
         
+        // CHECK FOR DUPLICATES FIRST
+        var usuariosData = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues();
+        var duplicateFound = false;
+        for (var i = 1; i < usuariosData.length; i++) {
+            // Check if another row (not the one we just edited) has the new username
+            if (i + 1 !== row && usuariosData[i][0] && usuariosData[i][0].toString().trim().toLowerCase() === usuarioNuevo.toLowerCase()) {
+                duplicateFound = true;
+                break;
+            }
+        }
+        
+        if (duplicateFound) {
+            sheet.getRange(row, col).setValue(usuarioAntiguo); // REVERT
+            ss.toast("Error: El usuario '" + usuarioNuevo + "' ya existe en la base de datos.", "Cambio Rechazado", 5);
+            return;
+        }
+        
+        // PROCEED WITH UPDATE
+        // We bypass getSafeData for writes to ensure we get fresh row counts directly from sheets in case cache is stale
         var sheetsColA = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"]; 
         for (var s = 0; s < sheetsColA.length; s++) {
           var sh = ss.getSheetByName(sheetsColA[s]);
-          if (sh) {
-            var d = getSafeData(sh);
+          if (sh && sh.getLastRow() > 0) {
+            var d = sh.getRange(1, 1, sh.getLastRow(), 1).getValues();
             for (var r = 1; r < d.length; r++) { 
                 var celdaU = d[r][0] ? d[r][0].toString().trim() : "";
                 if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
@@ -990,8 +1009,8 @@ function onEdit(e) {
         var sheetsColB = ["Porras", "Predicciones_Secretas", "Peticiones_Nombre"];
         for (var s = 0; s < sheetsColB.length; s++) {
           var sh = ss.getSheetByName(sheetsColB[s]);
-          if (sh) {
-            var d = getSafeData(sh);
+          if (sh && sh.getLastRow() > 0) {
+            var d = sh.getRange(1, 1, sh.getLastRow(), 2).getValues();
             for (var r = 1; r < d.length; r++) { 
                 var celdaU = d[r][1] ? d[r][1].toString().trim() : "";
                 if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
@@ -1002,7 +1021,7 @@ function onEdit(e) {
         }
         
         clearAllCache();
-          ss.toast("Se ha actualizado el usuario '" + usuarioAntiguo + "' a '" + usuarioNuevo + "' en todas las pestañas.", "✅ Actualización Mágica", 5);
+        ss.toast("Se ha actualizado el usuario '" + usuarioAntiguo + "' a '" + usuarioNuevo + "' en todas las pestañas.", "Actualización Mágica", 5);
       }
     }
   }

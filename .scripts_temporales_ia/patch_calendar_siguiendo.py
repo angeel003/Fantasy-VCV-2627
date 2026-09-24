@@ -17,3 +17,4 @@ for filename in files:
         print(f"Patched {filename} for team names dropdown!")
     else:
         print(f"Token not found in {filename}!")
+
