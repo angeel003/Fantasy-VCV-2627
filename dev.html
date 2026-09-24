@@ -367,11 +367,11 @@
             <div class="faq-content">
                 <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
                 <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li><b>Nombre de usuario</b> deseado (necesario para iniciar sesión).</li>
-                    <li><b>Nombre real o alias</b> (opcional, si quieres que se muestre en la clasificación).</li>
-                    <li><b>Tu relación con el club:</b> si eres jugador (indica de qué equipo), entrenador, exjugador, etc., para añadirte tu logo de verificado.</li>
-                    <li><b>Ligas privadas:</b> si quieres unirte a alguna clasificación en concreto ya creada con tus amigos/equipo.</li>
-                    <li><b>Equipos a predecir:</b> a qué equipos quieres poder mandar predicciones (por defecto se te asignarán las categorías más altas del VCV).</li>
+                    <li><b>Nombre de usuario</b> deseado (ej: @juan_vcv).</li>
+                    <li><b>Contraseña</b> deseada.</li>
+                    <li><b>Relación con el club</b> (si juegas o entrenas, dinos en qué equipo/categoría) para añadir insignias a tu perfil.</li>
+                    <li><b>Equipos</b> que te gustaría seguir y predecir.</li>
+                    <li style="margin-top:5px;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con amigos. Escribe los usuarios de todos y los equipos que puntuarán en ella.</li>
                 </ul>
             </div>
         </details>
@@ -884,7 +884,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
-            document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
+            document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
             document.getElementById('btnReload').style.display = "flex";
@@ -910,10 +910,12 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                     <h3 style="color: var(--vcv-dorado); font-weight: bold; margin-bottom: 15px;">¿Quieres ver más? 🏐</h3>
                     <p style="font-size: 1.05rem; margin-bottom: 15px;">Si quieres acceder a toda la información detallada, <b>resultados pasados</b>, <b>calendario completo de próximos partidos</b> de tus equipos favoritos y <b>jugar en la liga de pronósticos</b>, ¡tienes que registrarte!</p>
                     <p style="font-size: 1rem; margin-bottom: 5px;">Envíanos un correo a <a href="mailto:adminfantasyvcv@gmail.com" style="color: var(--vcv-dorado); font-weight: bold; text-decoration: underline;">adminfantasyvcv@gmail.com</a> con:</p>
-                    <ul style="padding-left: 25px; margin-bottom: 15px; font-weight: bold;">
+                    <ul style="padding-left: 25px; margin-bottom: 15px; font-weight: bold; font-size: 0.95rem;">
                         <li>Nombre de usuario (ej: @juan_vcv)</li>
                         <li>Contraseña deseada</li>
-                        <li>Tu nombre real o mote</li>
+                        <li>Tu relación con el club (ej: jugador/entrenador, indicando de qué equipo y categoría) para añadir insignias a tu perfil.</li>
+                        <li>Qué equipos te gustaría seguir.</li>
+                        <li style="margin-top:8px; font-weight:normal;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con tus amigos. Escribe en el correo los nombres de usuario de todos los que os queráis unir y qué equipos puntuarán en vuestra clasificación.</li>
                     </ul>
                     <p style="font-size: 0.95rem; opacity: 0.9;"><i>Te crearemos la cuenta y te avisaremos enseguida para que puedas acceder al Fantasy VCV.</i></p>
                 `;
@@ -933,7 +935,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             
             data.equipos.forEach(eq => {
                 let esPasado = eq.oficial_sets && eq.oficial_sets.includes("-");
-                if (eq.estado === "CERRADO" || eq.visibilidad === "OCULTAR") esPasado = true;
                 
                 if (esPasado) {
                     if (!pasadosPorEquipo[eq.equipo_local]) {
@@ -1095,7 +1096,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 document.getElementById('adminPanelWrapper').style.display = "none";
             }
 
-            document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones";
+            document.getElementById('tituloPrincipalSeccion').innerText = "Mis Predicciones"; document.getElementById('tituloPrincipalSeccion').style.display = 'block';
 
             data.equipos.sort((a, b) => {
                 let tsA = a.timestamp || Infinity; 
