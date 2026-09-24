@@ -19,3 +19,4 @@ with open('index.html', 'w', encoding='utf-8') as f:
 # 3. Sync Backend Script
 shutil.copyfile('script-dev/Código.js', 'script-prod/Código.js')
 print("Successfully copied script-dev to script-prod")
+

@@ -768,6 +768,12 @@ function doPost(e) {
 
 
         var rondaAbierta = sheetAjustes.getRange("B2").getValue() || "1";
+        
+        var misEquiposSiguiendo = [];
+        for(var eqq in misPermisos) {
+            if(misPermisos[eqq] === true) misEquiposSiguiendo.push(eqq);
+        }
+
 
         return ContentService.createTextOutput(JSON.stringify({ 
             "status": "success", 
@@ -777,6 +783,7 @@ function doPost(e) {
             "clasificaciones": clasificacionesFormateadas,
             "nombre_real": miNombreReal,
             "insignias": insigniasMap,
+            "mis_equipos_siguiendo": misEquiposSiguiendo,
             "equipos_totales": misEquiposTotales,
             "puntos_reales": puntosRealesTotales,
             "predicciones_totales": prediccionesTotalesMap,

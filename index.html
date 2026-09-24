@@ -1734,7 +1734,7 @@ window.initCalendar = function() {
     });
 
     let catSelect = document.getElementById('calendarTeamSelect');
-    let uniqueCats = window.appData.equipos_totales || [];
+    let uniqueCats = window.appData.mis_equipos_siguiendo || [];
     
     let currentOptions = '<option value="">-- Ver Todos los Equipos --</option>';
     uniqueCats.forEach(cat => {

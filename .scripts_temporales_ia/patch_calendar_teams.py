@@ -55,3 +55,4 @@ if old_js in html and old_filter in html:
     print("Patched dev.html for team names!")
 else:
     print("Blocks not found!")
+
