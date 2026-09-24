@@ -47,3 +47,4 @@ for filename in files:
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(js)
     print(f"Patched add_user in {filename}")
+

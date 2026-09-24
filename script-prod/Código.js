@@ -277,13 +277,42 @@ function doPost(e) {
         var dataUsr = getSafeData(sheetUsuarios);
         for(var i=1; i<dataUsr.length; i++) {
             if(dataUsr[i][0] && dataUsr[i][0].toString().toLowerCase() === newU.toLowerCase()) {
-                return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "❌ El usuario ya existe en la base de datos."})).setMimeType(ContentService.MimeType.JSON);
+                return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": " El usuario ya existe en la base de datos."})).setMimeType(ContentService.MimeType.JSON);
             }
         }
         
-        // Lo añade a la pestaña Usuarios
-        sheetUsuarios.appendRow([newU, newP, newN]);
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "✅ Usuario '" + newU + "' creado correctamente."})).setMimeType(ContentService.MimeType.JSON);
+        // Find first empty row in Usuarios
+        var valsU = sheetUsuarios.getRange(1, 1, sheetUsuarios.getMaxRows(), 1).getValues();
+        var firstEmptyU = 1;
+        for(var j=0; j<valsU.length; j++){
+            if(!valsU[j][0] || valsU[j][0].toString().trim() === "") {
+                firstEmptyU = j + 1;
+                break;
+            }
+        }
+        sheetUsuarios.getRange(firstEmptyU, 1).setValue(newU);
+        sheetUsuarios.getRange(firstEmptyU, 2).setValue(newP);
+        sheetUsuarios.getRange(firstEmptyU, 3).setValue(newN);
+        
+        // Also add to other sheets
+        var sheetsToAppend = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"];
+        for(var i=0; i<sheetsToAppend.length; i++) {
+            var sh = ss.getSheetByName(sheetsToAppend[i]);
+            if(sh) {
+                var vals = sh.getRange(1, 1, sh.getMaxRows(), 1).getValues();
+                var firstEmpty = 1;
+                for(var j=0; j<vals.length; j++){
+                    if(!vals[j][0] || vals[j][0].toString().trim() === "") {
+                        firstEmpty = j + 1;
+                        break;
+                    }
+                }
+                sh.getRange(firstEmpty, 1).setValue(newU);
+            }
+        }
+        
+        clearAllCache(); 
+        return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": " Usuario '" + newU + "' creado e insertado en todas las tablas."})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "save_resultado_admin") {
@@ -969,6 +998,7 @@ function onEdit(e) {
   // ==========================================
   else if (sheet.getName() === "Usuarios") {
     if (col === 1 && row > 1) {
+      // SI CAMBIA UN NOMBRE EXISTENTE
       if (e.oldValue && e.value && e.oldValue !== e.value) {
         var usuarioAntiguo = e.oldValue.toString().trim();
         var usuarioNuevo = e.value.toString().trim();
@@ -977,7 +1007,6 @@ function onEdit(e) {
         var usuariosData = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues();
         var duplicateFound = false;
         for (var i = 1; i < usuariosData.length; i++) {
-            // Check if another row (not the one we just edited) has the new username
             if (i + 1 !== row && usuariosData[i][0] && usuariosData[i][0].toString().trim().toLowerCase() === usuarioNuevo.toLowerCase()) {
                 duplicateFound = true;
                 break;
@@ -991,7 +1020,6 @@ function onEdit(e) {
         }
         
         // PROCEED WITH UPDATE
-        // We bypass getSafeData for writes to ensure we get fresh row counts directly from sheets in case cache is stale
         var sheetsColA = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"]; 
         for (var s = 0; s < sheetsColA.length; s++) {
           var sh = ss.getSheetByName(sheetsColA[s]);
@@ -1021,7 +1049,48 @@ function onEdit(e) {
         }
         
         clearAllCache();
-        ss.toast("Se ha actualizado el usuario '" + usuarioAntiguo + "' a '" + usuarioNuevo + "' en todas las pestañas.", "Actualización Mágica", 5);
+        ss.toast("Se ha actualizado el usuario en todas las pestañas.", "Actualización", 5);
+      }
+      // SI AÑADE UN USUARIO NUEVO DIRECTAMENTE EN LA CELDA VACÍA DEL EXCEL
+      else if (!e.oldValue && e.value) {
+        var usuarioNuevo = e.value.toString().trim();
+        
+        // CHECK FOR DUPLICATES
+        var usuariosData = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues();
+        var duplicateFound = false;
+        for (var i = 1; i < usuariosData.length; i++) {
+            if (i + 1 !== row && usuariosData[i][0] && usuariosData[i][0].toString().trim().toLowerCase() === usuarioNuevo.toLowerCase()) {
+                duplicateFound = true; break;
+            }
+        }
+        
+        if (duplicateFound) {
+            sheet.getRange(row, col).clearContent();
+            ss.toast("Error: El usuario '" + usuarioNuevo + "' ya existe.", "Rechazado", 5);
+            return;
+        }
+        
+        var sheetsToAppend = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"];
+        for(var i=0; i<sheetsToAppend.length; i++) {
+            var sh = ss.getSheetByName(sheetsToAppend[i]);
+            if(sh) {
+                // Buscamos la primera fila vacia en la columna A
+                var vals = sh.getRange(1, 1, sh.getMaxRows(), 1).getValues();
+                var firstEmpty = 1;
+                for(var j=0; j<vals.length; j++){
+                    if(!vals[j][0] || vals[j][0].toString().trim() === "") {
+                        firstEmpty = j + 1;
+                        break;
+                    }
+                }
+                if(firstEmpty > sh.getMaxRows()) sh.appendRow([""]); // Just in case
+                
+                sh.getRange(firstEmpty, 1).setValue(usuarioNuevo);
+            }
+        }
+        
+        clearAllCache();
+        ss.toast("Usuario añadido a Permisos, Ligas e Insignias.", "Nuevo Usuario", 5);
       }
     }
   }
