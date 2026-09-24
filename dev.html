@@ -1734,7 +1734,7 @@ window.initCalendar = function() {
     });
 
     let catSelect = document.getElementById('calendarTeamSelect');
-    let uniqueCats = [...new Set(todos.map(p => p.categoria))].filter(c => c);
+    let uniqueCats = window.appData.equipos_totales || [];
     
     let currentOptions = '<option value="">-- Ver Todos los Equipos --</option>';
     uniqueCats.forEach(cat => {
@@ -1759,7 +1759,7 @@ window.renderCalendar = function() {
     localStorage.setItem('pref_calendario_' + currentUser, cat);
     
     let filtered = window.appData.todos_partidos.filter(p => {
-        let matchCat = (!cat || p.categoria === cat);
+        let matchCat = (!cat || p.equipo_local === cat || p.rival === cat);
         let matchSearch = (!search || p.rival.toLowerCase().includes(search) || p.equipo_local.toLowerCase().includes(search));
         return matchCat && matchSearch;
     });

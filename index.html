@@ -311,7 +311,7 @@
                 </div>
                 <div id="os-android" style="display:block;">
                     <p style="font-size:0.9rem; margin-bottom:10px;">Descarga el archivo APK e instálalo como una App nativa (acepta "Instalar de orígenes desconocidos" si tu móvil te avisa).</p>
-                    <a href="#" onclick="event.preventDefault();" class="btn btn-secondary btn-sm btn-block" style="font-weight:bold; border-radius:20px; cursor:not-allowed; opacity:0.7;">🤖 Descargar APK Oficial (Próximamente)</a>
+                    <a href="files/app/fantasy-vcv-2627.apk" download class="btn btn-success btn-sm btn-block" style="font-weight:bold; border-radius:20px;">📥 Descargar APK Oficial</a>
                 </div>
                 <div id="os-ios" style="display:none; text-align:left;">
                     <p style="font-size:0.9rem; margin-bottom:5px; color:#444;">Debido a las restricciones de Apple, instálala así:</p>
@@ -1734,7 +1734,7 @@ window.initCalendar = function() {
     });
 
     let catSelect = document.getElementById('calendarTeamSelect');
-    let uniqueCats = [...new Set(todos.map(p => p.categoria))].filter(c => c);
+    let uniqueCats = window.appData.equipos_totales || [];
     
     let currentOptions = '<option value="">-- Ver Todos los Equipos --</option>';
     uniqueCats.forEach(cat => {
@@ -1759,7 +1759,7 @@ window.renderCalendar = function() {
     localStorage.setItem('pref_calendario_' + currentUser, cat);
     
     let filtered = window.appData.todos_partidos.filter(p => {
-        let matchCat = (!cat || p.categoria === cat);
+        let matchCat = (!cat || p.equipo_local === cat || p.rival === cat);
         let matchSearch = (!search || p.rival.toLowerCase().includes(search) || p.equipo_local.toLowerCase().includes(search));
         return matchCat && matchSearch;
     });
