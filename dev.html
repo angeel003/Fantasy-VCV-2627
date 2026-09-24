@@ -1570,7 +1570,40 @@ function renderizarHistorial() {
                 }).catch(err => console.log('SW Error:', err));
             });
         }
-    </script>
+    
+document.getElementById('btnForceSyncExcel').addEventListener('click', function(e) {
+    e.preventDefault();
+    const btn = this;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Borrando Caché...';
+    btn.disabled = true;
+    
+    fetchSeguro(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'clear_cache', usuario: currentUser, password: currentPassword }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.status === 'success') {
+            btn.innerHTML = '✅ ¡Actualizado!';
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?v=' + new Date().getTime();
+            }, 1000);
+        } else {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Error de conexión.');
+    });
+});
+
+</script>
 
 
 
