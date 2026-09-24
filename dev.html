@@ -1007,6 +1007,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                 <div class="p-3 mb-3 card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     ${categoryHtml}
                     <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
                     ${infoLocFecha}
                     ${infoPabellon}
                     
@@ -1137,6 +1138,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         <div class="p-3 mb-3 partido-activo card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid var(--vcv-dorado); border-left: 5px solid var(--vcv-dorado); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             ${categoryHtml}
                             <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
                             ${infoLocFecha}
                             ${infoPabellon}
                             

@@ -629,6 +629,17 @@ function doPost(e) {
             if(u) { puntosPorUsuarioYLiga[u] = {}; for(var l=0; l<misLigas.length; l++){ puntosPorUsuarioYLiga[u][misLigas[l]] = 0; } }
         }
 
+        var permisosGlobalesMap = {};
+        for (var r=1; r<dataPermisos.length; r++) {
+            var usrPerm = dataPermisos[r][0];
+            if (usrPerm) {
+                permisosGlobalesMap[usrPerm] = {};
+                for(var j=1; j<eqHeaders.length; j++) {
+                    permisosGlobalesMap[usrPerm][eqHeaders[j]] = (dataPermisos[r][j] && dataPermisos[r][j].toString().toUpperCase() === "X");
+                }
+            }
+        }
+
         for(var pUser in porrasMap) {
             if(!puntosPorUsuarioYLiga[pUser]) continue;
             for(var pIdPart in porrasMap[pUser]) {
@@ -650,13 +661,19 @@ function doPost(e) {
                 var uDiff = parseInt(uPred.puntos) || 0;
                 if(uPred.signo === "En contra") uDiff = -uDiff;
 
+                var esDerby = permisosGlobalesMap[pUser] && permisosGlobalesMap[pUser][partidoInfo.equipo_local] === true && permisosGlobalesMap[pUser][partidoInfo.rival] === true;
+                var pS = esDerby ? ptsSets * 2 : ptsSets;
+                var pG = esDerby ? ptsGanador * 2 : ptsGanador;
+                var pDE = esDerby ? ptsDiffExacta * 2 : ptsDiffExacta;
+                var pD5 = esDerby ? ptsDiff5 * 2 : ptsDiff5;
+                
                 var ptsGanados = 0;
-                if(uPred.sets === oRes.sets) { ptsGanados += ptsSets; }
-                else if (uLocalWin === oLocalWin) { ptsGanados += ptsGanador; }
+                if(uPred.sets === oRes.sets) { ptsGanados += pS; }
+                else if (uLocalWin === oLocalWin) { ptsGanados += pG; }
 
                 var distancia = Math.abs(oDiff - uDiff);
-                if(distancia === 0) { ptsGanados += ptsDiffExacta; }
-                else if(distancia <= 5) { ptsGanados += ptsDiff5; }
+                if(distancia === 0) { ptsGanados += pDE; }
+                else if(distancia <= 5) { ptsGanados += pD5; }
 
                 for(var l=0; l<misLigas.length; l++){
                     var nombreLiga = misLigas[l];
