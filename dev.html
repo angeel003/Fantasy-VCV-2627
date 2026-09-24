@@ -1115,6 +1115,18 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             if (isAdmin) {
                 document.getElementById('adminPanelWrapper').style.display = "block";
                 renderAdminPanel(data.equipos); 
+                
+                // POPULATE LIGAS
+                var ligasContainer = document.getElementById('adminLigasCheckboxes');
+                if (ligasContainer && data.clasificaciones) {
+                    ligasContainer.innerHTML = '';
+                    var allLigas = Object.keys(data.clasificaciones);
+                    allLigas.forEach(function(liga) {
+                        var div = document.createElement('div');
+                        div.innerHTML = '<label style="margin:0; cursor:pointer;"><input type="checkbox" value="' + liga + '" style="margin-right:5px;"> ' + liga + '</label>';
+                        ligasContainer.appendChild(div);
+                    });
+                }
             } else {
                 document.getElementById('adminPanelWrapper').style.display = "none";
             }
