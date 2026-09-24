@@ -53,7 +53,7 @@
     h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
     h2 { margin-bottom: 35px; text-align: center; }
 
-    section { padding: 50px 15px; text-align: center; }
+        section { padding: 50px 15px; text-align: center; scroll-margin-top: calc(80px + env(safe-area-inset-top, 0px)); }
     .section-alt { background: #e9ecef; }
     
     /* ---------------------------------------------------
@@ -386,7 +386,7 @@
     
 
     
-    <section>
+    <section id="carteleraSection">
         
         <div class="form-container">
             <div class="row mb-3" style="background:var(--bg-general); border: 2px solid var(--vcv-morado); padding:15px; border-radius:8px; align-items:center;">
@@ -1861,7 +1861,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
     <!-- FAB MENU NAV (Navegación Rápida) FUERA DEL APPSECTION PARA QUE POSITION FIXED FUNCIONE BIEN -->
     <div id="fab-menu" style="position: fixed; bottom: 90px; right: 25px; z-index: 9999; text-align: right; display: none;">
         <div id="fab-links" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border: 2px solid var(--vcv-dorado); text-align: left; backdrop-filter: blur(5px);">
-            <a id="fab-cartelera" href="#prediccionForm" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏐 Cartelera de Partidos</a>
+            <a id="fab-cartelera" href="#carteleraSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏐 Cartelera de Partidos</a>
             <a id="fab-ranking" href="#clasificacionesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏆 Ranking</a>
             <a id="fab-enlaces" href="#enlacesRfevbSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🔗 Enlaces Rfevb</a>
             <a id="fab-historial" href="#historialSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">✅ Mis Predicciones</a>
@@ -1918,7 +1918,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                 document.getElementById('fab-menu').style.display = 'block';
                 
                 // Show/hide specific links based on section visibility
-                var cartelera = document.getElementById('prediccionForm');
+                var cartelera = document.getElementById('carteleraSection');
                 var ranking = document.getElementById('clasificacionesSection');
                 var enlaces = document.getElementById('enlacesRfevbSection');
                 var historial = document.getElementById('historialSection');

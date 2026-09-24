@@ -7,3 +7,4 @@ if idx != -1:
     end_idx = text.find('}', idx)
     func_body = text[idx:end_idx+100]
     print(func_body.encode('ascii', 'ignore').decode())
+
