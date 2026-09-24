@@ -297,7 +297,8 @@ function doPost(e) {
         // Also add to other sheets
         var sheetsToAppend = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"];
         for(var i=0; i<sheetsToAppend.length; i++) {
-            var sh = ss.getSheetByName(sheetsToAppend[i]);
+            var shName = sheetsToAppend[i];
+            var sh = ss.getSheetByName(shName);
             if(sh) {
                 var vals = sh.getRange(1, 1, sh.getMaxRows(), 1).getValues();
                 var firstEmpty = 1;
@@ -308,6 +309,17 @@ function doPost(e) {
                     }
                 }
                 sh.getRange(firstEmpty, 1).setValue(newU);
+                
+                if (shName === "Ligas" && params.ligas_seleccionadas && params.ligas_seleccionadas.length > 0) {
+                    var ligasSel = params.ligas_seleccionadas;
+                    var ligasHeaders = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+                    for (var rL = 0; rL < ligasSel.length; rL++) {
+                        var cIdx = ligasHeaders.indexOf(ligasSel[rL]);
+                        if (cIdx !== -1) {
+                            sh.getRange(firstEmpty, cIdx + 1).setValue("X");
+                        }
+                    }
+                }
             }
         }
         

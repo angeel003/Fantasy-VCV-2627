@@ -416,7 +416,12 @@
                         <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                             <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
                             <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
-                            
+                            <div style="margin-bottom: 10px; text-align: left; font-size: 0.9rem;">
+                                <strong>Añadir a Ligas:</strong>
+                                <div id="adminLigasCheckboxes" style="display: flex; flex-direction: column; gap: 3px; max-height: 100px; overflow-y: auto; background: white; padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
                             <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
                         </div>
                         

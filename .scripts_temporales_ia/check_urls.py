@@ -11,3 +11,4 @@ prod_url = re.search(r'const SCRIPT_URL\s*=\s*[\'"]([^\'"]+)[\'"]', prod)
 
 print('dev URL:', dev_url.group(1) if dev_url else 'None')
 print('prod URL:', prod_url.group(1) if prod_url else 'None')
+

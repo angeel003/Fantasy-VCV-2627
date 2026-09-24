@@ -12,3 +12,4 @@ with open('index.html', 'w', encoding='utf-8') as f:
     f.write(prod)
     
 print("Synced dev.html to index.html with prod URL preserved.")
+
