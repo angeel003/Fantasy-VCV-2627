@@ -860,6 +860,8 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
         if(data.status === "success") {
             
             isGuestMode = true;
+            window.appData = data;
+            if(window.initCalendar) window.initCalendar();
             document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
             document.getElementById('tituloPrincipalSeccion').innerText = "Cartelera Pública";
             
@@ -969,6 +971,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             currentUser = usr; currentPassword = pwd;
             currentJornadaGlobal = data.jornada;
+            window.appData = data;
+            if(window.initCalendar) window.initCalendar();
             
             if(data.reglas) {
                 let listaReglas = document.getElementById('listaReglasPuntuacion');
