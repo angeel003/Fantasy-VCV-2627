@@ -4,3 +4,4 @@ with open('dev.html', 'r', encoding='utf-8') as f:
 
 idx = text.find('id="appSection"')
 print(text[max(0, idx-10):idx+300])
+

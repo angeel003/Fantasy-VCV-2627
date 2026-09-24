@@ -27,3 +27,4 @@ with open('dev.html', 'w', encoding='utf-8') as f:
     f.write(text)
 
 print("Updated dev.html with scroll-margin-top and carteleraSection")
+
