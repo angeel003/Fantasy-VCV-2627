@@ -1662,7 +1662,9 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             isGuestMode = true;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
-            document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
+            document.getElementById('h2-user-name').innerText = "Modo Invitado";
+            document.getElementById('h2-user-handle').innerText = "@lectura";
+            document.getElementById('h2-user-badges').innerHTML = "";
             document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
@@ -1941,7 +1943,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let dt = new Date(eq.timestamp);
                         let fechaFormateada = isNaN(dt) ? "" : `${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
 
-                        setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
+                        
 
                         let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
                         let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
@@ -2060,6 +2062,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
             iniciarRelojes();
+            if(window.lucide) setTimeout(() => lucide.createIcons(), 50);
 
             let clasifHtml = "";
             if(data.ligas.length === 0) { 
