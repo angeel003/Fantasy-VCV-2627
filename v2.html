@@ -19,14 +19,30 @@
     /* ---------------------------------------------------
        1. VARIABLES DE COLOR OFICIALES DEL VCV
        --------------------------------------------------- */
+    
     :root {
-        --vcv-morado: #783b7a; 
-        --vcv-blanco: #ffffff; 
-        --vcv-dorado: #cfb359; 
-        --vcv-rojo: #d24442; 
-        --vcv-negro: #000000;
-        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
+      --primary-color: #6a2c70;
+      --primary-hover: #7e3686;
+      --secondary-color: #d4af37;
+      --secondary-hover: #e5bf43;
+      --bg-surface: #140818;
+      --bg-card: #200f25;
+      --bg-card-alt: #2a1532;
+      --bg-input: #1a0b1e;
+      --border-color: #3b1d45;
+      --border-glow: rgba(212, 175, 55, 0.4);
+      --text-main: #f9f5fa;
+      --text-muted: #b7a4be;
+      --text-gold: #f3ce5e;
+      --success: #2ecc71;
+      --danger: #e74c3c;
     }
+    
+    body { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
+    #prediccionForm button[type="submit"] { display: none !important; }
+    footer { display: none !important; }
+    .text-center.mt-4.mb-3 { display: none !important; }
+
 
     html { scroll-behavior: smooth; }
     html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
@@ -261,272 +277,6 @@
     }
 
 </style>
-
-  <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root {
-      --bg-card: #ffffff;
-      --bg-card-alt: #f9fafb;
-      --primary-color: #783b7a;
-      --secondary-color: #bd9b53;
-      --text-main: #1f2937;
-      --text-muted: #6b7280;
-      --text-gold: #b48c36;
-      --success: #059669;
-      --danger: #dc2626;
-      --border-color: #e5e7eb;
-    }
-
-    /* LOGIN STYLES */
-    #loginSection {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      flex-direction: column;
-      background: var(--bg-card-alt);
-      min-height: 80vh;
-    }
-    .modal-card-v2 {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-      position: relative;
-      margin-bottom: 40px;
-    }
-    .club-crest-v2 {
-      background: var(--primary-color);
-      color: var(--secondary-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-gold-v2 {
-      background: linear-gradient(135deg, var(--secondary-color) 0%, #d4af37 100%);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 800;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .btn-outline-v2 {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 12px;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    /* CARTELERA STYLES */
-    .vcv-card-v2 {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-      border: 1px solid var(--border-color);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-    .match-header-strip-v2 {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      margin-bottom: 14px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      color: var(--text-muted);
-    }
-    .teams-versus-container-v2 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .team-box-v2 {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      text-align: center;
-    }
-    .team-avatar-v2 {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: var(--bg-card-alt);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 900;
-      font-size: 1.1rem;
-      color: var(--text-main);
-      margin-bottom: 8px;
-    }
-    .team-avatar-v2.vcv-local {
-      background: var(--primary-color);
-      color: var(--secondary-color);
-      border: 1px solid var(--secondary-color);
-    }
-    .team-name-v2 {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text-main);
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-    .team-role-v2 {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    .vs-divider-v2 {
-      font-weight: 900;
-      font-size: 1rem;
-      color: var(--text-muted);
-      opacity: 0.4;
-      padding: 0 10px;
-    }
-    .sets-grid-label-v2 {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .sets-selector-grid-v2 {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-    .set-option-btn-v2 {
-      background: var(--bg-card-alt);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 8px;
-      padding: 10px 0;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .set-option-btn-v2.selected {
-      background: var(--secondary-color);
-      color: #fff;
-      border-color: var(--secondary-color);
-      box-shadow: 0 4px 12px rgba(189, 155, 83, 0.3);
-      transform: translateY(-2px);
-    }
-    .points-diff-container-v2 {
-      background: var(--bg-card-alt);
-      border-radius: 12px;
-      padding: 14px;
-      border: 1px solid var(--border-color);
-    }
-    .points-header-v2 {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 10px;
-    }
-    .points-controls-row-v2 {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .stepper-container-v2 {
-      display: flex;
-      align-items: center;
-      background: var(--bg-card);
-      border-radius: 10px;
-      padding: 4px;
-      border: 1px solid var(--border-color);
-    }
-    .btn-step-v2 {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: none;
-      background: rgba(120, 59, 122, 0.1);
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .stepper-value-v2 {
-      min-width: 46px;
-      text-align: center;
-    }
-    .stepper-value-v2 span {
-      font-weight: 900;
-      font-size: 1.3rem;
-      color: var(--secondary-color);
-    }
-    .stepper-value-v2 small {
-      display: block;
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-top: -2px;
-    }
-    .sign-selector-v2 {
-      display: flex;
-      gap: 6px;
-      flex: 1;
-    }
-    .sign-btn-v2 {
-      flex: 1;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 10px 0;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    .sign-btn-v2.selected.sign-plus-v2 {
-      background: var(--primary-color);
-      color: var(--secondary-color);
-      border-color: var(--primary-color);
-    }
-    .sign-btn-v2.selected.sign-minus-v2 {
-      background: rgba(220, 38, 38, 0.1);
-      color: var(--danger);
-      border-color: rgba(220, 38, 38, 0.3);
-    }
-  </style>
-
 </head>
 <body>
 
@@ -536,7 +286,7 @@
 </button>
 <div id="toastNotification">✅ Datos actualizados</div>
 
-<header>
+<header style="display:none !important;">
     <button id="btnLogout" title="Volver atrás">&#10094;</button>
     <div class="header-content">
         <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
@@ -1463,7 +1213,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
 
                         htmlPartidos += `
-                        <div class="vcv-card-v2" data-category="${eq.categoria}">
+                        <div class="vcv-card-v2" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
                             <div class="match-header-strip-v2">
                                 <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
                                   ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
@@ -1485,7 +1235,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 </div>
                             </div>
                             
-                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.75rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:12px;">Calculando tiempo...</div>
+                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.75rem; font-weight:bold; padding:4px 8px; background:rgba(212, 175, 55, 0.1); color:var(--secondary-color); border: 1px solid var(--border-glow); border-radius:4px; display:inline-block; margin-bottom:12px;">Calculando tiempo...</div>
 
                             <!-- HIDDEN INPUTS -->
                             <input type="hidden" id="e${eq.id_partido}_sets" value="">
@@ -1531,6 +1281,15 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                   </div>
                                 </div>
                             </div>
+                            
+                            <div class="summary-v2" id="summary-v2-${eq.id_partido}" style="display:none; text-align:center; padding: 15px; background:var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">TU PREDICCIÓN</div>
+                                <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
+                            </div>
+
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
+                                Guardar Predicción
+                            </button>
                             
                             ${destacadoHtml}
                         </div>`;
@@ -1804,9 +1563,11 @@ function cargarDatosAntiguos() {
                 setVal(`e${idPart}_signo`, preds[idPart].signo);
                 
                 // --- V2 UI Sync ---
+                let isFilled = false;
                 if (preds[idPart].sets) {
                     const btn = document.querySelector(`button[onclick*="seleccionarSetV2(this, '${preds[idPart].sets}', '${idPart}')"]`);
                     if (btn) btn.classList.add('selected');
+                    isFilled = true;
                 }
                 if (preds[idPart].puntos) {
                     const span = document.getElementById(`val-v2-${idPart}`);
@@ -1820,6 +1581,26 @@ function cargarDatosAntiguos() {
                     } else if (signoVal === "En contra") {
                         const btn = document.getElementById(`signo-minus-v2-${idPart}`);
                         if (btn) btn.classList.add('selected');
+                    }
+                }
+                
+                if (isFilled) {
+                    const card = document.getElementById('card-v2-' + idPart);
+                    const btn = document.getElementById('btn-save-' + idPart);
+                    const summary = document.getElementById('summary-v2-' + idPart);
+                    const inputs = document.getElementById('inputs_eq_' + idPart);
+                    if(card && btn && summary && inputs) {
+                        const s = preds[idPart].sets;
+                        const p = preds[idPart].puntos;
+                        const sig = preds[idPart].signo;
+                        document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${sig === 'A favor' ? '+' : '-'}`;
+                        card.classList.add('collapsed');
+                        inputs.style.display = 'none';
+                        summary.style.display = 'block';
+                        btn.innerText = 'Modificar Predicción';
+                        btn.style.background = 'transparent';
+                        btn.style.color = 'var(--text-muted)';
+                        btn.style.border = '1px solid var(--border-color)';
                     }
                 }
             }
@@ -2334,6 +2115,75 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       if(minusBtn) minusBtn.classList.remove('selected');
       
       btn.classList.add('selected');
+    }
+    
+    function handleSaveOrModifyV2(idPart) {
+        const card = document.getElementById('card-v2-' + idPart);
+        const btn = document.getElementById('btn-save-' + idPart);
+        const summary = document.getElementById('summary-v2-' + idPart);
+        const inputs = document.getElementById('inputs_eq_' + idPart);
+        const isCollapsed = card.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            card.classList.remove('collapsed');
+            summary.style.display = 'none';
+            inputs.style.display = 'block';
+            btn.innerText = 'Guardar Predicción';
+            btn.style.background = 'var(--secondary-color)';
+            btn.style.color = '#000';
+            btn.style.border = 'none';
+        } else {
+            const s = document.getElementById('e' + idPart + '_sets').value;
+            const p = document.getElementById('e' + idPart + '_puntos').value;
+            const sig = document.getElementById('e' + idPart + '_signo').value;
+
+            if (!s || !p || !sig) {
+                alert('Faltan campos por rellenar en este partido.');
+                return;
+            }
+            if(window.isGuestMode) { alert("Modo invitado. No puedes guardar."); return; }
+            if(!window.currentUser) { alert("Tu sesión ha expirado."); window.location.reload(); return; }
+
+            const oldText = btn.innerText;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+            btn.disabled = true;
+
+            let singlePred = {};
+            singlePred[idPart] = { sets: s, puntos: p, signo: sig };
+
+            window.fetchSeguro(window.scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'guardar',
+                    usuario: window.currentUser,
+                    password: window.currentPassword,
+                    predicciones: singlePred
+                }),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                if(data.status === "success") {
+                    document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${sig === 'A favor' ? '+' : '-'}`;
+                    card.classList.add('collapsed');
+                    inputs.style.display = 'none';
+                    summary.style.display = 'block';
+                    btn.innerText = 'Modificar Predicción';
+                    btn.style.background = 'transparent';
+                    btn.style.color = 'var(--text-muted)';
+                    btn.style.border = '1px solid var(--border-color)';
+                } else {
+                    alert('Error al guardar: ' + data.message);
+                    btn.innerText = oldText;
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = oldText;
+                alert('Error de conexión.');
+            });
+        }
     }
 </script>
 
