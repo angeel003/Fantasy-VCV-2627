@@ -384,6 +384,14 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+  
+    .tied-btn {
+        background: var(--secondary-color) !important;
+        color: #000 !important;
+        border-color: var(--secondary-color) !important;
+        opacity: 0.7;
+    }
+
   </style>
 
   <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
@@ -772,6 +780,14 @@
     @keyframes fadeInTab {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+
+  
+    .tied-btn {
+        background: var(--secondary-color) !important;
+        color: #000 !important;
+        border-color: var(--secondary-color) !important;
+        opacity: 0.7;
     }
 
   </style>
@@ -1719,11 +1735,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let visitIsVcv = !eq.es_local;
 
                         let localLogo = localIsVcv 
-                            ? '<img src="files/images/logo_vcv_circle.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' 
+                            ? '<img src="files/images/logo_vcv_rounded.png" style="width:100%;height:100%;object-fit:contain;border-radius:14px;">' 
                             : localTeamName.substring(0,3).toUpperCase();
                             
                         let visitLogo = visitIsVcv 
-                            ? '<img src="files/images/logo_vcv_circle.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' 
+                            ? '<img src="files/images/logo_vcv_rounded.png" style="width:100%;height:100%;object-fit:contain;border-radius:14px;">' 
                             : visitTeamName.substring(0,3).toUpperCase();
 
                         htmlPartidos += `
@@ -1785,11 +1801,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                       <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
                                     </div>
                                     <div class="sign-selector-v2">
-                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, '+')">
-                                        <span>+ FAVOR</span>
+                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${localIsVcv})">
+                                        <span>${localTeamName.substring(0,10)}</span>
                                       </button>
-                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, '-')">
-                                        <span>- CONTRA</span>
+                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${visitIsVcv})">
+                                        <span>${visitTeamName.substring(0,10)}</span>
                                       </button>
                                     </div>
                                   </div>
@@ -2001,43 +2017,63 @@ function iniciarRelojes() {
             const diff = ts - now;
             const limite = 15 * 60 * 1000; 
 
-                        if (isGuestMode) {
+            const applyStyle = (bg, color, text) => {
+                el.innerHTML = text;
+                el.style.backgroundColor = bg;
+                el.style.color = color;
+                el.style.border = '1px solid ' + color;
+                el.style.borderRadius = '8px';
+                el.style.padding = '6px 12px';
+                el.style.fontSize = '0.75rem';
+                el.style.fontWeight = '800';
+            };
+
+            const darkBg = 'var(--bg-input)';
+            const red = 'var(--danger)';
+            const blue = '#3498db';
+            const yellow = 'var(--secondary-color)';
+            const green = 'var(--success)';
+            const gray = 'var(--text-muted)';
+
+            if (isGuestMode) {
                 if (diff <= 0 && diff > -14400000) {
-                    el.innerHTML = "⏱️ Partido en curso";
-                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
+                    applyStyle('rgba(231,76,60,0.1)', red, " Partido en curso");
                 } else if (diff <= -14400000) {
-                    el.innerHTML = "🏁 Partido Finalizado";
-                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                    applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let d = Math.floor(diff / (1000 * 60 * 60 * 24));
                     let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     let s = Math.floor((diff % (1000 * 60)) / 1000);
-                    el.innerHTML = `⏳ Empieza en: ${d}d ${h}h ${m}m ${s}s`;
-                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                    applyStyle('rgba(52,152,219,0.1)', blue, ` Empieza en: ${d}d ${h}h ${m}m ${s}s`);
                 }
             } else {
-                if (diff <= limite && diff > -14400000) { 
-                    el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
-                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
-                    if(eqId) {
-                        const divInputs = document.getElementById(`inputs_eq_${eqId}`);
-                        if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                if (diff <= limite && diff > -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        inputs.style.opacity = '0.5';
+                        inputs.style.pointerEvents = 'none';
                     }
+                    applyStyle('rgba(231,76,60,0.1)', red, " PREDICCIONES CERRADAS");
                 } else if (diff <= -14400000) {
-                    el.innerHTML = "🏁 Partido en curso o Finalizado";
-                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                    applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
-                    let diffToClose = diff - limite; 
-                    let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
-                    let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
-                    let s = Math.floor((diffToClose % (1000 * 60)) / 1000);
-                    el.innerHTML = `🔒 Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
-                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                    let diffLimit = diff - limite;
+                    let d = Math.floor(diffLimit / (1000 * 60 * 60 * 24));
+                    let h = Math.floor((diffLimit % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((diffLimit % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((diffLimit % (1000 * 60)) / 1000);
+                    if (d > 0) {
+                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Se cierra en: ${d}d ${h}h`);
+                    } else if (h > 0) {
+                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Se cierra en: ${h}h ${m}m`);
+                    } else if (m > 0) {
+                        applyStyle('rgba(231,76,60,0.1)', red, ` Se cierra en: ${m}m ${s}s`);
+                    } else {
+                        applyStyle('rgba(231,76,60,0.1)', red, ` Se cierra en: ${s}s`);
+                    }
                 }
             }
-        
         });
     }, 1000);
 }
@@ -2083,18 +2119,30 @@ function cargarDatosAntiguos() {
                     if (btn) btn.classList.add('selected');
                     isFilled = true;
                 }
-                if (preds[idPart].puntos) {
+                if (preds[idPart].puntos !== undefined) {
                     const span = document.getElementById(`val-v2-${idPart}`);
                     if (span) span.innerText = preds[idPart].puntos;
+                    // If it's 0, we can also force the tied state just in case
+                    if (parseInt(preds[idPart].puntos) === 0) {
+                        const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);
+                        const btnMinus = document.getElementById(`signo-minus-v2-${idPart}`);
+                        if(btnPlus) { btnPlus.classList.add('tied-btn'); btnPlus.disabled = true; }
+                        if(btnMinus) { btnMinus.classList.add('tied-btn'); btnMinus.disabled = true; }
+                    }
                 }
                 if (preds[idPart].signo) {
                     const signoVal = preds[idPart].signo;
                     if (signoVal === "A favor") {
-                        const btn = document.getElementById(`signo-plus-v2-${idPart}`);
+                        const btn = document.querySelector(`button[id^="signo-"][id$="-${idPart}"][onclick*=" true)"]`);
                         if (btn) btn.classList.add('selected');
                     } else if (signoVal === "En contra") {
-                        const btn = document.getElementById(`signo-minus-v2-${idPart}`);
+                        const btn = document.querySelector(`button[id^="signo-"][id$="-${idPart}"][onclick*=" false)"]`);
                         if (btn) btn.classList.add('selected');
+                    } else if (signoVal === "Empate") {
+                        const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);
+                        const btnMinus = document.getElementById(`signo-minus-v2-${idPart}`);
+                        if(btnPlus) { btnPlus.classList.add('tied-btn'); btnPlus.disabled = true; }
+                        if(btnMinus) { btnMinus.classList.add('tied-btn'); btnMinus.disabled = true; }
                     }
                 }
                 
@@ -2107,7 +2155,12 @@ function cargarDatosAntiguos() {
                         const s = preds[idPart].sets;
                         const p = preds[idPart].puntos;
                         const sig = preds[idPart].signo;
-                        document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${sig === 'A favor' ? '+' : '-'}`;
+                        
+                    const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
+                    let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
+                    if(p == 0) signText = "Empate";
+                    document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${signText}`;
+
                         card.classList.add('collapsed');
                         inputs.style.display = 'none';
                         summary.style.display = 'block';
@@ -2606,22 +2659,59 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       btn.classList.add('selected');
     }
     
+    
     function cambiarPuntosV2(matchId, delta) {
       const hiddenInput = document.getElementById('e' + matchId + '_puntos');
       const valSpan = document.getElementById('val-v2-' + matchId);
+      const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
+      const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
+      const signInput = document.getElementById('e' + matchId + '_signo');
+
       if (hiddenInput && valSpan) {
           let current = parseInt(hiddenInput.value) || 14; 
           let next = current + delta;
-          if (next < 1) next = 1; 
+          if (next < 0) next = 0; 
+          
           hiddenInput.value = next;
           valSpan.innerText = next;
+
+          if (next === 0) {
+              if(plusBtn) {
+                  plusBtn.classList.add('tied-btn');
+                  plusBtn.disabled = true;
+                  plusBtn.style.pointerEvents = 'none';
+              }
+              if(minusBtn) {
+                  minusBtn.classList.add('tied-btn');
+                  minusBtn.disabled = true;
+                  minusBtn.style.pointerEvents = 'none';
+              }
+              if(signInput) signInput.value = 'Empate';
+          } else {
+              if(plusBtn) {
+                  plusBtn.classList.remove('tied-btn');
+                  plusBtn.disabled = false;
+                  plusBtn.style.pointerEvents = 'auto';
+              }
+              if(minusBtn) {
+                  minusBtn.classList.remove('tied-btn');
+                  minusBtn.disabled = false;
+                  minusBtn.style.pointerEvents = 'auto';
+              }
+              if(signInput.value === 'Empate') {
+                  signInput.value = '';
+                  if(plusBtn) plusBtn.classList.remove('selected');
+                  if(minusBtn) minusBtn.classList.remove('selected');
+              }
+          }
       }
     }
+
     
-    function cambiarSignoV2(matchId, btn, val) {
+    function cambiarSignoV2(matchId, btn, isVcv) {
       const hiddenInput = document.getElementById('e' + matchId + '_signo');
       if (hiddenInput) {
-          hiddenInput.value = val === '+' ? 'A favor' : 'En contra';
+          hiddenInput.value = isVcv ? 'A favor' : 'En contra';
       }
       const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
       const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
@@ -2728,7 +2818,12 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             .then(data => {
                 btn.disabled = false;
                 if(data.status === "success") {
-                    document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${sig === 'A favor' ? '+' : '-'}`;
+                    
+                    const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
+                    let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
+                    if(p == 0) signText = "Empate";
+                    document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${signText}`;
+
                     card.classList.add('collapsed');
                     inputs.style.display = 'none';
                     summary.style.display = 'block';
