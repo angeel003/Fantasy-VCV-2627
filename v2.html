@@ -392,6 +392,24 @@
         opacity: 0.7;
     }
 
+  
+    /* STREAMING V2 */
+    .btn-streaming-v2 {
+        display: flex; align-items: center; justify-content: center; gap: 4px;
+        font-size: 0.6rem; font-weight: 800; border-radius: 6px;
+        padding: 4px 6px; text-decoration: none; border: none;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .btn-streaming-v2.active {
+        background: var(--danger); color: #fff;
+        box-shadow: 0 2px 8px rgba(231,76,60,0.4);
+    }
+    .btn-streaming-v2.disabled {
+        background: var(--bg-card-alt); color: var(--text-muted); border: 1px solid var(--border-color);
+        cursor: not-allowed;
+    }
+
   </style>
 
   <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
@@ -788,6 +806,24 @@
         color: #000 !important;
         border-color: var(--secondary-color) !important;
         opacity: 0.7;
+    }
+
+  
+    /* STREAMING V2 */
+    .btn-streaming-v2 {
+        display: flex; align-items: center; justify-content: center; gap: 4px;
+        font-size: 0.6rem; font-weight: 800; border-radius: 6px;
+        padding: 4px 6px; text-decoration: none; border: none;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .btn-streaming-v2.active {
+        background: var(--danger); color: #fff;
+        box-shadow: 0 2px 8px rgba(231,76,60,0.4);
+    }
+    .btn-streaming-v2.disabled {
+        background: var(--bg-card-alt); color: var(--text-muted); border: 1px solid var(--border-color);
+        cursor: not-allowed;
     }
 
   </style>
@@ -1728,19 +1764,20 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                         setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
 
-                        let localTeamName = eq.es_local ? eq.equipo_local : eq.rival;
-                        let visitTeamName = eq.es_local ? eq.rival : eq.equipo_local;
+                        let localTeamName = eq.equipo_local;
+                        let visitTeamName = eq.rival;
                         
-                        let localIsVcv = eq.es_local;
-                        let visitIsVcv = !eq.es_local;
+                        let localAbrev = (eq.abrev_local || localTeamName.substring(0,3)).toUpperCase();
+                        let visitAbrev = (eq.abrev_rival || visitTeamName.substring(0,3)).toUpperCase();
 
-                        let localLogo = localIsVcv 
-                            ? '<img src="files/images/logo_vcv_rounded.png" style="width:100%;height:100%;object-fit:contain;border-radius:14px;">' 
-                            : localTeamName.substring(0,3).toUpperCase();
-                            
-                        let visitLogo = visitIsVcv 
-                            ? '<img src="files/images/logo_vcv_rounded.png" style="width:100%;height:100%;object-fit:contain;border-radius:14px;">' 
-                            : visitTeamName.substring(0,3).toUpperCase();
+                        let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
+                        let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
+                        
+                        let infoPabellon = eq.pabellon ? `<div style="margin-top:2px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon}</div>` : '';
+
+                        let btnStreaming = eq.streaming 
+                            ? `<a href="${eq.streaming}" target="_blank" class="btn-streaming-v2 active" style="text-decoration:none;"><i data-lucide="play" style="width:14px;height:14px;"></i> Streaming</a>` 
+                            : `<button class="btn-streaming-v2 disabled" disabled><i data-lucide="play-square" style="width:14px;height:14px;"></i> Sin enlace</button>`;
 
                         htmlPartidos += `
                         <div class="vcv-card-v2" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
@@ -1748,18 +1785,24 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
                                   ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
                                 </span>
-                                <span><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${fechaFormateada}</span>
+                                <div style="text-align: right;">
+                                    <div><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${fechaFormateada}</div>
+                                    ${infoPabellon}
+                                </div>
                             </div>
 
                             <div class="teams-versus-container-v2">
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${localIsVcv ? 'vcv-local' : ''}">${localLogo}</div>
+                                  <div class="team-avatar-v2 ${eq.es_local ? 'vcv-local' : ''}">${localLogo}</div>
                                   <span class="team-name-v2">${localTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--success)">LOCAL</span>
                                 </div>
-                                <div class="vs-divider-v2">VS</div>
+                                <div class="vs-divider-v2" style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                                  <div>VS</div>
+                                  ${btnStreaming}
+                                </div>
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${visitIsVcv ? 'vcv-local' : ''}">${visitLogo}</div>
+                                  <div class="team-avatar-v2 ${!eq.es_local ? 'vcv-local' : ''}">${visitLogo}</div>
                                   <span class="team-name-v2">${visitTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
                                 </div>
@@ -1801,11 +1844,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                       <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
                                     </div>
                                     <div class="sign-selector-v2">
-                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${localIsVcv})">
-                                        <span>${localTeamName.substring(0,10)}</span>
+                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${eq.es_local})">
+                                        <span style="font-size:0.7rem;">${localTeamName}</span>
                                       </button>
-                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${visitIsVcv})">
-                                        <span>${visitTeamName.substring(0,10)}</span>
+                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${!eq.es_local})">
+                                        <span style="font-size:0.7rem;">${visitTeamName}</span>
                                       </button>
                                     </div>
                                   </div>
