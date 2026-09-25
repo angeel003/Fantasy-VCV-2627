@@ -39,7 +39,7 @@
 
     html { scroll-behavior: smooth; }
     html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); overflow-x: hidden; }
 
     /* ---------------------------------------------------
        2. TRANSICIONES Y ANIMACIONES (Fade-in)
@@ -410,7 +410,25 @@
         cursor: not-allowed;
     }
 
-  </style>
+  
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 10px !important;
+            border-radius: 0px !important; /* maybe 0px or small radius if it takes full width? */
+            border-left: none !important;
+            border-right: none !important;
+        }
+        body {
+            padding: 0 !important;
+            padding-right: 0px !important;
+        }
+        .vcv-card-v2 {
+            padding: 12px;
+            border-radius: 12px;
+        }
+    }
+</style>
 
   <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -826,7 +844,25 @@
         cursor: not-allowed;
     }
 
-  </style>
+  
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 10px !important;
+            border-radius: 0px !important; /* maybe 0px or small radius if it takes full width? */
+            border-left: none !important;
+            border-right: none !important;
+        }
+        body {
+            padding: 0 !important;
+            padding-right: 0px !important;
+        }
+        .vcv-card-v2 {
+            padding: 12px;
+            border-radius: 12px;
+        }
+    }
+</style>
 
 </head>
 <body>
