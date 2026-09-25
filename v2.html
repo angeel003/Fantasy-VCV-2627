@@ -328,6 +328,62 @@
       border: 1px solid var(--border-color);
     }
 
+  
+    /* BOTTOM NAV V2 */
+    .bottom-nav-v2 {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item-v2 {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 20%;
+    }
+    .nav-item-v2 i {
+        width: 22px;
+        height: 22px;
+        margin-bottom: 2px;
+    }
+    .nav-item-v2.active {
+        color: var(--secondary-color);
+    }
+    .nav-item-v2.active i {
+        transform: scale(1.15);
+    }
+    
+    /* Hide all sections by default except when active */
+    #appSection > section {
+        display: none;
+        padding-bottom: 80px; /* space for bottom nav */
+    }
+    #appSection > section.active-tab {
+        display: block;
+        animation: fadeInTab 0.3s ease;
+    }
+    @keyframes fadeInTab {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 
   <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
@@ -662,6 +718,62 @@
       border: 1px solid var(--border-color);
     }
 
+  
+    /* BOTTOM NAV V2 */
+    .bottom-nav-v2 {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item-v2 {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 20%;
+    }
+    .nav-item-v2 i {
+        width: 22px;
+        height: 22px;
+        margin-bottom: 2px;
+    }
+    .nav-item-v2.active {
+        color: var(--secondary-color);
+    }
+    .nav-item-v2.active i {
+        transform: scale(1.15);
+    }
+    
+    /* Hide all sections by default except when active */
+    #appSection > section {
+        display: none;
+        padding-bottom: 80px; /* space for bottom nav */
+    }
+    #appSection > section.active-tab {
+        display: block;
+        animation: fadeInTab 0.3s ease;
+    }
+    @keyframes fadeInTab {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 
 </head>
@@ -685,10 +797,10 @@
     <div class="modal-card-v2">
         <div style="text-align: center; margin-bottom: 18px;">
           <div class="club-crest-v2" style="margin: 0 auto 12px; width: 52px; height: 52px;">
-            <i data-lucide="shield" style="width: 30px; height: 30px;"></i>
+            <img src="files/images/logo_vcv_circle.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
           </div>
           <h2 style="font-size: 1.5rem; font-weight: 900; color:var(--text-main); margin-bottom:4px; letter-spacing: -0.5px;">VCV Play <span style="color:var(--secondary-color);">2627</span></h2>
-          <p style="font-size: 0.85rem; font-weight:600; color: var(--text-muted); margin-top: 4px;">La liga de pronósticos oficial del club</p>
+          <p style="font-size: 0.85rem; font-weight:600; color: var(--text-muted); margin-top: 4px;">El juego oficial del club</p>
         </div>
 
         <div>
@@ -2478,6 +2590,38 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       btn.classList.add('selected');
     }
     
+    
+    function switchTabV2(sectionId, btn) {
+        // Hide all sections in appSection
+        const sections = ['carteleraSection', 'clasificacionesSection', 'historialSection', 'calendarioSection', 'enlacesRfevbSection', 'prediccionesTotalesSection'];
+        sections.forEach(s => {
+            const el = document.getElementById(s);
+            if (el) el.classList.remove('active-tab');
+        });
+        
+        // Show target section
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active-tab');
+        
+        // If historial, also show prediccionesTotalesSection right below it (if they were separate)
+        if (sectionId === 'historialSection') {
+            const extra = document.getElementById('prediccionesTotalesSection');
+            if (extra) extra.classList.add('active-tab');
+        }
+
+        // Update active button state
+        document.querySelectorAll('.nav-item-v2').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Initialize first tab as active
+        const firstSec = document.getElementById('carteleraSection');
+        if (firstSec) firstSec.classList.add('active-tab');
+    });
+
     function handleSaveOrModifyV2(idPart) {
         const card = document.getElementById('card-v2-' + idPart);
         const btn = document.getElementById('btn-save-' + idPart);
