@@ -1684,9 +1684,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         <li>Acertar el <b>Resultado Exacto (Sets)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.sets} pts</span></li>
                         <li>Acertar el <b>Ganador del partido</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.ganador} pts</span></li>
                         <li>Acertar la <b>Diferencia de puntos exacta</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_exacta} pts</span> extra</li>
-                        <li>Acertar la <b>Diferencia aproximada (±5)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_5} pts</span> extra</li>
+                        <li>Acertar la <b>Diferencia aproximada (5)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_5} pts</span> extra</li>
                     `;
                 }
+                
+                // Update match cards dynamically
+                document.querySelectorAll('.sets-points-label').forEach(el => el.innerText = `+${data.reglas.sets} pts si aciertas`);
+                document.querySelectorAll('.diff-points-label').forEach(el => el.innerText = `+${data.reglas.diff_exacta} pts exacto`);
             }
 
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
@@ -1793,7 +1797,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                             <div class="teams-versus-container-v2">
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${eq.es_local ? 'vcv-local' : ''}">${localLogo}</div>
+                                  <div class="team-avatar-v2">${localLogo}</div>
                                   <span class="team-name-v2">${localTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--success)">LOCAL</span>
                                 </div>
@@ -1802,7 +1806,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                   ${btnStreaming}
                                 </div>
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${!eq.es_local ? 'vcv-local' : ''}">${visitLogo}</div>
+                                  <div class="team-avatar-v2">${visitLogo}</div>
                                   <span class="team-name-v2">${visitTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
                                 </div>
@@ -1818,7 +1822,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="sets-grid-label-v2">
                                   <span>Pronóstico de Sets</span>
-                                  <span style="color: var(--secondary-color);">+150 pts si aciertas</span>
+                                  <span style="color: var(--secondary-color);" class="sets-points-label">...</span>
                                 </div>
                                 <div class="sets-selector-grid-v2">
                                     <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
@@ -1832,7 +1836,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <div class="points-diff-container-v2">
                                   <div class="points-header-v2">
                                     <span>PUNTOS DIFERENCIAL</span>
-                                    <span style="color: var(--text-gold);">+100 pts exacto</span>
+                                    <span style="color: var(--text-gold);" class="diff-points-label">...</span>
                                   </div>
                                   <div class="points-controls-row-v2">
                                     <div class="stepper-container-v2">
