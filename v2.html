@@ -297,6 +297,7 @@
       max-width: 360px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.08);
       position: relative;
+      margin-bottom: 40px;
     }
     .club-crest-v2 {
       background: var(--primary-color);
@@ -543,7 +544,7 @@
     
 </header>
 
-<div id="loginSection" style="display:flex; justify-content:center; align-items:center; background:var(--bg-card-alt); padding:40px 20px;">
+<div id="loginSection">
     <div class="modal-card-v2">
         <div style="text-align: center; margin-bottom: 18px;">
           <div class="club-crest-v2" style="margin: 0 auto 12px; width: 52px; height: 52px;">
@@ -574,7 +575,94 @@
         
         <div id="loginMessage" class="alert-box" style="margin-top:10px; display:none;"></div>
     </div>
+
+    <div class="faq-container">
+        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
+
+        <details class="faq-details">
+            <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
+            <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
+        </details>
+        <details class="faq-details">
+            <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
+            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
+        </details>
+        <details class="faq-details">
+            <summary class="faq-summary">📱 Cómo instalar la App (Android / iOS)</summary>
+            <div class="faq-content">
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                    <button onclick="document.getElementById('os-android').style.display='block'; document.getElementById('os-ios').style.display='none'; this.style.opacity='1'; document.getElementById('btnIosTab').style.opacity='0.5';" class="btn btn-sm" style="background:#3DDC84; color:white; font-weight:bold; flex:1;" id="btnAndroidTab">Android</button>
+                    <button onclick="document.getElementById('os-ios').style.display='block'; document.getElementById('os-android').style.display='none'; this.style.opacity='1'; document.getElementById('btnAndroidTab').style.opacity='0.5';" class="btn btn-sm" style="background:#000000; color:white; font-weight:bold; flex:1; opacity:0.5;" id="btnIosTab">iOS (iPhone)</button>
+                </div>
+                <div id="os-android" style="display:block;">
+                    <p style="font-size:0.9rem; margin-bottom:10px;">Descarga el archivo APK e instálalo como una App nativa (acepta "Instalar de orígenes desconocidos" si tu móvil te avisa).</p>
+                    <a href="files/app/fantasy-vcv-2627.apk" download class="btn btn-success btn-sm btn-block" style="font-weight:bold; border-radius:20px;">📥 Descargar APK Oficial</a>
+                </div>
+                <div id="os-ios" style="display:none; text-align:left;">
+                    <p style="font-size:0.9rem; margin-bottom:5px; color:#444;">Debido a las restricciones de Apple, instálala así:</p>
+                    <ol style="font-size:0.9rem; padding-left:20px; color:#444; margin-bottom:0;">
+                        <li style="margin-bottom:8px;">Abre esta web desde <b>Safari</b>.</li>
+                        <li style="margin-bottom:8px;">Toca el icono de <b>Compartir</b> en la barra inferior.</li>
+                        <li>Selecciona <b>"Añadir a la pantalla de inicio"</b>.</li>
+                    </ol>
+                    <p style="font-size:0.8rem; color:#888; margin-top:10px;"><i>Nota: Si ya la tenías instalada, bórrala e instálala de nuevo para actualizar el sistema de la caché.</i></p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="faq-details">
+            <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
+            <div class="faq-content">
+                <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    
+                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
+                        ⚠️ <b>Atención:</b> Por motivos de seguridad, te rogamos encarecidamente que <b>NO utilices la misma contraseña que usas para cosas importantes</b> (como tu correo electrónico, banco o redes sociales). Esta es una plataforma lúdica.
+                    </div>
+
+                    <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
+                    <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
+                    <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
+                    <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite la nueva contraseña" required>
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnChangePwd" style="font-weight:bold;">Actualizar Contraseña</button>
+                    <div id="msgChangePwd" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+                <p class="mt-3">¿La has olvidado y no puedes entrar? Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca.</p>
+            </div>
+        </details>
+
+        <details class="faq-details">
+            <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
+            <div class="faq-content">
+                <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
+                    <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
+                    <hr>
+                    <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (déjalo en blanco si no quieres cambiarlo)">
+                    <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (déjalo en blanco si no quieres cambiarlo)">
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnReqName" style="font-weight:bold;">Enviar Solicitud</button>
+                    <div id="msgReqName" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+            </div>
+        </details>
+
+        <details class="faq-details">
+            <summary class="faq-summary">🆕 Aún no tengo cuenta / Crear cuenta</summary>
+            <div class="faq-content">
+                <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
+                <ul style="margin-top: 5px; padding-left: 20px;">
+                    <li><b>Nombre de usuario</b> deseado (ej: @juan_vcv).</li>
+                    <li><b>Contraseña</b> deseada.</li>
+                    <li><b>Relación con el club</b> (si juegas o entrenas, dinos en qué equipo/categoría) para añadir insignias a tu perfil.</li>
+                    <li><b>Equipos</b> que te gustaría seguir y predecir.</li>
+                    <li style="margin-top:5px;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con amigos. Escribe los usuarios de todos y los equipos que puntuarán en ella.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
 </div>
+
 <div id="appSection" style="display: none;">
 
     
@@ -2218,7 +2306,6 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       if (hiddenInput) {
           hiddenInput.value = val;
       }
-      
       const container = btn.parentElement;
       container.querySelectorAll('.set-option-btn-v2').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
@@ -2241,7 +2328,6 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       if (hiddenInput) {
           hiddenInput.value = val === '+' ? 'A favor' : 'En contra';
       }
-      
       const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
       const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
       if(plusBtn) plusBtn.classList.remove('selected');
