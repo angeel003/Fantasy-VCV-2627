@@ -711,9 +711,13 @@ function doPost(e) {
                 var oLocalWin = parseInt(oRes.sets.split("-")[0]) > parseInt(oRes.sets.split("-")[1]);
                 var oDiff = 0;
                 var setsParciales = oRes.parciales.split(",");
-                for(var sp=0; sp<setsParciales.length; sp++){
-                    var nums = setsParciales[sp].split("-");
-                    if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                if (setsParciales.length === 1 && !oRes.parciales.includes("-") && !isNaN(parseInt(oRes.parciales))) {
+                    oDiff = parseInt(oRes.parciales);
+                } else {
+                    for(var sp=0; sp<setsParciales.length; sp++){
+                        var nums = setsParciales[sp].split("-");
+                        if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                    }
                 }
                 var uLocalWin = parseInt(uPred.sets.split("-")[0]) > parseInt(uPred.sets.split("-")[1]);
                 var uDiff = parseInt(uPred.puntos) || 0;
@@ -726,8 +730,8 @@ function doPost(e) {
                 var maxDist = esDerby ? maxDistancia : maxDistancia;
                 
                 var ptsGanados = 0;
-                if(uPred.sets === oRes.sets) { ptsGanados += pS; }
-                else if (uLocalWin === oLocalWin) { ptsGanados += pG; }
+                if (uLocalWin === oLocalWin) { ptsGanados += pG; }
+                if (uPred.sets === oRes.sets) { ptsGanados += pS; }
 
                 var distancia = Math.abs(oDiff - uDiff);
                 if(distancia === 0) { 
