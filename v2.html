@@ -554,11 +554,11 @@
         </div>
 
         <div>
-          <div class="form-group">
+          <div class="form-group text-left" style="margin-bottom:10px;">
             <label style="font-size:0.85rem; font-weight:600;">Usuario</label>
             <input type="text" id="loginUsuario" class="form-control" placeholder="@tu_usuario" required>
           </div>
-          <div class="form-group" style="margin-top:10px;">
+          <div class="form-group text-left" style="margin-bottom:10px;">
             <label style="font-size:0.85rem; font-weight:600;">Contraseña</label>
             <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
           </div>
@@ -1734,9 +1734,6 @@ function cargarDatosAntiguos() {
                         if (btn) btn.classList.add('selected');
                     }
                 }
-            }_sets`, preds[idPart].sets);
-                setVal(`e${idPart}_puntos`, preds[idPart].puntos);
-                setVal(`e${idPart}_signo`, preds[idPart].signo);
             }
         }
     });
@@ -2212,7 +2209,6 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 
 <script>
     // --- V2 INTERACTIVE LOGIC ---
-    // Initialize icons safely
     document.addEventListener("DOMContentLoaded", () => {
         if(window.lucide) lucide.createIcons();
     });
