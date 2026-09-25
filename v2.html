@@ -1862,7 +1862,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             
             // Populating new Header V2
-            document.getElementById('h2-user-name').innerText = displayNom;
+            document.getElementById('h2-user-name').innerText = data.nombre_real || usr;
             document.getElementById('h2-user-handle').innerText = "@" + usr;
             
             let misInsignias = data.insignias[usr] || [];
