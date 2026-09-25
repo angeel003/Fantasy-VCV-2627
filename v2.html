@@ -1992,7 +1992,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 </div>
                             </div>
                             
-                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.75rem; font-weight:bold; padding:4px 8px; background:rgba(212, 175, 55, 0.1); color:var(--secondary-color); border: 1px solid var(--border-glow); border-radius:4px; display:inline-block; margin-bottom:12px;">Calculando tiempo...</div>
+                            
 
                             <!-- HIDDEN INPUTS -->
                             <input type="hidden" id="e${eq.id_partido}_sets" value="">
@@ -2250,8 +2250,8 @@ function iniciarRelojes() {
                 el.style.color = color;
                 el.style.border = '1px solid ' + color;
                 el.style.borderRadius = '8px';
-                el.style.padding = '6px 12px';
-                el.style.fontSize = '0.75rem';
+                el.style.padding = '2px 6px';
+                el.style.fontSize = '0.65rem';
                 el.style.fontWeight = '800';
             };
 
