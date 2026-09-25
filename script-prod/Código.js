@@ -558,7 +558,7 @@ function doPost(e) {
     var ptsSets = parseInt(reglas[0][0]) || 0;
     var ptsGanador = parseInt(reglas[1][0]) || 0;
     var ptsDiffExacta = parseInt(reglas[2][0]) || 0;
-    var ptsDiff5 = parseInt(reglas[3][0]) || 0;
+    var maxDistancia = parseInt(reglas[3][0]) || 0;
 
     // LÓGICA DE PERMISOS COMBINADOS (LIGAS + EXPLÍCITOS)
     var dataLigas = getSafeData(sheetLigas);
@@ -711,9 +711,13 @@ function doPost(e) {
                 var oLocalWin = parseInt(oRes.sets.split("-")[0]) > parseInt(oRes.sets.split("-")[1]);
                 var oDiff = 0;
                 var setsParciales = oRes.parciales.split(",");
-                for(var sp=0; sp<setsParciales.length; sp++){
-                    var nums = setsParciales[sp].split("-");
-                    if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                if (setsParciales.length === 1 && !oRes.parciales.includes("-") && !isNaN(parseInt(oRes.parciales))) {
+                    oDiff = parseInt(oRes.parciales);
+                } else {
+                    for(var sp=0; sp<setsParciales.length; sp++){
+                        var nums = setsParciales[sp].split("-");
+                        if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                    }
                 }
                 var uLocalWin = parseInt(uPred.sets.split("-")[0]) > parseInt(uPred.sets.split("-")[1]);
                 var uDiff = parseInt(uPred.puntos) || 0;
@@ -723,15 +727,19 @@ function doPost(e) {
                 var pS = esDerby ? ptsSets * 2 : ptsSets;
                 var pG = esDerby ? ptsGanador * 2 : ptsGanador;
                 var pDE = esDerby ? ptsDiffExacta * 2 : ptsDiffExacta;
-                var pD5 = esDerby ? ptsDiff5 * 2 : ptsDiff5;
+                var maxDist = esDerby ? maxDistancia : maxDistancia;
                 
                 var ptsGanados = 0;
-                if(uPred.sets === oRes.sets) { ptsGanados += pS; }
-                else if (uLocalWin === oLocalWin) { ptsGanados += pG; }
+                if (uLocalWin === oLocalWin) { ptsGanados += pG; }
+                if (uPred.sets === oRes.sets) { ptsGanados += pS; }
 
                 var distancia = Math.abs(oDiff - uDiff);
-                if(distancia === 0) { ptsGanados += pDE; }
-                else if(distancia <= 5) { ptsGanados += pD5; }
+                if(distancia === 0) { 
+                    ptsGanados += pDE; 
+                } else if(maxDist > 0 && distancia < maxDist) { 
+                    var porcentaje = (maxDist - distancia) / maxDist;
+                    ptsGanados += Math.round(pDE * porcentaje);
+                }
 
                 for(var l=0; l<misLigas.length; l++){
                     var nombreLiga = misLigas[l];
@@ -832,7 +840,7 @@ function doPost(e) {
             "equipos_totales": misEquiposTotales,
             "puntos_reales": puntosRealesTotales,
             "predicciones_totales": prediccionesTotalesMap,
-            "reglas": { "sets": ptsSets, "ganador": ptsGanador, "diff_exacta": ptsDiffExacta, "diff_5": ptsDiff5 }
+            "reglas": { "sets": ptsSets, "ganador": ptsGanador, "diff_exacta": ptsDiffExacta, "max_dist": maxDistancia }
         })).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -876,9 +884,13 @@ function doPost(e) {
                     var oLocalWin = parseInt(oRes.sets.split("-")[0]) > parseInt(oRes.sets.split("-")[1]);
                     var oDiff = 0;
                     var setsParciales = oRes.parciales.split(",");
-                    for(var sp=0; sp<setsParciales.length; sp++){
-                       var nums = setsParciales[sp].split("-");
-                       if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                    if (setsParciales.length === 1 && !oRes.parciales.includes("-") && !isNaN(parseInt(oRes.parciales))) {
+                        oDiff = parseInt(oRes.parciales);
+                    } else {
+                        for(var sp=0; sp<setsParciales.length; sp++){
+                            var nums = setsParciales[sp].split("-");
+                            if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                        }
                     }
                     var uLocalWin = parseInt(uPred.sets.split("-")[0]) > parseInt(uPred.sets.split("-")[1]);
                     var uDiff = parseInt(uPred.puntos) || 0;
@@ -888,16 +900,23 @@ function doPost(e) {
                     var pS = esDerby ? ptsSets * 2 : ptsSets;
                     var pG = esDerby ? ptsGanador * 2 : ptsGanador;
                     var pDE = esDerby ? ptsDiffExacta * 2 : ptsDiffExacta;
-                    var pD5 = esDerby ? ptsDiff5 * 2 : ptsDiff5;
+                    var maxDist = esDerby ? maxDistancia : maxDistancia;
 
                     if(esDerby) motivos.push("🔥 DERBY (x2)");
 
-                    if(uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
-                    else if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Acertar ganador (+" + pG + ")"); }
+                    if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Ganador (+" + pG + ")"); }
+                    if (uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
 
                     var distancia = Math.abs(oDiff - uDiff);
-                    if(distancia === 0) { ptsGanados += pDE; motivos.push("Dif. exacta (+" + pDE + ")"); }
-                    else if(distancia <= 5) { ptsGanados += pD5; motivos.push("Dif. aproximada (+" + ptsDiff5 + ")"); }
+                    if(distancia === 0) { 
+                        ptsGanados += pDE; 
+                        motivos.push("Dif. exacta (+" + pDE + ")"); 
+                    } else if(maxDist > 0 && distancia < maxDist) { 
+                        var porcentaje = (maxDist - distancia) / maxDist;
+                        var ptsDiferencia = Math.round(pDE * porcentaje);
+                        ptsGanados += ptsDiferencia;
+                        motivos.push("Dif. acercada [" + distancia + "] (+" + ptsDiferencia + ")");
+                    }
                     if(ptsGanados === 0) { motivos.push("Sin aciertos"); }
                 }
             }
