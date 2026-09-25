@@ -1,9 +1,11 @@
+with open('prototipo_stitch.html', 'r', encoding='utf-8') as f:
+    text = f.read()
 import re
-with open('dev.html', 'r', encoding='utf-8') as f:
-    html = f.read()
-
-for m in re.finditer(r'<([a-z]+)[^>]*id=[\'"]([^\'"]+)[\'"]', html):
-    id_val = m.group(2)
-    if 'cartelera' in id_val.lower() or 'partido' in id_val.lower() or 'pred' in id_val.lower():
-        print(id_val)
-
+print("Containers:")
+matches = re.finditer(r'id="(.*?-container)"', text)
+for m in matches:
+    print(m.group(1))
+print("Other IDs:")
+matches = re.finditer(r'id="([^"]+)"', text)
+ids = [m.group(1) for m in matches]
+print(sorted(list(set(ids))))

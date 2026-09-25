@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.fantasyvcv.app",
-        "sha256_cert_fingerprints": ["5B:00:77:61:F4:F0:44:15:6C:6F:A5:47:09:FB:07:B9:74:6D:B6:4D:8E:FC:7B:37:B2:2D:B0:75:47:F4:9C:8B"]
-      }
-    }]
