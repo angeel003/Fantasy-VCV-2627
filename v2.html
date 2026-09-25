@@ -1023,8 +1023,8 @@
             <span>Calendario</span>
           </button>
           <button class="nav-item-v2" onclick="switchTabV2('enlacesRfevbSection', this)">
-            <i data-lucide="shield"></i>
-            <span>Club</span>
+            <i data-lucide="user"></i>
+            <span>Perfil</span>
           </button>
         </nav>
     </div>
@@ -1206,7 +1206,7 @@
                             ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
                         </summary>
                         <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                            <p style="margin-bottom: 8px;"><b>1. Diferencia de Puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
+                            <p style="margin-bottom: 8px;"><b>1. Diferencia de puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
                             <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
                                 <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
                                 • Set 1: VCV gana de 5<br>
@@ -1854,9 +1854,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 }
                 
                 // Update match cards dynamically
-                document.querySelectorAll('.sets-points-label').forEach(el => el.innerText = `+${data.reglas.sets} pts si aciertas`);
-                document.querySelectorAll('.diff-points-label').forEach(el => el.innerText = `+${data.reglas.diff_exacta} pts exacto`);
-            }
+                                            }
 
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
             
@@ -1995,17 +1993,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             
 
                             ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
-                            <!-- PUNTOS TEXT -->
-                            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; font-weight: bold;">
-                                Sets Exactos: <span style="color:var(--success);">+${data.reglas?.puntos_sets_exactos || 80} pts</span> | 
-                                Diferencia: <span style="color:var(--success);">+${data.reglas?.puntos_diferencia_exacta || 100} pts</span>
-                            </div>
-                            ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
-                            <!-- PUNTOS TEXT -->
-                            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; font-weight: bold;">
-                                Sets Exactos: <span style="color:var(--success);">+${data.reglas?.puntos_sets_exactos || 80} pts</span> | 
-                                Diferencia: <span style="color:var(--success);">+${data.reglas?.puntos_diferencia_exacta || 100} pts</span>
-                            </div>
                             <!-- HIDDEN INPUTS -->`}`}
                             <input type="hidden" id="e${eq.id_partido}_sets" value="">
                             <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
@@ -2013,8 +2000,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                             <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
                                 <div class="sets-grid-label-v2">
-                                  <span>Pronóstico de Sets</span>
-                                  <span style="color: var(--secondary-color);" class="sets-points-label">...</span>
+                                  <span>Pronóstico de sets</span>
+                                  
                                 </div>
                                 <div class="sets-selector-grid-v2">
                                     <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
@@ -2027,8 +2014,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                                 <div class="points-diff-container-v2">
                                   <div class="points-header-v2">
-                                    <span>PUNTOS DIFERENCIAL</span>
-                                    <span style="color: var(--text-gold);" class="diff-points-label">...</span>
+                                    <span>DIFERENCIA DE PUNTOS</span>
+                                    
                                   </div>
                                   <div class="points-controls-row-v2">
                                     <div class="stepper-container-v2">
@@ -2266,6 +2253,12 @@ function iniciarRelojes() {
                 if (diff <= 0 && diff > -14400000) {
                     applyStyle('rgba(231,76,60,0.1)', red, " Partido en curso");
                 } else if (diff <= -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let d = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -2278,11 +2271,18 @@ function iniciarRelojes() {
                 if (diff <= limite && diff > -14400000) {
                     const inputs = document.getElementById('inputs_eq_' + eqId);
                     if(inputs) {
-                        inputs.style.opacity = '0.5';
-                        inputs.style.pointerEvents = 'none';
+                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
                     }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(231,76,60,0.1)', red, " PREDICCIONES CERRADAS");
                 } else if (diff <= -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let diffLimit = diff - limite;
