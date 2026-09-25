@@ -1,2264 +1,1606 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fantasy VCV 26/27 | Club Voleibol Valencia</title>
-  
-  <!-- Manifest & PWA Meta Tags -->
-  <meta name="theme-color" content="#1d0d21">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Fantasy VCV">
-  
-  <!-- Google Fonts: Space Grotesk & Outfit -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fantasy VCV 26/27">
+<title>Fantasy VCV 26/27</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#783b7a">
+<link rel="icon" type="image/png" href="files/images/logo_vcv_circle.png">
+<link rel="apple-touch-icon" href="files/images/logo_vcv_square_white.png">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Recuperamos la fuente Golos Text original -->
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
 
+<style>
+    /* ---------------------------------------------------
+       1. VARIABLES DE COLOR OFICIALES DEL VCV
+       --------------------------------------------------- */
+    :root {
+        --vcv-morado: #783b7a; 
+        --vcv-blanco: #ffffff; 
+        --vcv-dorado: #cfb359; 
+        --vcv-rojo: #d24442; 
+        --vcv-negro: #000000;
+        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
+    }
+
+    html { scroll-behavior: smooth; }
+    html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
+
+    /* ---------------------------------------------------
+       2. TRANSICIONES Y ANIMACIONES (Fade-in)
+       --------------------------------------------------- */
+    @keyframes fadeScaleIn {
+        0% { opacity: 0; transform: scale(0.98) translateY(15px); }
+        100% { opacity: 1; transform: none; }
+    }
+    #loginSection, #appSection, #adminPanelWrapper {
+        animation: fadeScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    
+    /* ---------------------------------------------------
+       3. CABECERAS Y TÍTULOS
+       --------------------------------------------------- */
+    header { position: relative; background: var(--vcv-morado); color: var(--vcv-blanco); padding: calc(40px + env(safe-area-inset-top, 0px)) 15px 40px; text-align: center; border-bottom: 5px solid var(--vcv-dorado); }
+    header h1 { font-family: 'Golos Text', sans-serif; font-weight: 600; font-size: 3.2rem; margin-bottom: 0px; }
+    
+    h2, h3, h4, h5, .faq-title { font-weight: 600; color: var(--vcv-morado); }
+    h2 { margin-bottom: 35px; text-align: center; }
+
+        section { padding: 50px 15px; text-align: center; scroll-margin-top: calc(15px + env(safe-area-inset-top, 0px)); }
+    .section-alt { background: #e9ecef; }
+    
+    /* ---------------------------------------------------
+       4. TABLAS Y CAJAS
+       --------------------------------------------------- */
+    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+    th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
+    thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
+    .medal-1 { background: #fff8e1; font-weight: bold; }
+    .medal-2 { background: #f8f9fa; font-weight: bold; }
+    .medal-3 { background: #fff4e6; font-weight: bold; }
+
+    /* ---------------------------------------------------
+       5. BOTONES E INTERACCIONES
+       --------------------------------------------------- */
+    .btn-primary { background-color: var(--vcv-morado); border-color: var(--vcv-morado); color: var(--vcv-blanco); }
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
+    .btn-primary:disabled, .btn-primary.disabled { background-color: var(--vcv-morado); border-color: var(--vcv-morado); color: var(--vcv-blanco); opacity: 0.7; }
+    
+    .btn-success { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); }
+    .btn-success:hover, .btn-success:focus, .btn-success:active { background-color: #b89c45; border-color: #b89c45; color: var(--vcv-negro); }
+    .btn-success:disabled, .btn-success.disabled { background-color: var(--vcv-dorado); border-color: var(--vcv-dorado); color: var(--vcv-negro); opacity: 0.7; }
+
+    .btn-outline-primary { border: 2px solid var(--vcv-morado); color: var(--vcv-morado); }
+    .btn-outline-primary:hover { background-color: var(--vcv-morado); color: var(--vcv-blanco); }
+
+    .form-container { max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; }
+    .form-group label { font-weight: bold; color: var(--vcv-morado); }
+    
+    /* ---------------------------------------------------
+       6. ALERTAS Y MENSAJES
+       --------------------------------------------------- */
+    .alert-box { display: none; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 20px; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .alert-danger { background: #fde8e8; color: var(--vcv-rojo); border: 1px solid #f8caca; }
+    .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
+    .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+
+    #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
+    .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
+    
+    .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
+    .faq-title { font-weight: bold; color: var(--vcv-morado); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
+    .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
+    .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .faq-summary { font-weight: 600; color: var(--vcv-negro); cursor: pointer; padding: 4px 0; outline: none; font-size: 1.05rem; }
+    .faq-summary:hover { color: var(--vcv-dorado); }
+    .faq-content { font-size: 0.95rem; color: #555; padding: 10px 5px 5px 15px; line-height: 1.6; }
+    .faq-email { font-weight: bold; color: var(--vcv-morado); }
+    
+    footer { background: var(--vcv-negro); color: var(--vcv-blanco); padding: 20px 0; text-align: center; border-top: 3px solid var(--vcv-dorado); }
+
+    .filter-checkbox { display:inline-block; margin-right:15px; margin-bottom:10px; background:var(--bg-general); padding:5px 12px; border-radius:20px; font-size:0.9rem; border:1px solid #ddd; cursor:pointer; }
+    .filter-checkbox input { margin-right:6px; cursor:pointer; }
+    
+    /* ---------------------------------------------------
+       7. ESTILOS DE LOS VERIFICADOS Y TOOLTIP FLOTANTE
+       --------------------------------------------------- */
+    .badge-icon { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; cursor: pointer; }
+    .badge-header { width: 24px; height: 24px; cursor: pointer; transition: transform 0.2s; }
+    .badge-header:hover { transform: scale(1.1); }
+    
+    .badge-jugador { filter: none; }
+    .badge-entrenador { filter: hue-rotate(270deg) saturate(150%); }
+    .badge-staff { filter: hue-rotate(180deg) saturate(200%); }
+    .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
+    .badge-exjugador { filter: grayscale(100%) brightness(0%); }
+
+    #mobileTooltip {
+        position: fixed;
+        background: var(--vcv-morado);
+        color: var(--vcv-blanco);
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        transform: translate(-50%, calc(-100% - 10px));
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        white-space: normal;
+        max-width: 250px;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid var(--vcv-dorado);
+    }
+    #mobileTooltip.show { opacity: 1; }
+
+    /* ESTILOS DEL LOGO/TEXTO DE LA CATEGORÍA */
+    .card-match { position: relative; } 
+    .cat-badge-img {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        max-height: 35px;
+        max-width: 80px;
+        object-fit: contain;
+    }
+    .cat-badge-text {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: #555;
+        background: #e9ecef;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    /* ---------------------------------------------------
+       8. BOTÓN FLOTANTE DE RECARGA Y AVISOS
+       --------------------------------------------------- */
+    #btnReload {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background-color: var(--vcv-dorado);
+        color: var(--vcv-morado);
+        border: 2px solid var(--vcv-morado);
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        cursor: pointer;
+        z-index: 9999;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+        padding: 0;
+        outline: none;
+    }
+    #btnReload:hover {
+        background-color: #b89c45;
+        transform: scale(1.1);
+    }
+    .spin-anim {
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); } 
+    }
+    #toastNotification {
+        position: fixed;
+        bottom: 160px;
+        right: 25px;
+        background: var(--vcv-morado);
+        color: var(--vcv-blanco);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 9998;
+        border: 1px solid var(--vcv-dorado);
+    }
+
+    /* ---------------------------------------------------
+       5. BOTON ATRAS (Pestaña flotante)
+       --------------------------------------------------- */
+    #btnLogout {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--vcv-dorado);
+        border: none;
+        border-radius: 0 12px 12px 0;
+        color: var(--vcv-morado);
+        font-size: 1.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 20px 12px 20px 8px;
+        box-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+        z-index: 99999;
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    #btnLogout:hover {
+        transform: translateY(-50%) translateX(8px);
+    }
+    
+    @keyframes slideOutRight {
+        0% { opacity: 1; transform: none; }
+        100% { opacity: 0; transform: translateX(50px); }
+    }
+    
+    @keyframes slideInLeft {
+        0% { opacity: 0; transform: translateX(-50px); }
+        100% { opacity: 1; transform: none; }
+    }
+    .slide-in-left {
+        animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    .slide-out-right {
+        animation: slideOutRight 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    }
+
+</style>
+
+  <!-- NEW V2 STYLES PARA CARTELERA -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
+      --bg-card: #ffffff;
+      --bg-card-alt: #f9fafb;
       --primary-color: #783b7a;
-      --primary-hover: #904c92;
       --secondary-color: #bd9b53;
-      --secondary-hover: #d2b26a;
-      
-      /* Refined Dark Mode (less deep purple, more neutral/lighter darks) */
-      --bg-surface: #1e1b24; 
-      --bg-card: #2a2631; 
-      --bg-card-alt: #383340; 
-      --bg-input: #ffffff; /* White inputs for contrast! */
-      
-      --border-color: #534c5f;
-      --border-glow: rgba(189, 155, 83, 0.4);
-      
-      --text-main: #ffffff;
-      --text-muted: #b4aebf;
-      --text-gold: #e5cd85;
-      
-      --success: #2ecc71;
-      --danger: #e74c3c;
-      --badge-admin: #e67e22;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 16px);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --text-gold: #b48c36;
+      --success: #059669;
+      --danger: #dc2626;
+      --border-color: #e5e7eb;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    body {
-      background-color: var(--bg-surface);
-      color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      overflow-x: hidden;
-    }
-
-    /* Contenedor tipo App móvil responsivo */
-    #app-container {
-      width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #1b0c20 0%, #120716 100%);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      padding-top: calc(var(--safe-top) + 64px);
-      padding-bottom: calc(var(--safe-bottom) + 76px);
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-      border-left: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-    }
-
-    /* HEADER SUPERIOR FIJO */
-    header.app-header {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
-      height: calc(var(--safe-top) + 64px);
-      padding-top: var(--safe-top);
-      padding-left: 18px;
-      padding-right: 18px;
-      background: rgba(27, 12, 32, 0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 1000;
-    }
-
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .club-crest {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #6a2c70 0%, #903c98 100%);
-      border: 2px solid var(--secondary-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
-      color: var(--secondary-color);
-    }
-
-    .brand-text h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .brand-text h1 span.tag-temp {
-      font-size: 0.65rem;
-      background: rgba(212, 175, 55, 0.2);
-      color: var(--secondary-color);
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid rgba(212, 175, 55, 0.4);
-    }
-
-    .user-pill {
+    .vcv-card-v2 {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 6px 12px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .user-pill:active {
-      transform: scale(0.95);
-    }
-
-    .user-pill .pts-badge {
-      color: var(--secondary-color);
-      font-weight: 700;
-    }
-
-    /* PANTALLAS (VIEWS) */
-    .view-section {
-      display: none;
+      border-radius: 16px;
       padding: 16px;
-      flex-direction: column;
-      gap: 18px;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .view-section.active {
-      display: flex;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* CARDS GENÉRICAS */
-    .vcv-card {
-      background: var(--bg-card);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
       border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 16px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      margin-bottom: 20px;
     }
 
-    .card-title-row {
+    .match-header-strip-v2 {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .badge-status {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .badge-jornada {
-      background: rgba(106, 44, 112, 0.4);
-      color: #e2a6ea;
-      border: 1px solid rgba(144, 60, 152, 0.6);
-    }
-
-    .badge-locked {
-      background: rgba(231, 76, 60, 0.2);
-      color: #ff7675;
-      border: 1px solid rgba(231, 76, 60, 0.4);
-    }
-
-    .badge-open {
-      background: rgba(46, 204, 113, 0.2);
-      color: #55efc4;
-      border: 1px solid rgba(46, 204, 113, 0.4);
-    }
-
-    /* BOTONES */
-    .btn-gold {
-      background: linear-gradient(135deg, #d4af37 0%, #b89327 100%);
-      color: #140818;
-      font-weight: 800;
-      font-size: 0.95rem;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 20px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .btn-gold:active {
-      transform: scale(0.96);
-    }
-
-    .btn-gold::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-      transform: skewX(-20deg);
-      animation: shimmer 3s infinite;
-    }
-
-    @keyframes shimmer {
-      100% { left: 160%; }
-    }
-
-    .btn-purple {
-      background: linear-gradient(135deg, #6a2c70 0%, #83358a 100%);
-      color: #fff;
-      font-weight: 700;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 12px;
-      padding: 12px 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-
-    .btn-purple:active {
-      transform: scale(0.96);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
       color: var(--text-muted);
-      border-radius: 12px;
-      padding: 10px 16px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      transition: all 0.2s;
     }
 
-    .btn-outline.active, .btn-outline:active {
-      border-color: var(--secondary-color);
-      color: var(--secondary-color);
-      background: rgba(212, 175, 55, 0.08);
-    }
-
-    /* PESTAÑA: CARTELERA Y PRONÓSTICOS */
-    .match-header-strip {
+    .teams-versus-container-v2 {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-
-    .teams-versus-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
       margin-bottom: 16px;
     }
 
-    .team-box {
+    .team-box-v2 {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      width: 40%;
+      flex: 1;
       text-align: center;
     }
 
-    .team-avatar {
-      width: 48px;
-      height: 48px;
+    .team-avatar-v2 {
+      width: 52px;
+      height: 52px;
       border-radius: 14px;
       background: var(--bg-card-alt);
-      border: 2px solid var(--border-color);
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
       font-size: 1.1rem;
       color: var(--text-main);
+      margin-bottom: 8px;
     }
-
-    .team-avatar.vcv-local {
-      border-color: var(--secondary-color);
-      background: #3c1442;
+    
+    .team-avatar-v2.vcv-local {
+      background: var(--primary-color);
       color: var(--secondary-color);
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+      border: 1px solid var(--secondary-color);
     }
 
-    .team-name {
+    .team-name-v2 {
       font-weight: 700;
       font-size: 0.95rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 130px;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: 4px;
     }
 
-    .team-role {
-      font-size: 0.68rem;
-      color: var(--text-gold);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .vs-divider {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.85rem;
+    .team-role-v2 {
+      font-size: 0.65rem;
       font-weight: 700;
-      color: var(--text-muted);
-      background: var(--bg-card-alt);
-      padding: 4px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-
-    /* SELECTOR DE SETS */
-    .sets-grid-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
+    }
+
+    .vs-divider-v2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      opacity: 0.4;
+      padding: 0 10px;
+    }
+
+    .sets-grid-label-v2 {
       display: flex;
       justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .sets-selector-grid {
+    .sets-selector-grid-v2 {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 6px;
       margin-bottom: 16px;
     }
 
-    .set-option-btn {
+    .set-option-btn-v2 {
       background: var(--bg-card-alt);
       border: 1px solid var(--border-color);
       color: var(--text-main);
+      border-radius: 8px;
       padding: 10px 0;
-      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       cursor: pointer;
-      text-align: center;
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.2s;
     }
 
-    .set-option-btn:active {
-      transform: scale(0.92);
-    }
-
-    .set-option-btn.selected {
+    .set-option-btn-v2.selected {
       background: var(--secondary-color);
-      color: #140818;
+      color: #fff;
       border-color: var(--secondary-color);
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.5);
-      font-weight: 900;
+      box-shadow: 0 4px 12px rgba(189, 155, 83, 0.3);
+      transform: translateY(-2px);
     }
 
-    /* SELECTOR DE PUNTOS DIFERENCIAL Y SIGNO (REGLA CLAVE VCV) */
-    .points-diff-container {
+    .points-diff-container-v2 {
       background: var(--bg-card-alt);
+      border-radius: 12px;
+      padding: 14px;
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 12px;
     }
 
-    .points-header {
+    .points-header-v2 {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      color: var(--text-muted);
+      color: var(--text-main);
       margin-bottom: 10px;
     }
 
-    .points-controls-row {
+    .points-controls-row-v2 {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .stepper-container {
+    .stepper-container-v2 {
       display: flex;
       align-items: center;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
+      background: var(--bg-card);
       border-radius: 10px;
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .btn-step {
-      width: 40px;
-      height: 42px;
-      background: transparent;
-      border: none;
-      color: var(--secondary-color);
-      font-size: 1.2rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-step:active {
-      background: rgba(212, 175, 55, 0.15);
-    }
-
-    .step-display {
-      flex: 1;
-      text-align: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .step-display span.unit {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      display: block;
-      margin-top: -3px;
-    }
-
-    /* CONMUTADOR DE SIGNO VITAL */
-    .sign-toggle-group {
-      display: flex;
-      background: var(--bg-surface);
+      padding: 4px;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 3px;
-      gap: 4px;
-      flex: 1.3;
     }
 
-    .sign-btn {
-      flex: 1;
-      padding: 8px 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
+    .btn-step-v2 {
+      width: 36px;
+      height: 36px;
       border-radius: 8px;
       border: none;
-      background: transparent;
-      color: var(--text-muted);
+      background: rgba(120, 59, 122, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: all 0.2s;
     }
 
-    .sign-btn.active.sign-plus {
-      background: rgba(46, 204, 113, 0.25);
-      color: #2ecc71;
-      border: 1px solid rgba(46, 204, 113, 0.5);
-      box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-    }
-
-    .sign-btn.active.sign-minus {
-      background: rgba(231, 76, 60, 0.25);
-      color: #e74c3c;
-      border: 1px solid rgba(231, 76, 60, 0.5);
-      box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
-    }
-
-    /* ESTADO BLOQUEADO (< 15 MIN) */
-    .vcv-card.is-locked {
-      border-color: rgba(231, 76, 60, 0.35);
-      background: linear-gradient(180deg, rgba(32, 15, 37, 0.95) 0%, rgba(20, 8, 24, 0.98) 100%);
-    }
-
-    .vcv-card.is-locked .set-option-btn,
-    .vcv-card.is-locked .btn-step,
-    .vcv-card.is-locked .sign-btn {
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    /* PODIO RANKING */
-    .podium-container {
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 12px;
-      padding: 24px 8px 12px;
-      margin-bottom: 8px;
-    }
-
-    .podium-slot {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 30%;
-    }
-
-    .podium-avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: var(--bg-card-alt);
-      border: 2px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      position: relative;
-      margin-bottom: -10px;
-      z-index: 2;
-    }
-
-    .podium-slot.rank-1 .podium-avatar {
-      width: 66px;
-      height: 66px;
-      border: 3px solid var(--secondary-color);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-    }
-
-    .crown-icon {
-      position: absolute;
-      top: -16px;
-      color: var(--secondary-color);
-    }
-
-    .podium-bar {
-      width: 100%;
-      background: linear-gradient(180deg, #381b42 0%, #200f25 100%);
-      border: 1px solid var(--border-color);
-      border-radius: 12px 12px 6px 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 16px;
+    .stepper-value-v2 {
+      min-width: 46px;
       text-align: center;
     }
-
-    .podium-slot.rank-1 .podium-bar {
-      height: 120px;
-      border-color: rgba(212, 175, 55, 0.5);
-      background: linear-gradient(180deg, #4d235b 0%, #291032 100%);
-    }
-
-    .podium-slot.rank-2 .podium-bar { height: 95px; }
-    .podium-slot.rank-3 .podium-bar { height: 80px; }
-
-    .podium-bar .player-handle {
-      font-size: 0.75rem;
-      font-weight: 700;
-      max-width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .podium-bar .player-pts {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--secondary-color);
-    }
-
-    /* TABLA CLASIFICACIÓN */
-    .ranking-table-card {
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .ranking-list-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      transition: background 0.15s;
-    }
-
-    .ranking-list-item:last-child {
-      border-bottom: none;
-    }
-
-    .ranking-list-item.is-current-user {
-      background: rgba(106, 44, 112, 0.35);
-      border-left: 4px solid var(--secondary-color);
-    }
-
-    .rank-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .rank-num {
+    
+    .stepper-value-v2 span {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      width: 22px;
-      text-align: center;
-    }
-
-    .rank-user-info .name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .role-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 1px 6px;
-      border-radius: 4px;
-      background: var(--bg-card-alt);
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
-
-    .rank-pts {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
+      font-weight: 900;
+      font-size: 1.3rem;
       color: var(--secondary-color);
     }
 
-    /* PESTAÑA: TOP SECRET */
-    .top-secret-banner {
-      background: linear-gradient(135deg, #2b1138 0%, #15091c 100%);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      border-radius: 16px;
-      padding: 16px;
-      position: relative;
-    }
-
-    .top-secret-banner::before {
-      content: 'CONFIDENCIAL';
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #e74c3c;
-      background: rgba(231, 76, 60, 0.15);
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid rgba(231, 76, 60, 0.3);
-    }
-
-    /* ACCORDIONS (DETALLES Y FAQS) */
-    details.vcv-accordion {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-
-    details.vcv-accordion summary {
-      padding: 14px 16px;
+    .stepper-value-v2 small {
+      display: block;
+      font-size: 0.55rem;
       font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      list-style: none;
-    }
-
-    details.vcv-accordion summary::-webkit-details-marker {
-      display: none;
-    }
-
-    details.vcv-accordion[open] summary {
-      border-bottom: 1px solid var(--border-color);
-      color: var(--secondary-color);
-    }
-
-    details.vcv-accordion .accordion-body {
-      padding: 14px 16px;
-      font-size: 0.86rem;
-      line-height: 1.5;
       color: var(--text-muted);
+      margin-top: -2px;
     }
 
-    /* INTRANET ADMIN BOX */
-    .admin-box {
-      border: 2px dashed #e67e22;
-      background: rgba(230, 126, 34, 0.08);
-      border-radius: 16px;
-      padding: 16px;
-      margin-top: 12px;
-    }
-
-    /* FORMULARIOS */
-    .form-group {
+    .sign-selector-v2 {
       display: flex;
-      flex-direction: column;
       gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .form-control {
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .form-control:focus {
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-    }
-
-    /* BARRA DE NAVEGACIÓN INFERIOR (BOTTOM BAR) */
-    nav.bottom-nav-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
-      height: calc(var(--safe-bottom) + 68px);
-      padding-bottom: var(--safe-bottom);
-      background: rgba(20, 8, 24, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .nav-item-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-family: inherit;
-      font-size: 0.72rem;
-      font-weight: 600;
-      cursor: pointer;
       flex: 1;
-      padding: 8px 0;
+    }
+
+    .sign-btn-v2 {
+      flex: 1;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 10px 0;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       transition: all 0.2s;
     }
 
-    .nav-item-btn i {
-      width: 22px;
-      height: 22px;
-    }
-
-    .nav-item-btn:active {
-      transform: scale(0.9);
-    }
-
-    .nav-item-btn.active {
+    .sign-btn-v2.selected.sign-plus-v2 {
+      background: var(--primary-color);
       color: var(--secondary-color);
-      font-weight: 800;
+      border-color: var(--primary-color);
     }
 
-    .nav-item-btn.active i {
-      filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
-    }
-
-    /* MODAL DE LOGIN / CONFIGURACIÓN DE CONEXIÓN */
-    .modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      padding: 20px;
-    }
-
-    .modal-backdrop.show {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-    }
-
-    /* TOAST DE NOTIFICACIONES */
-    #vcv-toast {
-      position: fixed;
-      top: calc(var(--safe-top) + 74px);
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: var(--bg-card-alt);
-      border: 1px solid var(--secondary-color);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 30px;
-      font-size: 0.86rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 3000;
-    }
-
-    #vcv-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* SPINNER DE CARGA */
-    .spinner {
-      border: 3px solid rgba(255,255,255,0.1);
-      border-left-color: var(--secondary-color);
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .sign-btn-v2.selected.sign-minus-v2 {
+      background: rgba(220, 38, 38, 0.1);
+      color: var(--danger);
+      border-color: rgba(220, 38, 38, 0.3);
     }
   </style>
+
 </head>
 <body>
 
-  <div id="app-container">
-    
-    <!-- HEADER SUPERIOR -->
-    <header class="app-header">
-      <div class="brand-container">
-        <div class="club-crest">
-          <i data-lucide="volleyball" style="width: 22px; height: 22px;"></i>
-        </div>
-        <div class="brand-text">
-          <h1>VCV PLAY <span class="tag-temp">26/27</span></h1>
-        </div>
-      </div>
-      <div class="user-pill" id="btn-user-profile" onclick="abrirPerfilModal()">
-        <i data-lucide="user" style="width: 16px; height: 16px; color: var(--secondary-color);"></i>
-        <span id="display-user-handle">@alex_vcv</span>
-        <span class="pts-badge" id="display-user-pts">240 pts</span>
-      </div>
-    </header>
+<div id="mobileTooltip"></div>
+<button id="btnReload" title="Sincronizar y recargar datos">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+</button>
+<div id="toastNotification">✅ Datos actualizados</div>
 
-    <!-- TOAST FLOTANTE -->
-    <div id="vcv-toast">
-      <i data-lucide="check-circle" style="color: var(--secondary-color); width: 20px; height: 20px;"></i>
-      <span id="toast-msg">Mensaje del sistema</span>
+<header>
+    <button id="btnLogout" title="Volver atrás">&#10094;</button>
+    <div class="header-content">
+        <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
     </div>
+    
+</header>
 
-    <!-- VISTA 1: CARTELERA Y PRONÓSTICOS (PARTIDOS) -->
-    <section class="view-section active" id="view-partidos">
-      
-      <!-- Banner Estado de Jornada Activa -->
-      <div class="vcv-card" style="background: linear-gradient(135deg, #321338 0%, #1c0a21 100%); border-color: rgba(212,175,55,0.3);">
-        <div class="card-title-row" style="margin-bottom: 8px;">
-          <span class="badge-status badge-jornada">
-            <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
-            Jornada 14 Activa
-          </span>
-          <span style="font-size: 0.75rem; color: var(--text-gold); font-weight: 600;">
-            <i data-lucide="clock" style="width: 12px; height: 12px; display: inline-block; vertical-align: -2px;"></i>
-            Cierre en 2h 15m
-          </span>
-        </div>
-        <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;">Pronósticos del Club</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">
-          Introduce tus sets y la <strong style="color: var(--secondary-color);">diferencia de puntos con su signo (+/-)</strong>.
-        </p>
-      </div>
-
-      <!-- Filtros Rápidos por Categoría -->
-      <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;">
-        <button class="btn-outline active" onclick="filtrarPartidos('todos', this)">Todos (3)</button>
-        <button class="btn-outline" onclick="filtrarPartidos('SM2', this)">Superliga 2</button>
-        <button class="btn-outline" onclick="filtrarPartidos('1M', this)">1ª Masc</button>
-        <button class="btn-outline" onclick="filtrarPartidos('1F', this)">1ª Fem</button>
-      </div>
-
-      <!-- LISTA DE PARTIDOS DE LA JORNADA -->
-      <div id="partidos-list-container" style="display: flex; flex-direction: column; gap: 14px;">
-        
-        <!-- Partido 1: Superliga 2 (Abierto para editar) -->
-        <div class="vcv-card match-card" data-category="SM2" data-id-partido="PARTIDO_101">
-          <div class="match-header-strip">
-            <span style="color: var(--secondary-color); font-weight: 700;">SUPERLIGA MASC 2 • GRP C</span>
-            <span><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline;"></i> Sáb 18:30 • Pab. VCV</span>
-          </div>
-
-          <div class="teams-versus-container">
-            <div class="team-box">
-              <div class="team-avatar vcv-local">VCV</div>
-              <span class="team-name">VCV Voleibol</span>
-              <span class="team-role">LOCAL (4V)</span>
-            </div>
-            <div class="vs-divider">VS</div>
-            <div class="team-box">
-              <div class="team-avatar">LEG</div>
-              <span class="team-name">CV Leganés</span>
-              <span class="team-role" style="color: var(--text-muted);">VISITANTE</span>
-            </div>
-          </div>
-
-          <!-- Selector de Sets -->
-          <div class="sets-grid-label">
-            <span>Pronóstico de Sets</span>
-            <span style="color: var(--secondary-color);">+150 pts si aciertas</span>
-          </div>
-          <div class="sets-selector-grid" data-group="sets-p101">
-            <button class="set-option-btn" onclick="seleccionarSet(this, '3-0')">3-0</button>
-            <button class="set-option-btn selected" onclick="seleccionarSet(this, '3-1')">3-1</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '3-2')">3-2</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '2-3')">2-3</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '1-3')">1-3</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '0-3')">0-3</button>
-          </div>
-
-          <!-- Selector de Puntos Diferencial y Signo -->
-          <div class="points-diff-container">
-            <div class="points-header">
-              <span>PUNTOS DIFERENCIAL (TANTEO)</span>
-              <span style="color: var(--text-gold);">+100 pts exacto</span>
-            </div>
-            <div class="points-controls-row">
-              <!-- Stepper Numérico -->
-              <div class="stepper-container">
-                <button class="btn-step" onclick="cambiarPuntos('val-p101', -1)">-</button>
-                <div class="step-display">
-                  <span id="val-p101">14</span>
-                  <span class="unit">PUNTOS</span>
-                </div>
-                <button class="btn-step" onclick="cambiarPuntos('val-p101', 1)">+</button>
-              </div>
-
-              <!-- Conmutador de Signo Vital -->
-              <div class="sign-toggle-group">
-                <button class="sign-btn active sign-plus" id="signo-plus-p101" onclick="cambiarSigno('p101', '+')">
-                  <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> A favor (+)
-                </button>
-                <button class="sign-btn" id="signo-minus-p101" onclick="cambiarSigno('p101', '-')">
-                  <i data-lucide="minus-circle" style="width: 14px; height: 14px;"></i> En contra (-)
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-            <i data-lucide="check" style="width: 14px; height: 14px; color: var(--success);"></i>
-            <span>Configurado: <strong>VCV 3 - 1 Leganés (+14 pts favor)</strong></span>
-          </div>
-        </div>
-
-        <!-- Partido 2: 1ª Femenina (Abierto) -->
-        <div class="vcv-card match-card" data-category="1F" data-id-partido="PARTIDO_102">
-          <div class="match-header-strip">
-            <span style="color: #e2a6ea; font-weight: 700;">1ª DIVISIÓN FEMENINA • GRP D</span>
-            <span><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline;"></i> Dom 12:00 • Benicalap</span>
-          </div>
-
-          <div class="teams-versus-container">
-            <div class="team-box">
-              <div class="team-avatar">VAL</div>
-              <span class="team-name">CV Valencia</span>
-              <span class="team-role" style="color: var(--text-muted);">LOCAL</span>
-            </div>
-            <div class="vs-divider">VS</div>
-            <div class="team-box">
-              <div class="team-avatar vcv-local">VCV</div>
-              <span class="team-name">VCV Femenino</span>
-              <span class="team-role">VISITANTE</span>
-            </div>
-          </div>
-
-          <div class="sets-grid-label">
-            <span>Pronóstico de Sets</span>
-            <span style="color: var(--secondary-color);">+150 pts si aciertas</span>
-          </div>
-          <div class="sets-selector-grid" data-group="sets-p102">
-            <button class="set-option-btn" onclick="seleccionarSet(this, '3-0')">3-0</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '3-1')">3-1</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '3-2')">3-2</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '2-3')">2-3</button>
-            <button class="set-option-btn selected" onclick="seleccionarSet(this, '1-3')">1-3</button>
-            <button class="set-option-btn" onclick="seleccionarSet(this, '0-3')">0-3</button>
-          </div>
-
-          <div class="points-diff-container">
-            <div class="points-header">
-              <span>PUNTOS DIFERENCIAL (TANTEO)</span>
-              <span style="color: var(--text-gold);">+100 pts exacto</span>
-            </div>
-            <div class="points-controls-row">
-              <div class="stepper-container">
-                <button class="btn-step" onclick="cambiarPuntos('val-p102', -1)">-</button>
-                <div class="step-display">
-                  <span id="val-p102">9</span>
-                  <span class="unit">PUNTOS</span>
-                </div>
-                <button class="btn-step" onclick="cambiarPuntos('val-p102', 1)">+</button>
-              </div>
-              <div class="sign-toggle-group">
-                <button class="sign-btn active sign-plus" id="signo-plus-p102" onclick="cambiarSigno('p102', '+')">
-                  <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> A favor (+)
-                </button>
-                <button class="sign-btn" id="signo-minus-p102" onclick="cambiarSigno('p102', '-')">
-                  <i data-lucide="minus-circle" style="width: 14px; height: 14px;"></i> En contra (-)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Partido 3: 1ª Masculina (Ejemplo Bloqueado por regla < 15 min) -->
-        <div class="vcv-card match-card is-locked" data-category="1M" data-id-partido="PARTIDO_103">
-          <div class="match-header-strip">
-            <span style="color: #ff7675; font-weight: 700;">1ª DIVISIÓN MASCULINA • GRP A</span>
-            <span class="badge-status badge-locked">
-              <i data-lucide="lock" style="width: 10px; height: 10px;"></i> Bloqueado (&lt;15 min)
-            </span>
-          </div>
-
-          <div class="teams-versus-container">
-            <div class="team-box">
-              <div class="team-avatar vcv-local">VCV</div>
-              <span class="team-name">VCV Senior</span>
-              <span class="team-role">LOCAL</span>
-            </div>
-            <div class="vs-divider">VS</div>
-            <div class="team-box">
-              <div class="team-avatar">MIA</div>
-              <span class="team-name">ADV Miajadas</span>
-              <span class="team-role" style="color: var(--text-muted);">VISITANTE</span>
-            </div>
-          </div>
-
-          <p style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin-top: 8px;">
-            🔒 Pronósticos cerrados por inicio inminente del encuentro.
-          </p>
-        </div>
-
-      </div>
-
-      <!-- BOTÓN FLOTANTE GUARDAR PREDICCIONES -->
-      <div style="position: sticky; bottom: 84px; z-index: 50;">
-        <button class="btn-gold" id="btn-save-predictions" onclick="guardarPredicciones()">
-          <i data-lucide="save" style="width: 20px; height: 20px;"></i>
-          <span>GUARDAR MIS PREDICCIONES</span>
-        </button>
-      </div>
-
-      <!-- Guía Explicativa del Signo -->
-      <details class="vcv-accordion">
-        <summary>
-          <span style="display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="help-circle" style="color: var(--secondary-color); width: 18px; height: 18px;"></i>
-            ¿Cómo funciona el Tanteo y el Signo?
-          </span>
-          <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
-        </summary>
-        <div class="accordion-body">
-          <p><strong>1. Diferencia de Puntos:</strong> Es la suma total de puntos ganados menos perdidos en todos los sets del partido.</p>
-          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 8px 0; font-family: monospace; color: var(--text-gold);">
-            Ejemplo: 25-20 (+5), 23-25 (-2), 25-15 (+10), 25-22 (+3)<br>
-            Total: 5 - 2 + 10 + 3 = 16 puntos.
-          </div>
-          <p><strong>2. Signo (¡VITAL!):</strong> Si crees que el VCV gana el cómputo total de puntos, debes marcar <em>A favor (+)</em>. Si crees que el rival sumará más puntos totales, marca <em>En contra (-)</em>.</p>
-        </div>
-      </details>
-
-    </section>
-
-    <!-- VISTA 2: RANKING Y CLASIFICACIONES -->
-    <section class="view-section" id="view-ranking">
-      
-      <div class="vcv-card" style="padding-bottom: 8px;">
-        <div class="card-title-row">
-          <h2 style="font-size: 1.15rem; font-weight: 800;">Clasificación de Ligas</h2>
-          <span class="badge-status badge-jornada">Jornada 14</span>
-        </div>
-
-        <!-- Selector de Ligas Privadas -->
-        <div style="display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; scrollbar-width: none;">
-          <button class="btn-outline active" onclick="cambiarLiga('general', this)">Liga General</button>
-          <button class="btn-outline" onclick="cambiarLiga('amigos', this)">Liga Amigos</button>
-          <button class="btn-outline" onclick="cambiarLiga('staff', this)">Staff & Senior</button>
-        </div>
-
-        <!-- Podio Top 3 -->
-        <div class="podium-container">
-          <!-- 2º Puesto -->
-          <div class="podium-slot rank-2">
-            <div class="podium-avatar">LV</div>
-            <div class="podium-bar">
-              <span style="font-weight: 800; font-size: 0.85rem; color: #ced6e0;">2º</span>
-              <span class="player-handle">@laura_vcv</span>
-              <span class="player-pts">340 pts</span>
-            </div>
-          </div>
-
-          <!-- 1º Puesto -->
-          <div class="podium-slot rank-1">
-            <div class="podium-avatar">
-              <i data-lucide="crown" class="crown-icon" style="width: 22px; height: 22px;"></i>
-              CV
-            </div>
-            <div class="podium-bar">
-              <span style="font-weight: 900; font-size: 0.95rem; color: var(--secondary-color);">1º</span>
-              <span class="player-handle">@carlos_vcv</span>
-              <span class="player-pts">385 pts</span>
-            </div>
-          </div>
-
-          <!-- 3º Puesto -->
-          <div class="podium-slot rank-3">
-            <div class="podium-avatar">SL</div>
-            <div class="podium-bar">
-              <span style="font-weight: 800; font-size: 0.85rem; color: #e58e26;">3º</span>
-              <span class="player-handle">@sergio_lib</span>
-              <span class="player-pts">310 pts</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fila Destacada: Mi Posición Actual -->
-      <div class="vcv-card" style="background: rgba(106, 44, 112, 0.4); border-color: var(--secondary-color);">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--secondary-color); color: #140818; display: flex; align-items: center; justify-content: center; font-weight: 900;">
-              4º
-            </div>
-            <div>
-              <div style="font-weight: 800; font-size: 0.95rem;">@alex_vcv <span class="role-badge" style="background: var(--secondary-color); color: #140818;">TÚ</span></div>
-              <div style="font-size: 0.75rem; color: #e2a6ea;">Jugador SM2 • +45 pts esta jornada</div>
-            </div>
-          </div>
-          <div style="text-align: right;">
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--secondary-color);">240 pts</div>
-            <div style="font-size: 0.72rem; color: var(--success); font-weight: 700;">▲ Sube 2 puestos</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabla de Clasificación Completa -->
-      <div class="vcv-card ranking-table-card">
-        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-weight: 700; font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-          <span>TABLA COMPLETA (32 JUGADORES)</span>
-          <span>PUNTOS</span>
-        </div>
-
-        <div id="ranking-list-body">
-          <div class="ranking-list-item">
-            <div class="rank-left">
-              <span class="rank-num">5</span>
-              <div class="rank-user-info">
-                <div class="name">@marcos_rec <span class="role-badge">Cantera</span></div>
-              </div>
-            </div>
-            <span class="rank-pts">228</span>
-          </div>
-
-          <div class="ranking-list-item">
-            <div class="rank-left">
-              <span class="rank-num">6</span>
-              <div class="rank-user-info">
-                <div class="name">@elena_vcv <span class="role-badge">1ª Fem</span></div>
-              </div>
-            </div>
-            <span class="rank-pts">215</span>
-          </div>
-
-          <div class="ranking-list-item">
-            <div class="rank-left">
-              <span class="rank-num">7</span>
-              <div class="rank-user-info">
-                <div class="name">@pablo_mister <span class="role-badge" style="color: #e67e22; border-color: #e67e22;">Staff</span></div>
-              </div>
-            </div>
-            <span class="rank-pts">198</span>
-          </div>
-
-          <div class="ranking-list-item">
-            <div class="rank-left">
-              <span class="rank-num">8</span>
-              <div class="rank-user-info">
-                <div class="name">@diego_gold <span class="role-badge">Socio</span></div>
-              </div>
-            </div>
-            <span class="rank-pts">184</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN TOP SECRET -->
-      <div class="top-secret-banner">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <i data-lucide="eye-off" style="color: var(--secondary-color); width: 20px; height: 20px;"></i>
-          <h3 style="font-size: 1rem; font-weight: 800;">Top Secret: Proyección Algorítmica</h3>
-        </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-          Puntos proyectados a final de temporada según el algoritmo del club:
-        </p>
-
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;">
-            <span style="font-size: 0.85rem; font-weight: 600;">Superliga Masc 2</span>
-            <strong style="color: var(--secondary-color);">42 pts est.</strong>
-          </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;">
-            <span style="font-size: 0.85rem; font-weight: 600;">1ª División Masc</span>
-            <strong style="color: var(--secondary-color);">38 pts est.</strong>
-          </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between;">
-            <span style="font-size: 0.85rem; font-weight: 600;">1ª División Fem</span>
-            <strong style="color: var(--secondary-color);">45 pts est.</strong>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- VISTA 3: MIS PREDICCIONES (HISTORIAL DE ACIERTOS) -->
-    <section class="view-section" id="view-historial">
-      
-      <!-- Resumen Métricas de Rendimiento -->
-      <div class="vcv-card" style="background: linear-gradient(135deg, #3d2b45 0%, #2a1c31 100%);">
-        <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">Rendimiento del Jugador</h2>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Puntos Totales</div>
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--secondary-color);">240 pts</div>
-            <div style="font-size: 0.7rem; color: var(--success);">+35 en J13</div>
-          </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Sets Exactos</div>
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff;">6 Sets</div>
-            <div style="font-size: 0.7rem; color: var(--text-gold);">Pleno absoluto</div>
-          </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Eficacia</div>
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #55efc4;">68%</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Por encima de la media</div>
-          </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-            <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Racha Activa</div>
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #ff7675;">3 Jornadas</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Puntuando seguido</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tarjetas de Partidos Anteriores y Comparativa vs Acta -->
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        
-        <!-- Tarjeta Historial 1 -->
-        <div class="vcv-card">
-          <div class="card-title-row" style="margin-bottom: 8px;">
-            <span class="badge-status badge-jornada">Jornada 13 • Finalizado</span>
-            <span style="font-size: 0.75rem; color: var(--success); font-weight: 700;">+180 PTS</span>
-          </div>
-          <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 6px;">VCV Voleibol 3 - 1 VP Madrid</div>
-          <div style="background: var(--bg-card-alt); padding: 10px; border-radius: 10px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 4px;">
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Tu Pronóstico:</span>
-              <strong style="color: var(--secondary-color);">3-1 (+12 pts favor)</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Acta Oficial:</span>
-              <strong style="color: #fff;">3-1 (+14 pts favor)</strong>
-            </div>
-          </div>
-          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--success); display: flex; align-items: center; gap: 6px;">
-            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
-            <span>¡Acertaste ganador, sets exactos y signo a favor!</span>
-          </div>
-        </div>
-
-        <!-- Tarjeta Historial 2 -->
-        <div class="vcv-card">
-          <div class="card-title-row" style="margin-bottom: 8px;">
-            <span class="badge-status badge-jornada">Jornada 13 • Finalizado</span>
-            <span style="font-size: 0.75rem; color: var(--text-gold); font-weight: 700;">+70 PTS</span>
-          </div>
-          <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 6px;">CV Valencia 2 - 3 VCV Femenino</div>
-          <div style="background: var(--bg-card-alt); padding: 10px; border-radius: 10px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 4px;">
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Tu Pronóstico:</span>
-              <strong style="color: var(--secondary-color);">1-3 (+8 pts favor)</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Acta Oficial:</span>
-              <strong style="color: #fff;">2-3 (+4 pts favor)</strong>
-            </div>
-          </div>
-          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-gold); display: flex; align-items: center; gap: 6px;">
-            <i data-lucide="award" style="width: 14px; height: 14px;"></i>
-            <span>Acertaste ganador y signo a favor del VCV.</span>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- VISTA 4: CALENDARIO Y ENLACES RFEVB -->
-    <section class="view-section" id="view-calendario">
-      
-      <div class="vcv-card">
-        <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">Próximos Encuentros</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
-          Calendario oficial de los equipos del Club Voleibol Valencia.
-        </p>
-
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 4px;">
-              <span>JORNADA 15 • SM2</span>
-              <span>Sáb 25 Feb • 18:00</span>
-            </div>
-            <div style="font-weight: 700; font-size: 0.92rem;">VCV Voleibol vs Cisneros Alter</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
-              <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Pabellón Polideportivo VCV (Local)
-            </div>
-          </div>
-
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #e2a6ea; font-weight: 700; margin-bottom: 4px;">
-              <span>JORNADA 15 • 1ª FEM</span>
-              <span>Dom 26 Feb • 12:30</span>
-            </div>
-            <div style="font-weight: 700; font-size: 0.92rem;">CV Valencia vs VCV Femenino</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
-              <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Pabellón Benicalap (Visitante)
-            </div>
-          </div>
-
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #ced6e0; font-weight: 700; margin-bottom: 4px;">
-              <span>JORNADA 16 • 1ª MASC</span>
-              <span>Sáb 4 Mar • 19:30</span>
-            </div>
-            <div style="font-weight: 700; font-size: 0.92rem;">VCV Senior vs CV Melilla</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
-              <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Polideportivo VCV (Local)
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Enlaces Oficiales RFEVB y EsVoley -->
-      <div class="vcv-card">
-        <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="external-link" style="width: 16px; height: 16px; color: var(--secondary-color);"></i>
-          Enlaces Oficiales de Competición
-        </h3>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <a href="https://rfevb.com/" target="_blank" class="btn-outline" style="justify-content: space-between; text-decoration: none;">
-            <span>🏐 RFEVB - Real Federación Española</span>
-            <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
-          </a>
-          <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn-outline" style="justify-content: space-between; text-decoration: none;">
-            <span>📊 EsVoley - Superliga Masculina 2 (Grupo C)</span>
-            <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
-          </a>
-          <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn-outline" style="justify-content: space-between; text-decoration: none;">
-            <span>📊 EsVoley - Primera Masculina (Grupo A)</span>
-            <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
-          </a>
-          <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn-outline" style="justify-content: space-between; text-decoration: none;">
-            <span>📊 EsVoley - Primera Femenina (Grupo D)</span>
-            <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
-          </a>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- VISTA 5: CLUB, GESTIÓN E INTRANET ADMIN -->
-    <section class="view-section" id="view-club">
-      
-      <!-- Descarga App e Instalación PWA -->
-      <div class="vcv-card">
-        <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 8px;">📱 Instalar la App Móvil</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Disfruta de la mejor experiencia instalando Fantasy VCV en tu dispositivo:
-        </p>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-          <a href="files/app/fantasy-vcv-2627.apk" download class="btn-purple" style="flex: 1; text-decoration: none; font-size: 0.82rem;">
-            <i data-lucide="download" style="width: 16px; height: 16px;"></i> Descargar APK
-          </a>
-          <button class="btn-outline" style="flex: 1; font-size: 0.82rem;" onclick="mostrarGuiaSafari()">
-            <i data-lucide="apple" style="width: 16px; height: 16px;"></i> Safari (iOS)
-          </button>
-        </div>
-
-        <div id="safari-hint" style="display: none; background: var(--bg-card-alt); padding: 10px; border-radius: 10px; font-size: 0.78rem; color: var(--text-gold); line-height: 1.4;">
-          📌 En iPhone: Toca el botón <strong>Compartir</strong> en Safari y selecciona <strong>"Añadir a la pantalla de inicio"</strong>.
-        </div>
-      </div>
-
-      <!-- Gestión de Cuenta -->
-      <div class="vcv-card">
-        <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="key" style="color: var(--secondary-color); width: 18px; height: 18px;"></i>
-          Gestionar mi Contraseña
-        </h3>
-        <div class="form-group">
-          <label>Contraseña Actual</label>
-          <input type="password" id="input-pwd-act" class="form-control" placeholder="••••••••">
-        </div>
-        <div class="form-group">
-          <label>Nueva Contraseña</label>
-          <input type="password" id="input-pwd-new" class="form-control" placeholder="Mínimo 6 caracteres">
-        </div>
-        <button class="btn-purple" style="width: 100%;" onclick="cambiarPassword()">
-          <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i> Actualizar Contraseña
-        </button>
-      </div>
-
-      <!-- INTRANET ADMINISTRADOR (Visible según backend) -->
-      <div class="admin-box" id="intranet-admin-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="shield-alert" style="color: #e67e22; width: 22px; height: 22px;"></i>
-            <h3 style="font-size: 1.05rem; font-weight: 800; color: #e67e22;">Intranet Administrador</h3>
-          </div>
-          <span style="font-size: 0.7rem; background: #e67e22; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800;">ROOT</span>
-        </div>
-
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
-          Panel de control enlazado directamente a tu Google Sheet de base de datos.
-        </p>
-
-        <!-- Botones de Control Servidor -->
-        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-          <button class="btn-outline" style="flex: 1;" onclick="forzarCacheServidor()">
-            <i data-lucide="refresh-ccw" style="width: 14px; height: 14px;"></i> Forzar Caché
-          </button>
-          <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn-outline" style="flex: 1; text-decoration: none;">
-            <i data-lucide="table" style="width: 14px; height: 14px;"></i> Abrir Excel
-          </a>
-        </div>
-
-        <!-- Formulario Crear Nuevo Usuario -->
-        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 12px;">
-          <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-gold);">➕ Añadir Nuevo Usuario</h4>
-          <div class="form-group">
-            <input type="text" id="admin-new-user" class="form-control" placeholder="@nombre_usuario">
-          </div>
-          <div class="form-group">
-            <input type="password" id="admin-new-pass" class="form-control" placeholder="Contraseña inicial">
-          </div>
-          <div class="form-group">
-            <label style="font-size: 0.7rem;">Inscribir a Ligas:</label>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
-              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" checked value="General"> General</label>
-              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" value="Amigos"> Amigos</label>
-              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" value="Veteranos"> Veteranos</label>
-            </div>
-          </div>
-          <button class="btn-gold" style="padding: 10px; font-size: 0.85rem;" onclick="adminCrearUsuario()">
-            Crear Usuario en Sheets
-          </button>
-        </div>
-
-        <!-- Subida Rápida de Resultados -->
-        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-          <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-gold);">🏐 Subir Resultado Rápido</h4>
-          <div class="form-group">
-            <select id="admin-select-partido" class="form-control">
-              <option value="PARTIDO_101">Superliga 2: VCV vs Leganés</option>
-              <option value="PARTIDO_102">1ª Fem: Valencia vs VCV</option>
-            </select>
-          </div>
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="admin-res-sets" class="form-control" placeholder="Sets (ej: 3-1)" style="flex: 1;">
-            <input type="text" id="admin-res-pts" class="form-control" placeholder="Pts Dif (ej: +14)" style="flex: 1;">
-          </div>
-          <button class="btn-purple" style="width: 100%; font-size: 0.85rem;" onclick="adminSubirResultado()">
-            Guardar Acta Oficial y Recalcular
-          </button>
-        </div>
-      </div>
-
-      <!-- Configuración del Endpoint de Google Apps Script -->
-      <div class="vcv-card" style="margin-top: 12px;">
-        <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--text-gold);">🔗 Conexión Google Apps Script</h4>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
-          Endpoint configurado para sincronizar con tu Google Sheets en la nube:
-        </p>
-        <input type="text" id="gas-endpoint-input" class="form-control" value="https://script.google.com/macros/s/AKfycbz_EJEMPLO_VCV_APPS_SCRIPT/exec" style="font-size: 0.75rem; font-family: monospace;">
-        <button class="btn-outline" style="width: 100%; margin-top: 8px;" onclick="guardarEndpointConfig()">
-          Guardar Endpoint del Backend
-        </button>
-      </div>
-
-    </section>
-
-    <!-- BARRA DE NAVEGACIÓN INFERIOR (BOTTOM BAR) -->
-    <nav class="bottom-nav-bar">
-      <button class="nav-item-btn active" onclick="navegarA('partidos', this)">
-        <i data-lucide="volleyball"></i>
-        <span>Partidos</span>
-      </button>
-      <button class="nav-item-btn" onclick="navegarA('ranking', this)">
-        <i data-lucide="trophy"></i>
-        <span>Ranking</span>
-      </button>
-      <button class="nav-item-btn" onclick="navegarA('historial', this)">
-        <i data-lucide="check-circle-2"></i>
-        <span>Mis Pronos</span>
-      </button>
-      <button class="nav-item-btn" onclick="navegarA('calendario', this)">
-        <i data-lucide="calendar"></i>
-        <span>Calendario</span>
-      </button>
-      <button class="nav-item-btn" onclick="navegarA('club', this)">
-        <i data-lucide="shield"></i>
-        <span>Club</span>
-      </button>
-    </nav>
-
-    <!-- MODAL DE LOGIN / ACCESO -->
-    <div class="modal-backdrop" id="login-modal">
-      <div class="modal-card">
-        <div style="text-align: center; margin-bottom: 18px;">
-          <div class="club-crest" style="margin: 0 auto 12px; width: 52px; height: 52px;">
-            <i data-lucide="volleyball" style="width: 30px; height: 30px;"></i>
-          </div>
-          <h2 style="font-size: 1.3rem; font-weight: 800;">Fantasy VCV 26/27</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Acceso oficial para jugadores y socios</p>
-        </div>
-
-        <form onsubmit="handleLoginSubmit(event)">
-          <div class="form-group">
+<div id="loginSection">
+    <div class="login-card">
+        <h3 style="color: var(--vcv-morado); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
+        <div class="form-group text-left">
             <label>Usuario</label>
-            <input type="text" id="login-user" class="form-control" placeholder="@tu_usuario" value="@alex_vcv" required>
-          </div>
-          <div class="form-group">
+            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group text-left">
             <label>Contraseña</label>
-            <input type="password" id="login-pass" class="form-control" placeholder="••••••••" value="password123" required>
-          </div>
-
-          <button type="submit" class="btn-gold" id="btn-login-action" style="margin-top: 14px;">
-            <span>Entrar al Fantasy</span>
-            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-          </button>
-        </form>
-
-        <button class="btn-outline" style="width: 100%; margin-top: 10px;" onclick="entrarComoInvitado()">
-          👀 Entrar como Invitado (Solo Lectura)
-        </button>
-
-        <p style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 14px;">
-          ¿No tienes cuenta? Solicítala a <a href="mailto:adminfantasyvcv@gmail.com" style="color: var(--secondary-color);">adminfantasyvcv@gmail.com</a>
-        </p>
-      </div>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Tu contraseña" required>
+        </div>
+        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar al Fantasy</button>
+        <button id="btnGuest" class="btn btn-outline-secondary btn-block mt-2" style="font-weight:bold;">👀 Entrar como Invitado</button>
+        <div id="loginMessage" class="alert-box mt-3"></div>
     </div>
 
-  </div>
+    <div class="faq-container">
+        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
 
-  
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzM7QuqH1yFRL9rSA7CAUHZX3cogU6AH3PAW36mQkWhMw2ZDnA3JhI-U2bC7TQyNOHz/exec";
+        <details class="faq-details">
+            <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
+            <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
+        </details>
+        <details class="faq-details">
+            <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
+            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
+        </details>
+        <details class="faq-details">
+            <summary class="faq-summary">📱 Cómo instalar la App (Android / iOS)</summary>
+            <div class="faq-content">
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                    <button onclick="document.getElementById('os-android').style.display='block'; document.getElementById('os-ios').style.display='none'; this.style.opacity='1'; document.getElementById('btnIosTab').style.opacity='0.5';" class="btn btn-sm" style="background:#3DDC84; color:white; font-weight:bold; flex:1;" id="btnAndroidTab">Android</button>
+                    <button onclick="document.getElementById('os-ios').style.display='block'; document.getElementById('os-android').style.display='none'; this.style.opacity='1'; document.getElementById('btnAndroidTab').style.opacity='0.5';" class="btn btn-sm" style="background:#000000; color:white; font-weight:bold; flex:1; opacity:0.5;" id="btnIosTab">iOS (iPhone)</button>
+                </div>
+                <div id="os-android" style="display:block;">
+                    <p style="font-size:0.9rem; margin-bottom:10px;">Descarga el archivo APK e instálalo como una App nativa (acepta "Instalar de orígenes desconocidos" si tu móvil te avisa).</p>
+                    <a href="files/app/fantasy-vcv-2627.apk" download class="btn btn-success btn-sm btn-block" style="font-weight:bold; border-radius:20px;">📥 Descargar APK Oficial</a>
+                </div>
+                <div id="os-ios" style="display:none; text-align:left;">
+                    <p style="font-size:0.9rem; margin-bottom:5px; color:#444;">Debido a las restricciones de Apple, instálala así:</p>
+                    <ol style="font-size:0.9rem; padding-left:20px; color:#444; margin-bottom:0;">
+                        <li style="margin-bottom:8px;">Abre esta web desde <b>Safari</b>.</li>
+                        <li style="margin-bottom:8px;">Toca el icono de <b>Compartir</b> en la barra inferior.</li>
+                        <li>Selecciona <b>"Añadir a la pantalla de inicio"</b>.</li>
+                    </ol>
+                    <p style="font-size:0.8rem; color:#888; margin-top:10px;"><i>Nota: Si ya la tenías instalada, bórrala e instálala de nuevo para actualizar el sistema de la caché.</i></p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="faq-details">
+            <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
+            <div class="faq-content">
+                <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    
+                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
+                        ⚠️ <b>Atención:</b> Por motivos de seguridad, te rogamos encarecidamente que <b>NO utilices la misma contraseña que usas para cosas importantes</b> (como tu correo electrónico, banco o redes sociales). Esta es una plataforma lúdica.
+                    </div>
+
+                    <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
+                    <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
+                    <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
+                    <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite la nueva contraseña" required>
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnChangePwd" style="font-weight:bold;">Actualizar Contraseña</button>
+                    <div id="msgChangePwd" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+                <p class="mt-3">¿La has olvidado y no puedes entrar? Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca.</p>
+            </div>
+        </details>
+
+        <details class="faq-details">
+            <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
+            <div class="faq-content">
+                <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
+                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
+                    <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
+                    <hr>
+                    <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (déjalo en blanco si no quieres cambiarlo)">
+                    <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (déjalo en blanco si no quieres cambiarlo)">
+                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnReqName" style="font-weight:bold;">Enviar Solicitud</button>
+                    <div id="msgReqName" class="alert-box mt-3" style="padding:10px;"></div>
+                </div>
+            </div>
+        </details>
+
+        <details class="faq-details">
+            <summary class="faq-summary">🆕 Aún no tengo cuenta / Crear cuenta</summary>
+            <div class="faq-content">
+                <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
+                <ul style="margin-top: 5px; padding-left: 20px;">
+                    <li><b>Nombre de usuario</b> deseado (ej: @juan_vcv).</li>
+                    <li><b>Contraseña</b> deseada.</li>
+                    <li><b>Relación con el club</b> (si juegas o entrenas, dinos en qué equipo/categoría) para añadir insignias a tu perfil.</li>
+                    <li><b>Equipos</b> que te gustaría seguir y predecir.</li>
+                    <li style="margin-top:5px;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con amigos. Escribe los usuarios de todos y los equipos que puntuarán en ella.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</div>
+
+<div id="appSection" style="display: none;">
+
     
-    const appState = {
-      usuario: "",
-      password: "",
-      nombreReal: "",
-      isAdmin: false,
-      isGuest: false,
-      puntosTotales: 0,
-      jornadaActiva: "-",
-      predicciones: {},
-      matchStates: {}, // To store interactive states: matchStates[id] = {sets, puntos, signo}
-      appData: null // Store full server response
-    };
 
-    // INICIALIZACIÓN
-    document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
-      document.getElementById('login-modal').classList.add('show');
+    
+    <section id="carteleraSection">
+        
+        <div class="form-container">
+            <div class="row mb-3" style="background:var(--bg-general); border: 2px solid var(--vcv-morado); padding:15px; border-radius:8px; align-items:center;">
+                <div class="col-md-12 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
+                    <div style="font-size:1.4rem; font-weight:bold; color:var(--vcv-morado);" id="displayJugador"></div>
+                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
+                </div>
+                
+            </div>
+            
+            <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
+            <div id="adminPanelWrapper" style="display: none; background: #343a40; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--vcv-dorado);">
+                <details>
+                    <summary style="font-weight:bold; color:var(--vcv-dorado); font-size:1.2rem; cursor:pointer; outline:none; text-align:center;">
+                        🛠️ INTRANET ADMINISTRADOR
+                    </summary>
+                    <div style="margin-top: 20px;">
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
+                            <button id="btnForceSyncExcel" class="btn btn-info" style="flex:1; font-weight:bold; color:white;">🔄 Forzar Caché</button>
+                            <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
+                        </div>
+
+                        <!-- NUEVA SECCIÓN DE CREAR USUARIOS -->
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h5>
+                        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
+                            <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
+                            <div style="margin-bottom: 10px; text-align: left; font-size: 0.9rem;">
+                                <strong>Añadir a Ligas:</strong>
+                                <div id="adminLigasCheckboxes" style="display: flex; flex-direction: column; gap: 3px; max-height: 100px; overflow-y: auto; background: white; padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
+                        </div>
+                        
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
+                        <div id="adminListaPartidos"></div>
+                        
+                    </div>
+                </details>
+            </div>
+            
+            <form id="prediccionForm">
+                
+                <h2 id="tituloPrincipalSeccion">🏐 Cartelera de Partidos</h2>
+        <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predice los resultados de tus equipos favoritos esta jornada.</p>
+                <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;"><details>
+                        <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
+                            ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
+                        </summary>
+                        <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
+                            <p style="margin-bottom: 8px;"><b>1. Diferencia de Puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
+                            <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
+                                <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
+                                • Set 1: VCV gana de 5<br>
+                                • Set 2: VCV pierde de 2<br>
+                                • Set 3: VCV gana de 10<br>
+                                • Set 4: VCV gana de 3<br>
+                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica.
+                            </div>
+                            
+                            <p style="margin-bottom: 8px;"><b>2. Signo <span style="color:var(--vcv-rojo);">(¡VITAL!)</span>:</b> Indica si esa diferencia de puntos será a favor del VCV o del equipo rival.</p>
+                            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px dashed #ffeeba; margin-bottom: 12px; font-size: 0.85rem; color: #856404;">
+                                <b>En el ejemplo anterior:</b> Como el VCV ha ganado el partido por una diferencia global de 16 puntos, tendrías que elegir <b>"A favor (+)"</b>. <br>
+                                ⚠️ Si escribes 16 pero marcas <i>"En contra (-)"</i>, tu predicción fallará por completo, ya que el sistema entenderá que creías que el VCV iba a <b>perder</b> por 16 puntos de diferencia. ¡Asegúrate de poner el signo correcto!
+                            </div>
+                            
+                            <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
+                            
+                            <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
+                            <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
+                                <li>Cargando sistema de puntuación...</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                
+                <hr>
+                <div id="contenedorPartidos"></div>
+
+                <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
+                    <p style="color:var(--vcv-rojo); font-size:0.95rem; font-weight:bold; margin:0;">
+                        ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
+                    </p>
+                </div>
+
+                <div id="appMessage" class="alert-box"></div>
+
+                <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
+            </form>
+        </div>
+    </section>
+    <section class="section-alt" id="clasificacionesSection">
+        <h2>🏆 Ranking</h2>
+<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Clasificación actual de nuestras ligas privadas según los puntos conseguidos.</p>
+        <div id="tablasClasificacionContainer"></div>
+    </section>
+    <section id="enlacesRfevbSection">
+        <h2>🔗 Enlaces Rfevb</h2>
+<p style="color:#555; margin-bottom:25px; font-weight: 500; font-size: 0.95rem;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales de la Federación.</p>
+        <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+            <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
+            <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
+            <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
+        </div>
+    </section>
+    <section class="section-alt" id="historialSection">
+        <h2>✅ Mis Predicciones</h2>
+<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Historial completo de tus aciertos y puntos conseguidos en jornadas anteriores.</p>
+        <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">
+            🔒 Cargar mi historial
+        </button>
+        <div id="historyMessage" class="alert-box mx-auto" style="max-width:600px;"></div>
+        
+        <div id="historyControls" style="display:none; max-width:700px; margin: 0 auto 20px auto; background:var(--vcv-blanco); padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); text-align:left;">
+            <div style="font-weight:bold; color:var(--vcv-morado); margin-bottom:12px; font-size:1.1rem;">Filtrar por Equipo:</div>
+            <div id="filterEquiposContainer" style="margin-bottom:15px; display:flex; flex-wrap:wrap;"></div>
+            <hr style="margin:15px 0;">
+            <button id="btnToggleSort" class="btn btn-outline-dark btn-sm" style="font-weight:bold;">⬇️ Orden Descendente (Nuevos primero)</button>
+        </div>
+
+        <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
+    </section>
+    <section class="section-alt" id="calendarioSection">
+        <h2>📅 Próximos encuentros</h2>
+<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Calendario con todos los horarios y fechas de los partidos futuros programados.</p>
+        <div class="form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+                <select id="calendarTeamSelect" class="form-control" style="flex:2; font-weight:bold; min-width:200px; border:2px solid var(--vcv-dorado);">
+                    <option value="">-- Selecciona un Equipo --</option>
+                </select>
+                <input type="text" id="calendarSearchInput" class="form-control" placeholder="Buscar rival..." style="flex:1; min-width:150px; border:2px solid #ccc;">
+            </div>
+            
+            <div id="calendarResults" style="display:flex; flex-direction:column; gap:12px; max-height:500px; overflow-y:auto; padding-right:5px;">
+                <!-- Calendario dinámico -->
+            </div>
+            
+            <p style="color:#888; font-size:0.8rem; margin-top:25px; font-style:italic; text-align:center; padding: 10px; border-top: 1px dashed #ccc;">
+                Si alguien ve que hay alguna errata o sabe de algún cambio en algún horario de partido, notifique al correo <a href="mailto:adminfantasyvcv@gmail.com" style="color:#1565c0;">adminfantasyvcv@gmail.com</a> lo antes posible por favor, por el bien de todos.
+            </p>
+        </div>
+    </section>
+    <section id="prediccionesTotalesSection" style="display:none;">
+        <h2>🔮 Top Secret</h2>
+<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predicción de los puntos totales acumulados a final de temporada de cada equipo.</p>
+        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; border-top: 5px solid var(--vcv-dorado);">
+            <!-- Se rellenará automáticamente -->
+        </div>
+    </section>
+
+
+    
+
+    
+
+    
+    
+    
+
+
+    
+
+</div>
+
+<footer><p>© Fantasy VCV 2026-2027</p></footer>
+
+<script>
+
+// POLYFILL PARA REINTENTOS AUTOMATICOS (Soluciona los errores 500 y timeouts del primer login)
+const fetchSeguro = (url, options, retries = 1) => {
+    const bustUrl = url + (url.includes('?') ? '&' : '?') + 't=' + new Date().getTime(); return fetch(bustUrl, options)
+        .then(res => res.json().then(data => ({ json: () => Promise.resolve(data) })))
+        .catch(err => {
+            if (retries > 0) return new Promise(r => setTimeout(r, 1000)).then(() => fetchSeguro(url, options, retries - 1));
+            throw new Error("El servidor de Google está saturado (Timeout). Vuelve a pulsar el botón.");
+        });
+};
+
+
+  // Comprobar si venimos de darle al botón Atrás para hacer la animación de la izquierda
+  if (sessionStorage.getItem('vcv_slide_left') === 'true') {
+      document.getElementById('loginSection').classList.add('slide-in-left');
+      sessionStorage.removeItem('vcv_slide_left');
+  }
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
+
+// --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
+const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
+// --------------------------------------------------------
+
+let currentUser = ""; let currentPassword = ""; let equiposTotalesInfo = [];
+let intervalCountdown = null;
+let intervalTotalesCountdown = null;
+let globalHistorialData = [];
+let isSortDesc = true;
+let currentJornadaGlobal = 0;
+
+
+  let isGuestMode = false;
+
+
+
+function formatFecha(ts) {
+    if(!ts) return "";
+    let d = new Date(ts);
+    return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+function getBadgeCSS(type) {
+    if(type === 'admin') return 'badge-admin';
+    if(type === 'staff') return 'badge-staff';
+    if(type === 'entrenador') return 'badge-entrenador';
+    if(type === 'jugador') return 'badge-jugador';
+    if(type === 'exjugador') return 'badge-exjugador';
+    return '';
+}
+
+// ------------------------------------------------------------------
+// LÓGICA DEL TOOLTIP FLOTANTE PARA MÓVILES
+// ------------------------------------------------------------------
+function showMobileTooltip(e, text) {
+    e.stopPropagation(); 
+    const tooltip = document.getElementById('mobileTooltip');
+    tooltip.innerText = text;
+    
+    const rect = e.target.getBoundingClientRect();
+    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    tooltip.style.top = rect.top + 'px';
+    
+    tooltip.classList.add('show');
+    
+    clearTimeout(tooltip.timeoutId);
+    tooltip.timeoutId = setTimeout(() => {
+        tooltip.classList.remove('show');
+    }, 3500); 
+}
+
+document.addEventListener('click', function(e) {
+    const tooltip = document.getElementById('mobileTooltip');
+    if (tooltip && tooltip.classList.contains('show')) {
+        tooltip.classList.remove('show');
+    }
+});
+
+function mostrarToast(mensaje) {
+    const toast = document.getElementById('toastNotification');
+    toast.innerText = mensaje;
+    toast.style.opacity = "1";
+    setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+}
+
+// ------------------------------------------------------------------
+// BOTÓN DE RECARGAR
+// ------------------------------------------------------------------
+document.getElementById('btnReload').addEventListener('click', function() {
+    const btn = this;
+    if(btn.classList.contains('spin-anim')) return; 
+    btn.classList.add('spin-anim');
+    
+    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
+    else { document.getElementById('btnLogin').click(); }
+    
+    let checkInterval = setInterval(() => {
+        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
+        if (!targetBtn.disabled) {
+            btn.classList.remove('spin-anim');
+            clearInterval(checkInterval);
+            mostrarToast("✅ Datos sincronizados");
+        }
+    }, 300);
+});
+
+// ------------------------------------------------------------------
+// FUNCIONES INTRANET ADMINISTRADOR
+// ------------------------------------------------------------------
+function renderAdminPanel(equipos) {
+    let html = "";
+    let now = new Date().getTime();
+    equipos.forEach(eq => {
+        let ts = eq.timestamp || Infinity;
+        if (now - ts < 48 * 60 * 60 * 1000) {
+            html += `
+            <div class="admin-match-box">
+                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; gap:10px;">
+                          <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="${now >= ts ? 'Sets (3-1)' : 'Bloqueado (No ha empezado)'}" value="${eq.oficial_sets || ''}" ${now >= ts ? '' : 'disabled'}>
+                          <input type="text" id="adm_parc_${eq.id_partido}" class="form-control form-control-sm" placeholder="${now >= ts ? 'Parc (25-20...)' : 'Bloqueado'}" value="${eq.oficial_parciales || ''}" ${now >= ts ? '' : 'disabled'}>
+                      </div>
+                    <input type="text" id="adm_stream_${eq.id_partido}" class="form-control form-control-sm" placeholder="Link Streaming YouTube/Twitch" value="${eq.streaming || ''}">
+                    
+                </div>
+                <button class="btn btn-sm btn-dark mt-2" style="font-weight:bold;" onclick="guardarResultadoAdmin(event, '${eq.id_partido}')">💾 Guardar Todo</button>
+            </div>`;
+        }
+    });
+    if (html === "") html = "<div style='color:white; font-size:0.9rem;'>No hay partidos disponibles o han pasado más de 48h.</div>";
+    document.getElementById('adminListaPartidos').innerHTML = html;
+}
+
+document.getElementById('btnAdminSync').addEventListener('click', function(e) {
+    e.preventDefault();
+    const btn = this;
+    btn.disabled = true; btn.innerText = "⏳ Sincronizando...";
+    
+    fetchSeguro(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'sync_permisos', usuario: currentUser, password: currentPassword }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { mostrarToast(d.message); } 
+        else { alert("Error al guardar: " + (d.message || JSON.stringify(d))); }
+    })
+    .finally(() => { btn.disabled = false; btn.innerText = "🔄 Auto-Permisos"; });
+});
+
+window.guardarResultadoAdmin = function(e, idPart) {
+    e.preventDefault();
+    const btn = e.currentTarget || e.target;
+    
+    // Leer valores, protegiendo si no existen los nuevos inputs
+    const elSets = document.getElementById(`adm_sets_${idPart}`);
+    const elParc = document.getElementById(`adm_parc_${idPart}`);
+    const elStream = document.getElementById(`adm_stream_${idPart}`);
+    
+    
+    const sets = elSets ? elSets.value.trim() : "";
+    const parc = elParc ? elParc.value.trim() : "";
+    const stream = elStream ? elStream.value.trim() : "";
+    
+    
+    btn.disabled = true; btn.innerText = "Subiendo...";
+    
+    fetchSeguro(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'save_resultado_admin', usuario: currentUser, password: currentPassword, id_partido: idPart, sets: sets, parciales: parc, streaming: stream }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { 
+            mostrarToast("✅ Resultado subido al Excel"); 
+        } else { 
+            alert("Error al guardar: " + (d.message || JSON.stringify(d))); 
+        }
+    })
+    .catch(err => {
+        console.error("Error al guardar:", err);
+        alert("�Guardado en Excel con �xito! (El servidor tard� mucho en confirmarlo, recarga la p�gina si lo necesitas).");
+    })
+    .finally(() => { 
+        btn.disabled = false; 
+        btn.innerText = "💾 Guardar Todo"; 
+    });
+}
+window.crearUsuarioAdmin = function(e) {
+    e.preventDefault();
+    const btn = e.target;
+    const nu = document.getElementById('addUsrName').value.trim();
+    const np = document.getElementById('addUsrPwd').value.trim();
+    
+    
+    if(!nu || !np) { alert("Usuario y Contraseña son obligatorios"); return; }
+    
+    
+    const checkboxes = document.querySelectorAll('#adminLigasCheckboxes input[type="checkbox"]');
+    const selectedLigas = [];
+    checkboxes.forEach(cb => {
+        if (cb.checked) selectedLigas.push(cb.value);
+    });
+    
+    btn.disabled = true; btn.innerText = "Creando...";
+    
+    fetchSeguro(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'add_user', usuario: currentUser, password: currentPassword, new_u: nu, new_p: np, new_n: "" , ligas_seleccionadas: selectedLigas }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(d => {
+        if(d.status === "success") { 
+            mostrarToast(d.message); 
+            document.getElementById('addUsrName').value = "";
+            document.getElementById('addUsrPwd').value = "";
+            
+        } 
+        else { alert("Error al guardar: " + (d.message || JSON.stringify(d))); }
+    })
+    .finally(() => { btn.disabled = false; btn.innerText = "➕ Crear Usuario"; });
+}
+// ------------------------------------------------------------------
+
+function getCategoryHTML(catName) {
+    if (!catName) return "";
+    let safeName = catName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    let baseUrl = "files/categories/"; 
+    let imgUrl = baseUrl + safeName + ".png";
+    return `<img src="${imgUrl}" class="cat-badge-img" alt="${catName}" title="${catName}" onerror="this.onerror=null; this.outerHTML='<div class=\\'cat-badge-text\\' title=\\'${catName}\\'>${catName}</div>';">`;
+}
+
+// LÓGICA DE CAMBIO DE CONTRASEÑA
+document.getElementById('btnChangePwd').addEventListener('click', function(e) {
+    e.preventDefault();
+    const usr = document.getElementById('cpUsuario').value.trim();
+    const oldP = document.getElementById('cpOldPwd').value.trim();
+    const newP1 = document.getElementById('cpNewPwd').value.trim();
+    const newP2 = document.getElementById('cpNewPwd2').value.trim();
+    const msgBox = document.getElementById('msgChangePwd');
+    const btn = this;
+
+    if(!usr || !oldP || !newP1 || !newP2) {
+        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Por favor, rellena todos los campos."; msgBox.style.display = "block"; return;
+    }
+    if(newP1 !== newP2) {
+        msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Las contraseñas nuevas no coinciden."; msgBox.style.display = "block"; return;
+    }
+
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...'; 
+    msgBox.style.display = "none";
+
+    fetchSeguro(scriptURL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'change_password', usuario: usr, old_password: oldP, new_password: newP1 }), 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if(data.status === "success") {
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el && val != null && val !== "") el.value = String(val).trim(); };
+            var preds = data.data.predicciones;
+            for(var idPart in preds) {
+                setVal(`e${idPart}_sets`, preds[idPart].sets);
+                setVal(`e${idPart}_puntos`, preds[idPart].puntos);
+                setVal(`e${idPart}_signo`, preds[idPart].signo);
+                
+                // --- V2 UI Sync ---
+                if (preds[idPart].sets) {
+                    const btn = document.querySelector(`button[onclick*="seleccionarSetV2(this, '${preds[idPart].sets}', '${idPart}')"]`);
+                    if (btn) btn.classList.add('selected');
+                }
+                if (preds[idPart].puntos) {
+                    const span = document.getElementById(`val-v2-${idPart}`);
+                    if (span) span.innerText = preds[idPart].puntos;
+                }
+                if (preds[idPart].signo) {
+                    const signoVal = preds[idPart].signo;
+                    if (signoVal === "A favor") {
+                        const btn = document.getElementById(`signo-plus-v2-${idPart}`);
+                        if (btn) btn.classList.add('selected');
+                    } else if (signoVal === "En contra") {
+                        const btn = document.getElementById(`signo-minus-v2-${idPart}`);
+                        if (btn) btn.classList.add('selected');
+                    }
+                }
+            }
+        }
+    });
+}
+
+document.getElementById('prediccionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btnSubmit = document.getElementById('btnSubmit'); 
+    const msgBox = document.getElementById('appMessage');
+    msgBox.style.display = "none";
+
+    const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+    let prediccionesList = {};
+    let validacionFallida = false;
+
+    equiposTotalesInfo.forEach(eq => {
+        const elSet = document.getElementById(`e${eq.id_partido}_sets`);
+        if(elSet && !elSet.disabled) {
+            let vSet = getVal(`e${eq.id_partido}_sets`);
+            let vPuntos = getVal(`e${eq.id_partido}_puntos`);
+            let vSigno = getVal(`e${eq.id_partido}_signo`);
+
+            let numRellenos = (vSet !== "" ? 1 : 0) + (vPuntos !== "" ? 1 : 0) + (vSigno !== "" ? 1 : 0);
+            if (numRellenos > 0 && numRellenos < 3) {
+                validacionFallida = true;
+            }
+
+            prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
+        }
     });
 
-    // --- TOAST NOTIFICATIONS ---
-    function mostrarToast(msg, icon = 'info') {
-      const toast = document.getElementById('vcv-toast');
-      const msgEl = document.getElementById('toast-msg');
-      if(toast && msgEl) {
-          msgEl.innerHTML = `<i data-lucide="${icon}" style="width:16px;height:16px;margin-right:8px;"></i> ${msg}`;
-          lucide.createIcons();
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 3500);
-      } else {
-          alert(msg);
-      }
+    if (validacionFallida) {
+        msgBox.className = "alert-box alert-danger"; 
+        msgBox.innerText = "❌ Si predices un partido, debes rellenar sus 3 campos (Sets, Puntos y Signo). Puedes dejar partidos enteros en blanco si no quieres jugarlos hoy."; 
+        msgBox.style.display = "block";
+        return; 
     }
 
-    // --- NAVEGACIÓN ---
-    function navegarA(viewName, btnEl) {
-      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-      document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active'));
-      const target = document.getElementById('view-' + viewName);
-      if (target) {
-        target.classList.add('active');
-        if(btnEl) btnEl.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-    
-    // --- FETCH SEGURO ---
-    async function fetchSeguro(url, options, maxRetries = 2) {
-      let retries = 0;
-      while (retries < maxRetries) {
-        try {
-          let res = await fetch(url, options);
-          if (res.ok) return res;
-        } catch (e) {
-          retries++;
-          if (retries >= maxRetries) throw e;
-          await new Promise(r => setTimeout(r, 1000));
+    btnSubmit.disabled = true; 
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
+
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    .then(res => res.json())
+    .then(data => {
+        msgBox.style.display = "block";
+        if (data.status === "success") { msgBox.className = "alert-box alert-success"; msgBox.innerText = "✅ " + data.message; } 
+        else { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "❌ " + data.message; }
+    })
+    .catch(() => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
+    .finally(() => { btnSubmit.disabled = false; btnSubmit.innerText = "💾 Guardar Mis Predicciones"; });
+});
+
+document.getElementById('btnToggleSort').addEventListener('click', function(e) {
+    e.preventDefault();
+    isSortDesc = !isSortDesc;
+    this.innerText = isSortDesc ? "⬇️ Orden Descendente (Nuevos primero)" : "⬆️ Orden Ascendente (Viejos primero)";
+    renderizarHistorial();
+});
+
+document.getElementById('btnHistory').addEventListener('click', function(e) {
+    e.preventDefault();
+    const msgBox = document.getElementById('historyMessage');
+    const container = document.getElementById('historyListContainer');
+    const controls = document.getElementById('historyControls');
+    const btnHist = this;
+
+    btnHist.disabled = true; 
+    btnHist.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando historial...'; 
+    msgBox.style.display = "none";
+
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'get_history', usuario: currentUser, password: currentPassword }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            if (data.history.length === 0) {
+                msgBox.style.display = "block"; msgBox.className = "alert-box alert-warning"; msgBox.innerText = "Aún no tienes predicciones ni resultados."; container.style.display = "none"; controls.style.display = "none";
+            } else {
+                globalHistorialData = data.history;
+                
+                let equiposEnHistorial = new Set();
+                globalHistorialData.forEach(r => {
+                    r.partidos.forEach(p => { equiposEnHistorial.add(p.equipo_local); });
+                });
+                
+                let equiposArray = Array.from(equiposEnHistorial).sort();
+                let checksHtml = "";
+                equiposArray.forEach(eq => {
+                    checksHtml += `<label class="filter-checkbox"><input type="checkbox" class="chk-equipo" value="${eq}" checked> ${eq}</label>`;
+                });
+                document.getElementById('filterEquiposContainer').innerHTML = checksHtml;
+
+                document.querySelectorAll('.chk-equipo').forEach(chk => {
+                    chk.addEventListener('change', renderizarHistorial);
+                });
+
+                controls.style.display = "block"; 
+                renderizarHistorial(); 
+            }
         }
-      }
-    }
+    })
+    .finally(() => { 
+        btnHist.innerText = "🔒 Cargar mi historial"; 
+        btnHist.disabled = false; 
+    });
+});
 
-    // --- LOGIN ---
-    async function handleLoginSubmit(e) {
-      e.preventDefault();
-      const u = document.getElementById('login-user').value.trim();
-      const p = document.getElementById('login-pass').value.trim();
-      if (!u || !p) return;
-      
-      const btn = document.getElementById('btn-login-action');
-      btn.innerHTML = `<i data-lucide="loader" class="lucide-spin" style="margin-right:8px;"></i> CARGANDO...`;
-      lucide.createIcons();
-      btn.disabled = true;
-      
-      try {
-        const res = await fetchSeguro(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'login', usuario: u, password: p, version: '2.0.0' })
+function renderizarHistorial() {
+    const container = document.getElementById('historyListContainer');
+    let sortedHistory = JSON.parse(JSON.stringify(globalHistorialData));
+    
+    sortedHistory.sort((a, b) => {
+        let numA = parseInt(a.ronda.replace(/\D/g, '')) || 0;
+        let numB = parseInt(b.ronda.replace(/\D/g, '')) || 0;
+        return isSortDesc ? numB - numA : numA - numB;
+    });
+
+    let checkedEquipos = Array.from(document.querySelectorAll('.chk-equipo:checked')).map(cb => cb.value);
+
+    let histHtml = "";
+    
+    sortedHistory.forEach(ronda => {
+        ronda.partidos.sort((a, b) => {
+            let tA = a.timestamp || 0;
+            let tB = b.timestamp || 0;
+            return isSortDesc ? tB - tA : tA - tB;
         });
-        const data = await res.json();
+
+        let esActual = (ronda.ronda == currentJornadaGlobal);
+        let blockHtml = `<div style="background:var(--vcv-blanco); border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.05); border:1px solid #e0e0e0; border-left: 5px solid var(--vcv-dorado);">`;
+        blockHtml += `<h4 style="color:var(--vcv-morado); border-bottom:2px solid var(--bg-general); padding-bottom:10px; margin-top:0; font-weight:bold;">Ronda ${ronda.ronda}</h4>`;
         
-        if (data.status === "success") {
-          appState.usuario = u;
-          appState.password = p;
-          appState.isGuest = false;
-          appState.isAdmin = data.is_admin || false;
-          appState.nombreReal = data.nombre_real || "";
-          appState.jornadaActiva = data.jornada || "-";
-          appState.appData = data;
-          
-          document.getElementById('login-modal').classList.remove('show');
-          
-          // Set UI Globals
-          document.getElementById('display-user-handle').innerText = u;
-          const ptsObj = data.clasificaciones && data.clasificaciones['Liga General VCV'] ? data.clasificaciones['Liga General VCV'].find(x => x.usuario.toLowerCase() === u.toLowerCase()) : null;
-          appState.puntosTotales = ptsObj ? ptsObj.puntos : 0;
-          document.getElementById('display-user-pts').innerText = appState.puntosTotales + " pts";
-          
-          const adminPanel = document.getElementById('intranet-admin-panel');
-          if (adminPanel) adminPanel.style.display = appState.isAdmin ? 'block' : 'none';
-          
-          const allJornadas = document.querySelectorAll('.badge-jornada');
-          allJornadas.forEach(el => el.innerText = "Jornada " + appState.jornadaActiva);
-          
-          await loadPredicciones();
-          
-          // Render All Views Dynamically
-          renderPartidos(data.equipos || []);
-          renderRanking(data.clasificaciones || {}, data.ligas || []);
-          renderHistorial(data.todos_partidos || []);
-          renderCalendario(data.todos_partidos || []);
-          
-          mostrarToast("Bienvenido al Fantasy VCV", "check-circle");
-        } else {
-          mostrarToast(data.message || "Error al iniciar sesión", "alert-circle");
-          btn.innerHTML = `<span>Entrar al Fantasy</span><i data-lucide="chevron-right"></i>`;
-          lucide.createIcons();
-          btn.disabled = false;
-        }
-      } catch(err) {
-        mostrarToast("Error de red. Reintenta.", "wifi-off");
-        btn.innerHTML = `<span>Entrar al Fantasy</span><i data-lucide="chevron-right"></i>`;
-        lucide.createIcons();
-        btn.disabled = false;
-      }
-    }
-    
-    function entrarComoInvitado() {
-        mostrarToast("Modo Invitado: Solo lectura");
-        appState.isGuest = true;
-        document.getElementById('login-modal').classList.remove('show');
-    }
-    
-    async function loadPredicciones() {
-      try {
-        const res = await fetchSeguro(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'load', usuario: appState.usuario, password: appState.password })
+        let hayDatosEnEsteBloque = false;
+        
+        ronda.partidos.forEach(p => {
+            if (!checkedEquipos.includes(p.equipo_local)) return; 
+            
+            hayDatosEnEsteBloque = true;
+            let eqName = p.equipo_local;
+            let rivalName = p.rival;
+            
+            let ofText = `<i style="color:#999;">Pendiente de disputarse</i>`;
+            if (p.oficial_sets && p.oficial_sets.includes("-")) {
+                let sL = parseInt(p.oficial_sets.split("-")[0]);
+                let sV = parseInt(p.oficial_sets.split("-")[1]);
+                let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:var(--vcv-rojo); font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
+                ofText = `<b style="color:var(--vcv-negro); font-size:1.05rem;">${p.oficial_sets}</b> ${textoRes} <br><span style="font-size:0.85rem;">(${p.oficial_parciales})</span>`;
+            }
+            
+            let valJornada = String(p.jornada_eq || "").trim();
+            let infoJornadaEq = "";
+            if(valJornada) {
+                infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.85rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
+            }
+
+            let streamIconHist = p.streaming ? ` <a href="${p.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+            let infoLocFecha = streamIconHist ? `<span style="margin-left:10px;">${streamIconHist}</span>` : "";
+            let htmlReloj = "";
+            let iconoLoc = p.ubicacion === "CASA" ? "🏠" : (p.ubicacion === "FUERA" ? "✈️" : "");
+            
+            if (esActual) {
+                if(iconoLoc || p.timestamp) {
+                    infoLocFecha = `<span style="font-weight:normal; font-size:0.85rem; color:#666; margin-left:10px;">${iconoLoc} ${formatFecha(p.timestamp)}${streamIconHist}</span>`;
+                }
+                if(p.timestamp && p.estado === "ABIERTO") {
+                    htmlReloj = `<div class="reloj-partido" data-ts="${p.timestamp}" style="margin-top:8px; font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block;">Calculando tiempo...</div>`;
+                }
+            }
+            
+            let puntosInfo = "";
+            if (p.oficial_sets && p.oficial_parciales) {
+                let pts = p.puntos_partido !== undefined ? p.puntos_partido : "?";
+                let mot = p.motivos || "Cálculo pendiente";
+                let bgColor = pts > 0 ? "#e8f5e9" : "#fde8e8";
+                let textColor = pts > 0 ? "#2e7d32" : "var(--vcv-rojo)";
+                if (mot === "No pronosticado") { bgColor = "#eeeeee"; textColor = "#666666"; }
+                
+                puntosInfo = `
+                <div style="margin-top:10px; background:${bgColor}; border-radius:6px; padding:10px; text-align:center;">
+                    <div style="color:${textColor}; font-weight:bold; font-size:1.1rem;">+${pts} Puntos</div>
+                    <div style="color:#666; font-size:0.85rem; margin-top:2px;">${mot}</div>
+                </div>`;
+            } else {
+                puntosInfo = `
+                <div style="margin-top:10px; background:#fff8e1; border-radius:6px; padding:10px; text-align:center;">
+                    <div style="color:#f57f17; font-weight:bold; font-size:0.9rem;">⏳ Partido sin puntuar aún</div>
+                </div>`;
+            }
+
+            let txtPorraSets = p.sets ? p.sets : `<i style="color:#999;">Sin predicción</i>`;
+            let txtPorraPtos = p.sets ? `<span style="font-size:0.9rem; color:#555;">| ${p.puntos} pts (${p.signo})</span>` : "";
+            
+            let infoPabellon = p.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-top:2px;">📍 ${p.pabellon}</div>` : "";
+            
+            // INSIGNIA DE CATEGORÍA PARA EL HISTORIAL
+            let categoryHtml = getCategoryHTML(p.categoria);
+
+            blockHtml += `
+            <div class="card-match" style="margin-bottom:20px; font-size:0.95rem; border-bottom:1px dashed #ccc; padding-bottom:15px; padding-top: 10px;">
+                ${categoryHtml}
+                <div style="font-weight:bold; color:#444; margin-bottom:6px; padding-right: 90px;">
+                    🏐 ${eqName} vs ${rivalName}${infoJornadaEq}${infoLocFecha}
+                    ${infoPabellon}
+                </div>
+                ${htmlReloj}
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; background:var(--bg-general); padding:12px; border-radius:6px; border-left: 4px solid var(--vcv-morado); margin-top:10px;">
+                    <div style="margin-right:15px; margin-bottom:8px;">
+                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Tu Predicción</span>
+                        <span style="font-weight:bold; color:var(--vcv-morado); font-size:1.05rem;">${txtPorraSets}</span> ${txtPorraPtos}
+                    </div>
+                    <div>
+                        <span style="color:#777; font-size:0.85rem; display:block; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span>
+                        ${ofText}
+                    </div>
+                </div>
+                ${puntosInfo}
+            </div>`;
         });
-        const d = await res.json();
-        if(d.status === "success" && d.data && d.data.predicciones) {
-            appState.predicciones = d.data.predicciones;
-        }
-      } catch(e) { console.error("Error cargando predicciones", e); }
+        
+        blockHtml += `</div>`;
+        
+        if(hayDatosEnEsteBloque) { histHtml += blockHtml; }
+    });
+    
+    if (histHtml === "") {
+        histHtml = `<div class="alert-box alert-warning" style="display:block;">Ningún partido coincide con los filtros seleccionados.</div>`;
     }
 
-    // --- INTERACCIONES DE CARTELERA ---
-    function seleccionarSet(btn, val, matchId) {
-      if(!appState.matchStates[matchId]) appState.matchStates[matchId] = { puntos: 14, signo: '+' };
-      appState.matchStates[matchId].sets = val;
+    container.innerHTML = histHtml;
+    container.style.display = "block";
+    iniciarRelojes(); 
+}
+</script>
+
+
+
+
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    reg.update(); // Forzar actualizacin siempre
+                }).catch(err => console.log('SW Error:', err));
+            });
+        }
+    
+document.getElementById('btnForceSyncExcel').addEventListener('click', function(e) {
+    e.preventDefault();
+    const btn = this;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Borrando Caché...';
+    btn.disabled = true;
+    
+    fetchSeguro(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'clear_cache', usuario: currentUser, password: currentPassword }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.status === 'success') {
+            btn.innerHTML = '✅ ¡Actualizado!';
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?v=' + new Date().getTime();
+            }, 1000);
+        } else {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(err => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Error de conexión.');
+    });
+});
+
+
+// ---------------------------------------------------
+// LOGICA DE CALENDARIO / PROXIMOS PARTIDOS
+// ---------------------------------------------------
+window.initCalendar = function() {
+    if(!window.appData || !window.appData.todos_partidos) return;
+    
+    let todos = window.appData.todos_partidos;
+    
+    // Sort by timestamp
+    todos.sort((a, b) => {
+        let tsA = a.timestamp || Infinity; 
+        let tsB = b.timestamp || Infinity;
+        return tsA - tsB; 
+    });
+
+    let catSelect = document.getElementById('calendarTeamSelect');
+    let uniqueCats = window.appData.mis_equipos_siguiendo || [];
+    
+    let currentOptions = '<option value="">-- Ver Todos los Equipos --</option>';
+    uniqueCats.forEach(cat => {
+        currentOptions += `<option value="${cat}">${cat}</option>`;
+    });
+    catSelect.innerHTML = currentOptions;
+    
+    let savedCat = localStorage.getItem('pref_calendario_' + currentUser);
+    if (savedCat && uniqueCats.includes(savedCat)) {
+        catSelect.value = savedCat;
+    }
+    
+    window.renderCalendar();
+};
+
+window.renderCalendar = function() {
+    if(!window.appData || !window.appData.todos_partidos) return;
+    
+    let cat = document.getElementById('calendarTeamSelect').value;
+    let search = document.getElementById('calendarSearchInput').value.toLowerCase().trim();
+    
+    localStorage.setItem('pref_calendario_' + currentUser, cat);
+    
+    let filtered = window.appData.todos_partidos.filter(p => {
+        let matchCat = (!cat || p.equipo_local === cat || p.rival === cat);
+        let matchSearch = (!search || p.rival.toLowerCase().includes(search) || p.equipo_local.toLowerCase().includes(search));
+        return matchCat && matchSearch;
+    });
+
+    let html_res = "";
+    if (filtered.length === 0) {
+        html_res = `<div style="text-align:center; padding:30px; color:#888; font-weight:bold;">No se han encontrado partidos con estos filtros.</div>`;
+    } else {
+        filtered.forEach(p => {
+            let fechaStr = "Fecha por confirmar";
+            if (p.timestamp) {
+                let d = new Date(p.timestamp);
+                let dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                let mes = (d.getMonth() + 1).toString().padStart(2, '0');
+                let dia = d.getDate().toString().padStart(2, '0');
+                let h = d.getHours().toString().padStart(2, '0');
+                let m = d.getMinutes().toString().padStart(2, '0');
+                fechaStr = `${dias[d.getDay()]} ${dia}/${mes} - ${h}:${m}`;
+            }
+            
+            let esPasado = p.oficial_sets && p.oficial_sets.trim() !== "";
+            let estadoHtml = esPasado 
+                ? `<span style="background:var(--vcv-dorado); color:#fff; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Finalizado: ${p.oficial_sets}</span>`
+                : `<span style="background:#e9ecef; color:#555; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Próximamente</span>`;
+                
+            let titulo = p.ubicacion === 'LOCAL' ? `<b>${p.equipo_local}</b> vs ${p.rival}` : `${p.rival} vs <b>${p.equipo_local}</b>`;
+            let pabellonStr = p.pabellon ? `<div style="font-size:0.8rem; color:#777; margin-top:5px;">📍 ${p.pabellon}</div>` : '';
+            let streamStr = p.streaming ? `<div style="margin-top:5px;"><a href="${p.streaming}" target="_blank" class="btn btn-sm" style="background:#ff0000; color:white; font-size:0.7rem; font-weight:bold; padding:2px 6px; border-radius:4px;">▶ Ver Streaming</a></div>` : '';
+
+            html_res += `<div style="background:white; padding:15px; border-radius:10px; border-left:5px solid ${esPasado ? 'var(--vcv-dorado)' : 'var(--vcv-morado)'}; box-shadow:0 2px 5px rgba(0,0,0,0.06); transition: transform 0.2s;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:0.85rem; font-weight:bold; color:var(--vcv-morado);">${fechaStr}</span>
+                    ${estadoHtml}
+                </div>
+                <div style="font-size:1.05rem; color:#222; margin-bottom:2px;">
+                    ${titulo}
+                </div>
+                <div style="font-size:0.8rem; font-weight:bold; color:#1565c0; margin-bottom:2px;">🏆 ${p.categoria} - Jornada ${p.jornada_eq}</div>
+                ${pabellonStr}
+                ${streamStr}
+            </div>`;
+        });
+    }
+    
+    document.getElementById('calendarResults').innerHTML = html_res;
+};
+
+document.getElementById('calendarTeamSelect').addEventListener('change', window.renderCalendar);
+document.getElementById('calendarSearchInput').addEventListener('input', window.renderCalendar);
+
+</script>
+
+
+
+
+    
+    
+    <!-- FAB MENU NAV (Navegación Rápida) FUERA DEL APPSECTION PARA QUE POSITION FIXED FUNCIONE BIEN -->
+    <div id="fab-menu" style="position: fixed; bottom: 90px; right: 25px; z-index: 9999; text-align: right; display: none;">
+        <div id="fab-links" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border: 2px solid var(--vcv-dorado); text-align: left; backdrop-filter: blur(5px);">
+            <a id="fab-cartelera" href="#carteleraSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏐 Cartelera de Partidos</a>
+            <a id="fab-ranking" href="#clasificacionesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏆 Ranking</a>
+            <a id="fab-enlaces" href="#enlacesRfevbSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🔗 Enlaces Rfevb</a>
+            <a id="fab-historial" href="#historialSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">✅ Mis Predicciones</a>
+            <a id="fab-calendario" href="#calendarioSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">📅 Próximos encuentros</a>
+            <a id="fab-totales" href="#prediccionesTotalesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none;">🔮 Top Secret</a>
+        </div>
+        <button id="fab-btn" onclick="toggleFab()" style="background: var(--vcv-dorado); color: var(--vcv-morado); border: 2px solid var(--vcv-morado); border-radius: 50%; width: 55px; height: 55px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: auto; transition: transform 0.2s;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+    </div>
+    
+    <script>
+        function toggleFab() {
+            var links = document.getElementById('fab-links');
+            var btn = document.getElementById('fab-btn');
+            if (links.style.display === 'none' || links.style.display === '') {
+                links.style.display = 'flex';
+                btn.style.transform = 'rotate(45deg)';
+            } else {
+                links.style.display = 'none';
+                btn.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        
+        // Cierra el menú de la lupa al hacer click fuera
+        document.addEventListener('click', function(event) {
+            var fabMenu = document.getElementById('fab-menu');
+            var links = document.getElementById('fab-links');
+            var btn = document.getElementById('fab-btn');
+            
+            if (fabMenu && links && btn) {
+                var isClickInside = fabMenu.contains(event.target);
+                if (!isClickInside && links.style.display === 'flex') {
+                    links.style.display = 'none';
+                    btn.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+        
+        function checkFabVisibility() {
+            var appSec = document.getElementById('appSection');
+            
+            // NO MOSTRAR EN MODO INVITADO
+            // currentUser usa 'let', así que no está en 'window'. Lo comprobamos de forma segura.
+            var isGuest = true;
+            try {
+                if (typeof currentUser !== 'undefined' && currentUser && currentUser !== "INVITADO") {
+                    isGuest = false;
+                }
+            } catch(e) {}
+            
+            if(appSec && appSec.style.display !== 'none' && !isGuest) {
+                document.getElementById('fab-menu').style.display = 'block';
+                
+                // Show/hide specific links based on section visibility
+                var cartelera = document.getElementById('carteleraSection');
+                var ranking = document.getElementById('clasificacionesSection');
+                var enlaces = document.getElementById('enlacesRfevbSection');
+                var historial = document.getElementById('historialSection');
+                var calendario = document.getElementById('calendarioSection');
+                var totales = document.getElementById('prediccionesTotalesSection');
+                
+                document.getElementById('fab-cartelera').style.display = (cartelera && cartelera.style.display !== 'none') ? 'block' : 'none';
+                document.getElementById('fab-ranking').style.display = (ranking && ranking.style.display !== 'none') ? 'block' : 'none';
+                document.getElementById('fab-enlaces').style.display = (enlaces && enlaces.style.display !== 'none') ? 'block' : 'none';
+                document.getElementById('fab-historial').style.display = (historial && historial.style.display !== 'none') ? 'block' : 'none';
+                document.getElementById('fab-calendario').style.display = (calendario && calendario.style.display !== 'none') ? 'block' : 'none';
+                document.getElementById('fab-totales').style.display = (totales && totales.style.display !== 'none') ? 'block' : 'none';
+                
+            } else {
+                document.getElementById('fab-menu').style.display = 'none';
+                document.getElementById('fab-links').style.display = 'none';
+            }
+        }
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                checkFabVisibility();
+            });
+        });
+        
+        var appSec = document.getElementById('appSection');
+        if(appSec) {
+            observer.observe(appSec, { attributes: true, subtree: true });
+        }
+        setInterval(checkFabVisibility, 1000);
+    </script>
+
+
+
+
+<script>
+    // --- V2 INTERACTIVE LOGIC ---
+    function seleccionarSetV2(btn, val, matchId) {
+      const hiddenInput = document.getElementById('e' + matchId + '_sets');
+      if (hiddenInput) {
+          hiddenInput.value = val;
+      }
       
       const container = btn.parentElement;
-      container.querySelectorAll('.set-option-btn').forEach(b => b.classList.remove('selected'));
+      container.querySelectorAll('.set-option-btn-v2').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
     }
     
-    function cambiarPuntos(matchId, delta) {
-      if(!appState.matchStates[matchId]) appState.matchStates[matchId] = { sets: null, puntos: 14, signo: '+' };
-      let p = appState.matchStates[matchId].puntos + delta;
-      if (p < 1) p = 1;
-      appState.matchStates[matchId].puntos = p;
-      const el = document.getElementById('val-' + matchId);
-      if(el) el.innerText = p;
-    }
-    
-    function cambiarSigno(matchId, btn, val) {
-      if(!appState.matchStates[matchId]) appState.matchStates[matchId] = { sets: null, puntos: 14, signo: '+' };
-      appState.matchStates[matchId].signo = val;
-      
-      const plusBtn = document.getElementById('signo-plus-' + matchId);
-      const minusBtn = document.getElementById('signo-minus-' + matchId);
-      if(plusBtn) plusBtn.classList.remove('selected', 'btn-danger');
-      if(minusBtn) minusBtn.classList.remove('selected', 'btn-danger');
-      
-      btn.classList.add('selected');
-      if(val === '-') btn.classList.add('btn-danger');
-    }
-    
-    async function guardarPronosticos(btn) {
-        if(appState.isGuest) { mostrarToast("Solo lectura", "info"); return; }
-        
-        const toSave = {};
-        for (const [id, state] of Object.entries(appState.matchStates)) {
-            if(state.sets && state.puntos && state.signo) {
-                toSave[id] = {
-                    sets: state.sets,
-                    puntos: state.puntos.toString(),
-                    signo: state.signo
-                };
-            }
-        }
-        
-        if(Object.keys(toSave).length === 0) {
-            mostrarToast("No hay predicciones completas.", "alert-circle");
-            return;
-        }
-        
-        btn.innerHTML = `<i data-lucide="loader" class="lucide-spin"></i> Guardando...`;
-        lucide.createIcons();
-        btn.disabled = true;
-        
-        try {
-            const res = await fetchSeguro(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'save', usuario: appState.usuario, password: appState.password, predicciones: toSave })
-            });
-            const d = await res.json();
-            if(d.status === "success") {
-                mostrarToast("Pronósticos guardados!", "check-circle");
-                btn.innerHTML = `<i data-lucide="check-circle"></i> GUARDADO OK`;
-                setTimeout(() => {
-                    btn.innerHTML = `Guardar Mis Pronósticos`;
-                    lucide.createIcons();
-                    btn.disabled = false;
-                }, 2000);
-            } else {
-                mostrarToast("Error: " + d.message, "alert-circle");
-                btn.innerHTML = `Guardar Mis Pronósticos`;
-                btn.disabled = false;
-            }
-        } catch(e) {
-            mostrarToast("Error de conexión", "wifi-off");
-            btn.innerHTML = `Guardar Mis Pronósticos`;
-            btn.disabled = false;
-        }
-    }
-
-    // --- RENDERIZADO DOM ---
-    function renderPartidos(equipos) {
-        const container = document.getElementById('partidos-list-container');
-        if(!container) return;
-        
-        const upcomingMatches = equipos.filter(eq => eq.estado_partido !== "FINALIZADO" && eq.estado_partido !== "SUSPENDIDO");
-        let html = "";
-        
-        upcomingMatches.forEach(eq => {
-            const dt = new Date(eq.timestamp);
-            const isDerby = eq.nombre_equipo.toUpperCase().includes("DERBY") || (eq.isDerby === true);
-            const isLocked = eq.bloqueado;
-            const pred = appState.predicciones[eq.id_partido];
-            
-            if(pred && !isLocked) {
-                appState.matchStates[eq.id_partido] = {
-                    sets: pred.sets,
-                    puntos: parseInt(pred.puntos) || 14,
-                    signo: pred.signo || '+'
-                };
-            } else if (!isLocked) {
-                appState.matchStates[eq.id_partido] = { sets: null, puntos: 14, signo: '+' };
-            }
-            const state = appState.matchStates[eq.id_partido] || {};
-            
-            html += `
-            <div class="vcv-card match-card ${isLocked ? 'is-locked' : ''}" data-category="${eq.categoria}" data-id-partido="${eq.id_partido}">
-              <div class="match-header-strip">
-                <span style="color: ${isDerby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 700;">
-                  ${eq.categoria.toUpperCase()} ${isDerby ? '🏆 DERBY' : ''}
-                </span>
-                <span><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline;"></i> ${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}</span>
-              </div>
-
-              <div class="teams-versus-container">
-                <div class="team-box">
-                  <div class="team-avatar vcv-local">VCV</div>
-                  <span class="team-name">${eq.nombre_equipo}</span>
-                  <span class="team-role" style="${eq.es_local ? 'color:var(--success)' : 'color:var(--text-muted)'}">${eq.es_local ? 'LOCAL' : 'VISITANTE'}</span>
-                </div>
-                <div class="vs-divider">VS</div>
-                <div class="team-box">
-                  <div class="team-avatar">${eq.rival.substring(0,3).toUpperCase()}</div>
-                  <span class="team-name">${eq.rival}</span>
-                  <span class="team-role" style="${!eq.es_local ? 'color:var(--success)' : 'color:var(--text-muted)'}">${!eq.es_local ? 'LOCAL' : 'VISITANTE'}</span>
-                </div>
-              </div>
-            `;
-            
-            if(isLocked) {
-                html += `
-                <div style="padding: 14px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border-color); text-align: center;">
-                    <span style="color: var(--secondary-color); font-weight: bold; font-size: 13px;"><i data-lucide="lock" style="width: 14px; height: 14px; display:inline;"></i> PARTIDO BLOQUEADO</span>
-                    <p style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Tu pronóstico: ${pred ? pred.sets + ' (' + pred.signo + pred.puntos + ' pts)' : 'Ninguno'}</p>
-                </div>
-                </div>`; 
-            } else {
-                html += `
-              <div class="sets-grid-label">
-                <span>Pronóstico de Sets</span>
-                <span style="color: var(--secondary-color);">+150 pts si aciertas</span>
-              </div>
-              <div class="sets-selector-grid" data-group="sets-${eq.id_partido}">
-                ${['3-0','3-1','3-2','2-3','1-3','0-3'].map(s => 
-                    `<button class="set-option-btn ${state.sets === s ? 'selected' : ''}" onclick="seleccionarSet(this, '${s}', '${eq.id_partido}')">${s}</button>`
-                ).join('')}
-              </div>
-
-              <div class="points-diff-container">
-                <div class="points-header">
-                  <span>PUNTOS DIFERENCIAL (TANTEO)</span>
-                  <span style="color: var(--text-gold);">+100 pts exacto</span>
-                </div>
-                <div class="points-controls-row">
-                  <div class="stepper-container">
-                    <button class="btn-step" onclick="cambiarPuntos('${eq.id_partido}', -1)"><i data-lucide="minus"></i></button>
-                    <div class="stepper-value">
-                      <span id="val-${eq.id_partido}">${state.puntos}</span>
-                      <small>PTS</small>
-                    </div>
-                    <button class="btn-step" onclick="cambiarPuntos('${eq.id_partido}', 1)"><i data-lucide="plus"></i></button>
-                  </div>
-                  <div class="sign-selector">
-                    <button class="sign-btn sign-plus ${state.signo === '+' ? 'selected' : ''}" id="signo-plus-${eq.id_partido}" onclick="cambiarSigno('${eq.id_partido}', this, '+')">
-                      <span>+ FAVOR</span>
-                    </button>
-                    <button class="sign-btn sign-minus ${state.signo === '-' ? 'selected btn-danger' : ''}" id="signo-minus-${eq.id_partido}" onclick="cambiarSigno('${eq.id_partido}', this, '-')">
-                      <span>- CONTRA</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>`; 
-            }
-        });
-        
-        if(upcomingMatches.length > 0) {
-            html += `<button class="btn-gold" id="btn-save-predictions" onclick="guardarPronosticos(this)">Guardar Mis Pronósticos</button>`;
-        } else {
-            html += `<p style="text-align:center; color:var(--text-muted);">No hay partidos activos.</p>`;
-        }
-        
-        container.innerHTML = html;
-        lucide.createIcons();
-    }
-    
-    // --- RANKING ---
-    function renderRanking(clasificaciones, ligas) {
-        const btnContainer = document.getElementById('ranking-leagues-container');
-        if(!btnContainer) {
-            // we inject a container if it doesn't exist, wait, stitch html has a container
-            const p = document.querySelector('#view-ranking .vcv-card div[style*="overflow-x: auto"]');
-            if(p) p.id = 'ranking-leagues-container';
-        }
-        const bcont = document.getElementById('ranking-leagues-container');
-        
-        // Render buttons for user's leagues
-        if(bcont && ligas && ligas.length > 0) {
-            let bHtml = "";
-            ligas.forEach((liga, idx) => {
-                bHtml += `<button class="btn-outline ${idx === 0 ? 'active' : ''}" onclick="cambiarLiga('${liga}', this)">${liga}</button>`;
-            });
-            bcont.innerHTML = bHtml;
-        }
-
-        // Render default league
-        if(ligas && ligas.length > 0) {
-            cambiarLiga(ligas[0], null);
-        }
-    }
-    
-    window.cambiarLiga = function(ligaName, btn) {
-        if(btn) {
-            const bcont = document.getElementById('ranking-leagues-container');
-            if(bcont) bcont.querySelectorAll('.btn-outline').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        } else {
-            const bcont = document.getElementById('ranking-leagues-container');
-            if(bcont) {
-                const b = bcont.querySelector(`button:nth-child(1)`);
-                if(b) b.classList.add('active');
-            }
-        }
-        
-        // Render Podium and Table
-        const list = appState.appData.clasificaciones[ligaName] || [];
-        
-        const podiumContainer = document.querySelector('.podium-container');
-        if(podiumContainer) {
-            let phtml = "";
-            // 2nd place
-            if(list.length > 1) {
-                phtml += `<div class="podium-slot rank-2"><div class="podium-avatar">${list[1].usuario.substring(1,3).toUpperCase()}</div><div class="podium-bar"><span style="font-weight: 800; font-size: 0.85rem; color: #ced6e0;">2º</span><span class="player-handle">${list[1].usuario}</span><span class="player-pts">${list[1].puntos} pts</span></div></div>`;
-            } else { phtml += `<div class="podium-slot rank-2"></div>`; }
-            
-            // 1st place
-            if(list.length > 0) {
-                phtml += `<div class="podium-slot rank-1"><div class="podium-avatar"><i data-lucide="crown" class="crown-icon" style="width: 22px; height: 22px;"></i>${list[0].usuario.substring(1,3).toUpperCase()}</div><div class="podium-bar"><span style="font-weight: 800; font-size: 1rem; color: var(--text-gold);">1º</span><span class="player-handle" style="color:var(--text-gold);">${list[0].usuario}</span><span class="player-pts">${list[0].puntos} pts</span></div></div>`;
-            }
-            
-            // 3rd place
-            if(list.length > 2) {
-                phtml += `<div class="podium-slot rank-3"><div class="podium-avatar">${list[2].usuario.substring(1,3).toUpperCase()}</div><div class="podium-bar"><span style="font-weight: 800; font-size: 0.75rem; color: #cd7f32;">3º</span><span class="player-handle">${list[2].usuario}</span><span class="player-pts">${list[2].puntos} pts</span></div></div>`;
-            } else { phtml += `<div class="podium-slot rank-3"></div>`; }
-            
-            podiumContainer.innerHTML = phtml;
-            lucide.createIcons();
-        }
-        
-        const tbody = document.getElementById('ranking-list-body');
-        if(tbody) {
-            let html = "";
-            list.slice(3).forEach((usr, idx) => { // starting from 4th place
-                const isMe = (usr.usuario.toLowerCase() === appState.usuario.toLowerCase());
-                let trClass = "ranking-row";
-                html += `
-                <tr class="${trClass}">
-                  <td style="text-align: center; font-weight: 800; color: var(--text-muted);">${idx + 4}</td>
-                  <td>
-                    <div class="user-badge" style="${isMe ? 'border: 2px solid var(--secondary-color); background: rgba(212,175,55,0.1);' : ''}">
-                      <span class="user-avatar">${usr.usuario.substring(1,3).toUpperCase()}</span>
-                      <span class="user-name">${usr.usuario} ${isMe ? '(TÚ)' : ''}</span>
-                    </div>
-                  </td>
-                  <td style="text-align: right; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--text-main); font-size: 16px;">
-                    ${usr.puntos}
-                  </td>
-                </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-    }
-    
-    // --- HISTORIAL ---
-    function renderHistorial(todos) {
-        // Find historial container. Prototipo stitch might not have a specific div, we can inject into view-historial
-        const view = document.getElementById('view-historial');
-        if(!view) return;
-        
-        // Check if there's a list container, else append
-        let listCont = document.getElementById('historial-list-container');
-        if(!listCont) {
-            listCont = document.createElement('div');
-            listCont.id = 'historial-list-container';
-            listCont.style.display = 'flex';
-            listCont.style.flexDirection = 'column';
-            listCont.style.gap = '10px';
-            view.appendChild(listCont);
-        }
-        
-        let sorted = [...todos].filter(p => p.estado_partido === "FINALIZADO");
-        sorted.sort((a,b) => b.timestamp - a.timestamp);
-        
-        let html = "<h3 style='margin-top:15px; margin-bottom:5px;'>Partidos Finalizados</h3>";
-        
-        if(sorted.length === 0) {
-            html += "<p style='color:var(--text-muted)'>No hay historial todavía.</p>";
-        }
-        
-        sorted.forEach(p => {
-            const pred = appState.predicciones[p.id_partido];
-            let predStr = pred ? `${pred.sets} (${pred.signo}${pred.puntos} pts)` : 'Sin pronóstico';
-            let resStr = p.oficial_sets ? `${p.oficial_sets} (${p.oficial_signo || ''}${p.oficial_puntos} pts)` : 'Faltan datos oficiales';
-            
-            html += `
-            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 8px;">
-                  <span>JORNADA ${p.ronda}</span>
-                  <span><i data-lucide="check-circle" style="width: 12px; height: 12px; display: inline;"></i> FINALIZADO</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <div style="font-weight:bold; font-size:0.9rem;">${p.equipo_local}</div>
-                    <div style="background:var(--primary-color); padding: 4px 8px; border-radius:6px; font-family:'Space Grotesk',sans-serif; font-weight:bold;">${p.oficial_sets || '? - ?'}</div>
-                    <div style="font-weight:bold; font-size:0.9rem;">${p.rival}</div>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-card); padding:8px; border-radius:6px;">
-                    <div style="margin-bottom:4px;">Tu pronóstico: <strong style="color:white">${predStr}</strong></div>
-                    <div>Resultado Oficial: <strong style="color:white">${resStr}</strong></div>
-                </div>
-            </div>
-            `;
-        });
-        
-        listCont.innerHTML = html;
-        lucide.createIcons();
-    }
-    
-    // --- CALENDARIO ---
-    function renderCalendario(todos) {
-        const view = document.getElementById('view-calendario');
-        if(!view) return;
-        
-        let listCont = document.getElementById('calendario-list-container');
-        if(!listCont) {
-            // Find the vcv-card inside view-calendario
-            const card = view.querySelector('.vcv-card');
-            if(card) {
-                // remove existing static children if we inject dynamically
-                const staticList = card.querySelector('div[style*="flex-direction: column"]');
-                if(staticList) staticList.remove();
-                
-                listCont = document.createElement('div');
-                listCont.id = 'calendario-list-container';
-                listCont.style.display = 'flex';
-                listCont.style.flexDirection = 'column';
-                listCont.style.gap = '10px';
-                card.appendChild(listCont);
-            }
-        }
-        if(!listCont) return;
-        
-        let sorted = [...todos].filter(p => p.estado_partido !== "FINALIZADO");
-        sorted.sort((a,b) => a.timestamp - b.timestamp);
-        
-        let html = "";
-        sorted.forEach(p => {
-            const dt = new Date(p.timestamp);
-            html += `
-            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 4px;">
-                  <span>JORNADA ${p.ronda} • ${p.categoria}</span>
-                  <span>${dt.toLocaleDateString()} • ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}</span>
-                </div>
-                <div style="font-weight: 700; font-size: 0.92rem;">${p.equipo_local} vs ${p.rival}</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
-                  <i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> ${p.es_local ? 'Local' : 'Visitante'}
-                </div>
-            </div>
-            `;
-        });
-        
-        listCont.innerHTML = html;
-        lucide.createIcons();
-    }
-  
-    // --- FILTRADO DE CARTELERA ---
-    window.filtrarPartidos = function(cat, btn) {
-      if(btn) {
-          const container = btn.parentElement;
-          container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+    function cambiarPuntosV2(matchId, delta) {
+      const hiddenInput = document.getElementById('e' + matchId + '_puntos');
+      const valSpan = document.getElementById('val-v2-' + matchId);
+      if (hiddenInput && valSpan) {
+          let current = parseInt(hiddenInput.value) || 14; 
+          let next = current + delta;
+          if (next < 1) next = 1; 
+          hiddenInput.value = next;
+          valSpan.innerText = next;
       }
-      const cards = document.querySelectorAll('#partidos-list-container .match-card');
-      cards.forEach(card => {
-          if (cat === 'all' || card.getAttribute('data-category') === cat) {
-              card.style.display = 'flex';
-          } else {
-              card.style.display = 'none';
-          }
-      });
-    };
+    }
     
-    // --- TOP SECRET ---
-    window.calcularTopSecret = function() {
-        if(!appState.appData) return;
-        const pts = appState.appData.top_secret || {}; // We don't have top secret from backend exactly like this. We calculate it.
-        // Let's implement Top Secret calculation similar to dev.html if we want it to be 100% complete
-    };
-    
-    // --- ENLACES EXTERNOS ---
-    window.abrirConfigUrl = function() {
-       window.open('https://rfevb-web.dataproject.com/CompetitionHome.aspx?ID=144', '_blank');
-    };
-    window.abrirFvbcvUrl = function() {
-       window.open('https://fvbcv.com/', '_blank');
-    };
-    
-    // --- PANEL ADMIN ---
-    window.adminSubmitResult = async function(e) {
-        if(e) e.preventDefault();
-        const p_id = document.getElementById('admin-select-partido').value;
-        const s = document.getElementById('admin-res-sets').value;
-        const pt = document.getElementById('admin-res-pts').value;
-        if(!p_id || !s || !pt) { mostrarToast("Rellena todos los campos", "alert-circle"); return; }
-        
-        const btn = document.querySelector('#intranet-admin-panel button[type="submit"]');
-        if(btn) btn.innerHTML = 'Subiendo...';
-        
-        try {
-            const res = await fetchSeguro(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: "save_resultado_admin",
-                    usuario: appState.usuario,
-                    password: appState.password,
-                    id_partido: p_id,
-                    oficial_sets: s,
-                    oficial_puntos: pt
-                })
-            });
-            const data = await res.json();
-            mostrarToast(data.message || "Resultado subido", "check-circle");
-            if(btn) btn.innerHTML = 'Subir Resultado';
-        } catch(err) {
-            mostrarToast("Error de red", "wifi-off");
-            if(btn) btn.innerHTML = 'Subir Resultado';
-        }
-    };
+    function cambiarSignoV2(matchId, btn, val) {
+      const hiddenInput = document.getElementById('e' + matchId + '_signo');
+      if (hiddenInput) {
+          hiddenInput.value = val === '+' ? 'A favor' : 'En contra';
+      }
+      
+      const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
+      const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
+      if(plusBtn) plusBtn.classList.remove('selected');
+      if(minusBtn) minusBtn.classList.remove('selected');
+      
+      btn.classList.add('selected');
+    }
 </script>
+
 </body>
 </html>
