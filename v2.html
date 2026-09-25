@@ -1506,11 +1506,10 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
-            document.getElementById('clasificacionesSection').style.display = "none";
-            document.getElementById('historialSection').style.display = "none";
-            document.getElementById('prediccionesTotalesSection').style.display = "none";
-            let calSec = document.getElementById('calendarioSection');
-            if (calSec) calSec.style.display = "none";
+            
+            
+            
+            
             
             // Mostrar banner promo de invitados
             let promoDiv = document.getElementById('guestPromoBanner');
@@ -1669,8 +1668,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         if(data.status === "success") {
             
             currentUser = usr; currentPassword = pwd;
-            let calSec2 = document.getElementById('calendarioSection');
-            if (calSec2) calSec2.style.display = "block";
+            
             let promoDiv2 = document.getElementById('guestPromoBanner');
             if (promoDiv2) promoDiv2.style.display = "none";
             currentJornadaGlobal = data.jornada;
@@ -1938,7 +1936,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
             if(data.equipos_totales && data.equipos_totales.length > 0) {
-                document.getElementById('prediccionesTotalesSection').style.display = "block";
+                
                 
                 let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
                 
@@ -2799,7 +2797,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
         if (target) target.classList.add('active-tab');
         
         // If historial, also show prediccionesTotalesSection right below it (if they were separate)
-        if (sectionId === 'historialSection') {
+        if (sectionId === 'carteleraSection') {
             const extra = document.getElementById('prediccionesTotalesSection');
             if (extra) extra.classList.add('active-tab');
         }
@@ -2815,6 +2813,8 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
         // Initialize first tab as active
         const firstSec = document.getElementById('carteleraSection');
         if (firstSec) firstSec.classList.add('active-tab');
+        const tsSec = document.getElementById('prediccionesTotalesSection');
+        if (tsSec) tsSec.classList.add('active-tab');
     });
 
     function handleSaveOrModifyV2(idPart) {
