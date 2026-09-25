@@ -178,31 +178,8 @@
     /* ---------------------------------------------------
        8. BOTÓN FLOTANTE DE RECARGA Y AVISOS
        --------------------------------------------------- */
-    #btnReload {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background-color: var(--vcv-dorado);
-        color: var(--vcv-morado);
-        border: 2px solid var(--vcv-morado);
-        border-radius: 50%;
-        width: 55px;
-        height: 55px;
-        font-size: 1.6rem;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        cursor: pointer;
-        z-index: 9999;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-        padding: 0;
-        outline: none;
-    }
-    #btnReload:hover {
-        background-color: #b89c45;
-        transform: scale(1.1);
-    }
+    
+    
     .spin-anim {
         animation: spin 1s linear infinite;
     }
@@ -895,9 +872,7 @@
     </div>
 
 <div id="mobileTooltip"></div>
-<button id="btnReload" title="Sincronizar y recargar datos">
-    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-</button>
+
 <div id="toastNotification">✅ Datos actualizados</div>
 
 <header style="display:none !important;">
@@ -1267,23 +1242,7 @@ function mostrarToast(mensaje) {
 // ------------------------------------------------------------------
 // BOTÓN DE RECARGAR
 // ------------------------------------------------------------------
-document.getElementById('btnReload').addEventListener('click', function() {
-    const btn = this;
-    if(btn.classList.contains('spin-anim')) return; 
-    btn.classList.add('spin-anim');
-    
-    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
-    else { document.getElementById('btnLogin').click(); }
-    
-    let checkInterval = setInterval(() => {
-        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
-        if (!targetBtn.disabled) {
-            btn.classList.remove('spin-anim');
-            clearInterval(checkInterval);
-            mostrarToast("✅ Datos sincronizados");
-        }
-    }, 300);
-});
+
 
 // ------------------------------------------------------------------
 // FUNCIONES INTRANET ADMINISTRADOR
@@ -1294,8 +1253,8 @@ function renderAdminPanel(equipos) {
     equipos.forEach(eq => {
         let ts = eq.timestamp || Infinity;
         if (now - ts < 48 * 60 * 60 * 1000) {
-            let adminLocal = eq.es_local ? eq.equipo_local : eq.rival;
-            let adminVisit = eq.es_local ? eq.rival : eq.equipo_local;
+            let adminLocal = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+            let adminVisit = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
             html += `
             <div class="admin-match-box">
                 <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${adminLocal} vs ${adminVisit} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
@@ -1537,7 +1496,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             document.querySelector('#prediccionForm > div').style.display = "none"; 
             document.getElementById('adminPanelWrapper').style.display = "none";
@@ -1804,11 +1763,11 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                         setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
 
-                        let localTeamName = eq.es_local ? eq.equipo_local : eq.rival;
-                        let visitTeamName = eq.es_local ? eq.rival : eq.equipo_local;
+                        let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                        let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
                         
-                        let abrevLocalRaw = eq.es_local ? eq.abrev_local : eq.abrev_rival;
-                        let abrevVisitRaw = eq.es_local ? eq.abrev_rival : eq.abrev_local;
+                        let abrevLocalRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_local : eq.abrev_rival;
+                        let abrevVisitRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_rival : eq.abrev_local;
                         
                         let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
                         let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
@@ -2077,7 +2036,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             iniciarRelojTotales();
         } else {
@@ -2634,97 +2593,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 
     
     
-    <!-- FAB MENU NAV (Navegación Rápida) FUERA DEL APPSECTION PARA QUE POSITION FIXED FUNCIONE BIEN -->
-    <div id="fab-menu" style="position: fixed; bottom: 90px; right: 25px; z-index: 9999; text-align: right; display: none;">
-        <div id="fab-links" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border: 2px solid var(--vcv-dorado); text-align: left; backdrop-filter: blur(5px);">
-            <a id="fab-cartelera" href="#carteleraSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏐 Cartelera de Partidos</a>
-            <a id="fab-ranking" href="#clasificacionesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏆 Ranking</a>
-            <a id="fab-enlaces" href="#enlacesRfevbSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🔗 Enlaces Rfevb</a>
-            <a id="fab-historial" href="#historialSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">✅ Mis Predicciones</a>
-            <a id="fab-calendario" href="#calendarioSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">📅 Próximos encuentros</a>
-            <a id="fab-totales" href="#prediccionesTotalesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none;">🔮 Top Secret</a>
-        </div>
-        <button id="fab-btn" onclick="toggleFab()" style="background: var(--vcv-dorado); color: var(--vcv-morado); border: 2px solid var(--vcv-morado); border-radius: 50%; width: 55px; height: 55px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: auto; transition: transform 0.2s;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </button>
-    </div>
     
-    <script>
-        function toggleFab() {
-            var links = document.getElementById('fab-links');
-            var btn = document.getElementById('fab-btn');
-            if (links.style.display === 'none' || links.style.display === '') {
-                links.style.display = 'flex';
-                btn.style.transform = 'rotate(45deg)';
-            } else {
-                links.style.display = 'none';
-                btn.style.transform = 'rotate(0deg)';
-            }
-        }
-        
-        
-        // Cierra el menú de la lupa al hacer click fuera
-        document.addEventListener('click', function(event) {
-            var fabMenu = document.getElementById('fab-menu');
-            var links = document.getElementById('fab-links');
-            var btn = document.getElementById('fab-btn');
-            
-            if (fabMenu && links && btn) {
-                var isClickInside = fabMenu.contains(event.target);
-                if (!isClickInside && links.style.display === 'flex') {
-                    links.style.display = 'none';
-                    btn.style.transform = 'rotate(0deg)';
-                }
-            }
-        });
-        
-        function checkFabVisibility() {
-            var appSec = document.getElementById('appSection');
-            
-            // NO MOSTRAR EN MODO INVITADO
-            // currentUser usa 'let', así que no está en 'window'. Lo comprobamos de forma segura.
-            var isGuest = true;
-            try {
-                if (typeof currentUser !== 'undefined' && currentUser && currentUser !== "INVITADO") {
-                    isGuest = false;
-                }
-            } catch(e) {}
-            
-            if(appSec && appSec.style.display !== 'none' && !isGuest) {
-                document.getElementById('fab-menu').style.display = 'block';
-                
-                // Show/hide specific links based on section visibility
-                var cartelera = document.getElementById('carteleraSection');
-                var ranking = document.getElementById('clasificacionesSection');
-                var enlaces = document.getElementById('enlacesRfevbSection');
-                var historial = document.getElementById('historialSection');
-                var calendario = document.getElementById('calendarioSection');
-                var totales = document.getElementById('prediccionesTotalesSection');
-                
-                document.getElementById('fab-cartelera').style.display = (cartelera && cartelera.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-ranking').style.display = (ranking && ranking.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-enlaces').style.display = (enlaces && enlaces.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-historial').style.display = (historial && historial.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-calendario').style.display = (calendario && calendario.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-totales').style.display = (totales && totales.style.display !== 'none') ? 'block' : 'none';
-                
-            } else {
-                document.getElementById('fab-menu').style.display = 'none';
-                document.getElementById('fab-links').style.display = 'none';
-            }
-        }
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                checkFabVisibility();
-            });
-        });
-        
-        var appSec = document.getElementById('appSection');
-        if(appSec) {
-            observer.observe(appSec, { attributes: true, subtree: true });
-        }
-        setInterval(checkFabVisibility, 1000);
-    </script>
 
 
 
