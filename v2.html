@@ -1062,12 +1062,12 @@
           </div>
 
           <button id="btnLogin" class="btn-gold-v2" style="margin-top: 14px;">
-            <span>Entrar al Fantasy</span>
+            <span>Entrar</span>
           </button>
         </div>
 
         <button id="btnGuest" class="btn-outline-v2" style="width: 100%; margin-top: 10px;">
-          👀 Entrar como Invitado (Solo Lectura)
+          👀 Entrar como invitado
         </button>
         
         <div id="loginMessage" class="alert-box" style="margin-top:10px; display:none; background-color:#ff4444; color:white; padding:10px; border-radius:8px; text-align:center; font-weight:bold;"></div>
@@ -1811,7 +1811,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "👀 Entrar como Invitado (Solo Lectura)"; 
+        btn.innerText = "👀 Entrar como invitado"; 
         btn.disabled = false; 
     });
 });
@@ -1993,7 +1993,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             
 
                             ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
-                            <!-- HIDDEN INPUTS -->`}`}
+                            <!-- HIDDEN INPUTS -->
                             <input type="hidden" id="e${eq.id_partido}_sets" value="">
                             <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
                             <input type="hidden" id="e${eq.id_partido}_signo" value="">
@@ -2043,9 +2043,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
                             </div>
 
-                            ${eq.estado === "CERRADO" ? "" : `${eq.estado === "CERRADO" ? "" : `<button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
                                 Guardar Predicción
-                            </button>`}`}
+                            </button>`}
                             
                             ${destacadoHtml}
                         </div>`;
@@ -2214,7 +2214,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "Entrar al Fantasy"; 
+        btn.innerText = "Entrar"; 
         btn.disabled = false; 
     });
 });
