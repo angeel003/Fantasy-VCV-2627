@@ -24,21 +24,26 @@
   <style>
     :root {
       --primary-color: #783b7a;
-      --primary-hover: #5d2d5f;
+      --primary-hover: #904c92;
       --secondary-color: #bd9b53;
-      --secondary-hover: #a38546;
-      --bg-surface: #f3f4f6; /* Light gray background */
-      --bg-card: #ffffff; /* White card */
-      --bg-card-alt: #f9fafb; /* Slightly off-white for internal boxes */
-      --bg-input: #ffffff;
-      --border-color: #e5e7eb;
+      --secondary-hover: #d2b26a;
+      
+      /* Refined Dark Mode (less deep purple, more neutral/lighter darks) */
+      --bg-surface: #1e1b24; 
+      --bg-card: #2a2631; 
+      --bg-card-alt: #383340; 
+      --bg-input: #ffffff; /* White inputs for contrast! */
+      
+      --border-color: #534c5f;
       --border-glow: rgba(189, 155, 83, 0.4);
-      --text-main: #1f2937; /* Dark gray */
-      --text-muted: #6b7280;
-      --text-gold: #b48c36;
-      --success: #059669;
-      --danger: #dc2626;
-      --badge-admin: #d97706;
+      
+      --text-main: #ffffff;
+      --text-muted: #b4aebf;
+      --text-gold: #e5cd85;
+      
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --badge-admin: #e67e22;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
@@ -66,7 +71,7 @@
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      background: var(--bg-card);
+      background: linear-gradient(180deg, #1b0c20 0%, #120716 100%);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -108,7 +113,7 @@
     .club-crest {
       width: 38px;
       height: 38px;
-      background: var(--bg-card);
+      background: linear-gradient(135deg, #6a2c70 0%, #903c98 100%);
       border: 2px solid var(--secondary-color);
       border-radius: 50%;
       display: flex;
@@ -139,7 +144,7 @@
 
     .user-pill {
       background: var(--bg-card);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       padding: 6px 12px;
       border-radius: 20px;
       display: flex;
@@ -180,7 +185,7 @@
     /* CARDS GENÉRICAS */
     .vcv-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 18px;
       padding: 16px;
       position: relative;
@@ -227,7 +232,7 @@
 
     /* BOTONES */
     .btn-gold {
-      background: var(--bg-card);
+      background: linear-gradient(135deg, #d4af37 0%, #b89327 100%);
       color: #140818;
       font-weight: 800;
       font-size: 0.95rem;
@@ -266,10 +271,10 @@
     }
 
     .btn-purple {
-      background: var(--bg-card);
-      color: var(--text-main);
+      background: linear-gradient(135deg, #6a2c70 0%, #83358a 100%);
+      color: #fff;
       font-weight: 700;
-      border: 1px solid var(--secondary-color);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 12px;
       padding: 12px 18px;
       display: inline-flex;
@@ -286,7 +291,7 @@
 
     .btn-outline {
       background: transparent;
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       color: var(--text-muted);
       border-radius: 12px;
       padding: 10px 16px;
@@ -377,7 +382,7 @@
       background: var(--bg-card-alt);
       padding: 4px 10px;
       border-radius: 12px;
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
     }
 
     /* SELECTOR DE SETS */
@@ -401,7 +406,7 @@
 
     .set-option-btn {
       background: var(--bg-card-alt);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 10px 0;
       border-radius: 10px;
@@ -427,7 +432,7 @@
     /* SELECTOR DE PUNTOS DIFERENCIAL Y SIGNO (REGLA CLAVE VCV) */
     .points-diff-container {
       background: var(--bg-card-alt);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 14px;
       padding: 12px;
       margin-bottom: 12px;
@@ -453,7 +458,7 @@
       display: flex;
       align-items: center;
       background: var(--bg-surface);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       overflow: hidden;
       flex: 1;
@@ -483,7 +488,7 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 1.15rem;
       font-weight: 800;
-      color: var(--text-main);
+      color: #fff;
     }
 
     .step-display span.unit {
@@ -498,7 +503,7 @@
     .sign-toggle-group {
       display: flex;
       background: var(--bg-surface);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 3px;
       gap: 4px;
@@ -596,8 +601,8 @@
 
     .podium-bar {
       width: 100%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      background: linear-gradient(180deg, #381b42 0%, #200f25 100%);
+      border: 1px solid var(--border-color);
       border-radius: 12px 12px 6px 6px;
       display: flex;
       flex-direction: column;
@@ -610,7 +615,7 @@
     .podium-slot.rank-1 .podium-bar {
       height: 120px;
       border-color: rgba(212, 175, 55, 0.5);
-      background: var(--bg-card);
+      background: linear-gradient(180deg, #4d235b 0%, #291032 100%);
     }
 
     .podium-slot.rank-2 .podium-bar { height: 95px; }
@@ -685,7 +690,7 @@
       border-radius: 4px;
       background: var(--bg-card-alt);
       color: var(--text-muted);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
     }
 
     .rank-pts {
@@ -697,7 +702,7 @@
 
     /* PESTAÑA: TOP SECRET */
     .top-secret-banner {
-      background: var(--bg-card);
+      background: linear-gradient(135deg, #2b1138 0%, #15091c 100%);
       border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 16px;
       padding: 16px;
@@ -722,7 +727,7 @@
     /* ACCORDIONS (DETALLES Y FAQS) */
     details.vcv-accordion {
       background: var(--bg-card);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 14px;
       overflow: hidden;
       margin-bottom: 8px;
@@ -782,7 +787,7 @@
 
     .form-control {
       background: var(--bg-input);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 12px 14px;
       border-radius: 10px;
@@ -874,7 +879,7 @@
 
     .modal-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);
+      border: 1px solid var(--border-color);
       border-radius: 20px;
       padding: 24px;
       width: 100%;
@@ -890,7 +895,7 @@
       transform: translateX(-50%) translateY(-20px);
       background: var(--bg-card-alt);
       border: 1px solid var(--secondary-color);
-      color: var(--text-main);
+      color: #fff;
       padding: 12px 20px;
       border-radius: 30px;
       font-size: 0.86rem;
@@ -956,7 +961,7 @@
     <section class="view-section active" id="view-partidos">
       
       <!-- Banner Estado de Jornada Activa -->
-      <div class="vcv-card" style="background: var(--bg-card); border-color: rgba(212,175,55,0.3);">
+      <div class="vcv-card" style="background: linear-gradient(135deg, #321338 0%, #1c0a21 100%); border-color: rgba(212,175,55,0.3);">
         <div class="card-title-row" style="margin-bottom: 8px;">
           <span class="badge-status badge-jornada">
             <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
@@ -1327,25 +1332,25 @@
     <section class="view-section" id="view-historial">
       
       <!-- Resumen Métricas de Rendimiento -->
-      <div class="vcv-card" style="background: var(--bg-card);">
+      <div class="vcv-card" style="background: linear-gradient(135deg, #3d2b45 0%, #2a1c31 100%);">
         <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">Rendimiento del Jugador</h2>
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);">
+          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Puntos Totales</div>
             <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--secondary-color);">240 pts</div>
             <div style="font-size: 0.7rem; color: var(--success);">+35 en J13</div>
           </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);">
+          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Sets Exactos</div>
-            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--text-main);">6 Sets</div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff;">6 Sets</div>
             <div style="font-size: 0.7rem; color: var(--text-gold);">Pleno absoluto</div>
           </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);">
+          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Eficacia</div>
             <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #55efc4;">68%</div>
             <div style="font-size: 0.7rem; color: var(--text-muted);">Por encima de la media</div>
           </div>
-          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);">
+          <div style="background: var(--bg-card-alt); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
             <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Racha Activa</div>
             <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 800; color: #ff7675;">3 Jornadas</div>
             <div style="font-size: 0.7rem; color: var(--text-muted);">Puntuando seguido</div>
@@ -1370,7 +1375,7 @@
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="color: var(--text-muted);">Acta Oficial:</span>
-              <strong style="color: var(--text-main);">3-1 (+14 pts favor)</strong>
+              <strong style="color: #fff;">3-1 (+14 pts favor)</strong>
             </div>
           </div>
           <div style="margin-top: 8px; font-size: 0.75rem; color: var(--success); display: flex; align-items: center; gap: 6px;">
@@ -1393,7 +1398,7 @@
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="color: var(--text-muted);">Acta Oficial:</span>
-              <strong style="color: var(--text-main);">2-3 (+4 pts favor)</strong>
+              <strong style="color: #fff;">2-3 (+4 pts favor)</strong>
             </div>
           </div>
           <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-gold); display: flex; align-items: center; gap: 6px;">
@@ -1417,7 +1422,7 @@
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
           
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); border-radius: 12px; padding: 12px;">
+          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 4px;">
               <span>JORNADA 15 • SM2</span>
               <span>Sáb 25 Feb • 18:00</span>
@@ -1428,7 +1433,7 @@
             </div>
           </div>
 
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); border-radius: 12px; padding: 12px;">
+          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #e2a6ea; font-weight: 700; margin-bottom: 4px;">
               <span>JORNADA 15 • 1ª FEM</span>
               <span>Dom 26 Feb • 12:30</span>
@@ -1439,7 +1444,7 @@
             </div>
           </div>
 
-          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); border-radius: 12px; padding: 12px;">
+          <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #ced6e0; font-weight: 700; margin-bottom: 4px;">
               <span>JORNADA 16 • 1ª MASC</span>
               <span>Sáb 4 Mar • 19:30</span>
@@ -1531,7 +1536,7 @@
             <i data-lucide="shield-alert" style="color: #e67e22; width: 22px; height: 22px;"></i>
             <h3 style="font-size: 1.05rem; font-weight: 800; color: #e67e22;">Intranet Administrador</h3>
           </div>
-          <span style="font-size: 0.7rem; background: #e67e22; color: var(--text-main); padding: 2px 6px; border-radius: 4px; font-weight: 800;">ROOT</span>
+          <span style="font-size: 0.7rem; background: #e67e22; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800;">ROOT</span>
         </div>
 
         <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
@@ -1549,7 +1554,7 @@
         </div>
 
         <!-- Formulario Crear Nuevo Usuario -->
-        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); margin-bottom: 12px;">
+        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 12px;">
           <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-gold);">➕ Añadir Nuevo Usuario</h4>
           <div class="form-group">
             <input type="text" id="admin-new-user" class="form-control" placeholder="@nombre_usuario">
@@ -1560,9 +1565,9 @@
           <div class="form-group">
             <label style="font-size: 0.7rem;">Inscribir a Ligas:</label>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
-              <label style="font-size: 0.75rem; color: var(--text-main);"><input type="checkbox" checked value="General"> General</label>
-              <label style="font-size: 0.75rem; color: var(--text-main);"><input type="checkbox" value="Amigos"> Amigos</label>
-              <label style="font-size: 0.75rem; color: var(--text-main);"><input type="checkbox" value="Veteranos"> Veteranos</label>
+              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" checked value="General"> General</label>
+              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" value="Amigos"> Amigos</label>
+              <label style="font-size: 0.75rem; color: #fff;"><input type="checkbox" value="Veteranos"> Veteranos</label>
             </div>
           </div>
           <button class="btn-gold" style="padding: 10px; font-size: 0.85rem;" onclick="adminCrearUsuario()">
@@ -1571,7 +1576,7 @@
         </div>
 
         <!-- Subida Rápida de Resultados -->
-        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main);">
+        <div style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
           <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-gold);">🏐 Subir Resultado Rápido</h4>
           <div class="form-group">
             <select id="admin-select-partido" class="form-control">
@@ -2121,7 +2126,7 @@
             let resStr = p.oficial_sets ? `${p.oficial_sets} (${p.oficial_signo || ''}${p.oficial_puntos} pts)` : 'Faltan datos oficiales';
             
             html += `
-            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); border-radius: 12px; padding: 12px;">
+            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 8px;">
                   <span>JORNADA ${p.ronda}</span>
                   <span><i data-lucide="check-circle" style="width: 12px; height: 12px; display: inline;"></i> FINALIZADO</span>
@@ -2132,8 +2137,8 @@
                     <div style="font-weight:bold; font-size:0.9rem;">${p.rival}</div>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-card); padding:8px; border-radius:6px;">
-                    <div style="margin-bottom:4px;">Tu pronóstico: <strong style="color:var(--text-main)">${predStr}</strong></div>
-                    <div>Resultado Oficial: <strong style="color:var(--text-main)">${resStr}</strong></div>
+                    <div style="margin-bottom:4px;">Tu pronóstico: <strong style="color:white">${predStr}</strong></div>
+                    <div>Resultado Oficial: <strong style="color:white">${resStr}</strong></div>
                 </div>
             </div>
             `;
@@ -2174,7 +2179,7 @@
         sorted.forEach(p => {
             const dt = new Date(p.timestamp);
             html += `
-            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); border-radius: 12px; padding: 12px;">
+            <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary-color); font-weight: 700; margin-bottom: 4px;">
                   <span>JORNADA ${p.ronda} • ${p.categoria}</span>
                   <span>${dt.toLocaleDateString()} • ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}</span>
