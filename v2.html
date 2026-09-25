@@ -1067,10 +1067,10 @@
         </div>
 
         <button id="btnGuest" class="btn-outline-v2" style="width: 100%; margin-top: 10px;">
-          👀 Entrar como Invitado
+          👀 Entrar como Invitado (Solo Lectura)
         </button>
         
-        <div id="loginMessage" class="alert-box" style="margin-top:10px; display:none;"></div>
+        <div id="loginMessage" class="alert-box" style="margin-top:10px; display:none; background-color:#ff4444; color:white; padding:10px; border-radius:8px; text-align:center; font-weight:bold;"></div>
     </div>
 
     <div class="faq-container" style="width:100%; max-width:360px; margin:0 auto; padding:0; background:transparent; border:none; box-shadow:none;">
@@ -1704,151 +1704,271 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
 
             
             // FILTRO MODO INVITADO
-            if (isGuestMode) {
-                let nowTime = new Date().getTime();
-                let limitTime = nowTime + (10 * 24 * 60 * 60 * 1000); // 10 days
-                let pasadosPorEquipo = {};
-                let proximosFiltrados = [];
+            let nowTime = new Date().getTime();
+            let limitTime = nowTime + (10 * 24 * 60 * 60 * 1000); // 10 days
+            
+            // Agrupar pasados por equipo para coger solo el más reciente
+            let pasadosPorEquipo = {};
+            let proximosFiltrados = [];
+            
+            data.equipos.forEach(eq => {
+                let esPasado = eq.oficial_sets && eq.oficial_sets.includes("-");
                 
-                data.equipos.forEach(eq => {
-                    let esPasado = eq.oficial_sets && eq.oficial_sets.includes("-");
-                    if (esPasado) {
-                        if (!pasadosPorEquipo[eq.equipo_local]) { pasadosPorEquipo[eq.equipo_local] = eq; }
-                        else {
-                            let currentTs = pasadosPorEquipo[eq.equipo_local].timestamp || 0;
-                            let newTs = eq.timestamp || 0;
-                            if (newTs > currentTs) { pasadosPorEquipo[eq.equipo_local] = eq; }
-                        }
+                if (esPasado) {
+                    if (!pasadosPorEquipo[eq.equipo_local]) {
+                        pasadosPorEquipo[eq.equipo_local] = eq;
                     } else {
-                        if (eq.timestamp && eq.timestamp <= limitTime) { proximosFiltrados.push(eq); }
+                        // Keep the most recent (highest timestamp that is past, or just highest timestamp if multiple)
+                        let currentTs = pasadosPorEquipo[eq.equipo_local].timestamp || 0;
+                        let newTs = eq.timestamp || 0;
+                        if (newTs > currentTs) {
+                            pasadosPorEquipo[eq.equipo_local] = eq;
+                        }
                     }
-                });
-                let pasadosFiltrados = Object.values(pasadosPorEquipo);
-                data.equipos = proximosFiltrados.concat(pasadosFiltrados);
-                data.equipos.sort((a, b) => { return (a.timestamp || Infinity) - (b.timestamp || Infinity); });
-            }
+                } else {
+                    // Es Próximo. Solo incluir si es en los próximos 10 días
+                    if (eq.timestamp && eq.timestamp <= limitTime) {
+                        proximosFiltrados.push(eq);
+                    } else if (!eq.timestamp) {
+                        // Si no tiene fecha, lo mostramos? El user dijo "que se vayan a jugar en los proximos 10 dias".
+                        // Lo ocultamos por si acaso, o lo mostramos? Mejor lo ocultamos si no hay fecha.
+                    }
+                }
+            });
+            
+            let pasadosFiltrados = Object.values(pasadosPorEquipo);
+            data.equipos = proximosFiltrados.concat(pasadosFiltrados);
 
-            let htmlPartidos = "";
-            let equiposPermitidos = 0;
-            let equiposCerrados = 0;
+            data.equipos.sort((a, b) => {
+
+                let tsA = a.timestamp || Infinity; 
+                let tsB = b.timestamp || Infinity;
+                return tsA - tsB; 
+            });
+
+            let htmlProximos = "";
+            let htmlPasados = "";
 
             data.equipos.forEach(eq => {
-                if (eq.visibilidad !== "OCULTAR") {
+                let valJornada = String(eq.jornada_eq || "").trim();
+                let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`) : "";
+                let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
+                let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+                  let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
+                let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
+
+                let infoAdicional = "";
+                let esPasado = false;
+
+                if (eq.oficial_sets && eq.oficial_sets.includes("-")) {
+                    esPasado = true;
+                    let sL = parseInt(eq.oficial_sets.split("-")[0]);
+                    let sV = parseInt(eq.oficial_sets.split("-")[1]);
+                    let textoRes = sL > sV ? `<span style="color:#28a745; font-weight:bold; margin-left:5px;">🟢 Ganado</span>` : `<span style="color:var(--vcv-rojo); font-weight:bold; margin-left:5px;">🔴 Perdido</span>`;
+                    
+                    infoAdicional = `
+                    <div style="margin-top:10px; background:var(--bg-general); border-left:4px solid var(--vcv-morado); padding:10px; border-radius:4px;">
+                        <span style="font-size:0.85rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">Resultado Oficial</span><br>
+                        <b style="font-size:1.1rem; color:var(--vcv-negro);">${eq.oficial_sets}</b> ${textoRes} <br>
+                        <span style="font-size:0.9rem; color:#555;">(${eq.oficial_parciales})</span>
+                    </div>`;
+                } else if (eq.estado === "CERRADO" || eq.visibilidad === "OCULTAR") {
+                    esPasado = true;
+                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#e2e3e5; color:#383d41; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🔒 Partido finalizado</span></div>`;
+                } else {
+                    infoAdicional = `<div style="margin-top:10px;"><span style="background-color:#d4edda; color:#155724; padding:6px 12px; border-radius:20px; font-weight:bold; font-size:0.85rem;">🟢 Próximamente</span>${eq.timestamp ? `<div class="reloj-partido" data-ts="${eq.timestamp}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-left:10px;">Calculando tiempo...</div>` : ""}</div>`;
+                }
+                
+                let categoryHtml = getCategoryHTML(eq.categoria);
+
+                let cardHtml = `
+                <div class="p-3 mb-3 card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    ${categoryHtml}
+                    <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
+                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
+                    ${infoLocFecha}
+                    ${infoPabellon}
+                    
+                    ${infoAdicional}
+                </div>`;
+
+                if (esPasado) { htmlPasados = cardHtml + htmlPasados; } 
+                else { htmlProximos += cardHtml; }
+            });
+
+            let finalHtml = "";
+            if(htmlProximos !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Partidos en los próximos 10 días</h4>` + htmlProximos;
+            if(htmlPasados !== "") finalHtml += `<h4 style="color:var(--vcv-morado); margin-top:30px; margin-bottom:15px; text-align:left; border-bottom:2px solid var(--vcv-dorado); padding-bottom:5px;">Últimos Resultados</h4>` + htmlPasados;
+            
+            if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
+
+            document.getElementById('contenedorPartidos').innerHTML = finalHtml;
+            document.getElementById('loginSection').style.display = "none";
+            if(typeof iniciarRelojes === 'function') iniciarRelojes();
+        } else {
+            msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
+        }
+    })
+    .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
+    .finally(() => { 
+        btn.innerText = "👀 Entrar como Invitado (Solo Lectura)"; 
+        btn.disabled = false; 
+    });
+});
+
+// LOGICA USUARIO NORMAL
+document.getElementById('btnLogin').addEventListener('click', function() {
+    const usr = document.getElementById('loginUsuario').value.trim();
+    const pwd = document.getElementById('loginPassword').value.trim();
+    const msgBox = document.getElementById('loginMessage');
+    const btn = this;
+
+    if(!usr || !pwd) { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Rellena usuario y contraseña."; msgBox.style.display = "block"; return; }
+    
+    btn.disabled = true; 
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Accediendo...'; 
+    msgBox.style.display = "none";
+
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'login', usuario: usr, password: pwd }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            
+            currentUser = usr; currentPassword = pwd;
+            
+            let promoDiv2 = document.getElementById('guestPromoBanner');
+            if (promoDiv2) promoDiv2.style.display = "none";
+            currentJornadaGlobal = data.jornada;
+            window.appData = data;
+            if(window.initCalendar) window.initCalendar();
+            
+            if(data.reglas) {
+                let listaReglas = document.getElementById('listaReglasPuntuacion');
+                if(listaReglas) {
+                    listaReglas.innerHTML = `
+                        <li>Acertar el <b>Resultado Exacto (Sets)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.sets} pts</span></li>
+                        <li>Acertar el <b>Ganador del partido</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.ganador} pts</span></li>
+                        <li>Acertar la <b>Diferencia de puntos exacta</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_exacta} pts</span> extra</li>
+                        <li>Acertar la <b>Diferencia aproximada (5)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_5} pts</span> extra</li>
+                    `;
+                }
+                
+                // Update match cards dynamically
+                document.querySelectorAll('.sets-points-label').forEach(el => el.innerText = `+${data.reglas.sets} pts si aciertas`);
+                document.querySelectorAll('.diff-points-label').forEach(el => el.innerText = `+${data.reglas.diff_exacta} pts exacto`);
+            }
+
+            let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
+            
+            
+            // Populating new Header V2
+            document.getElementById('h2-user-name').innerText = data.nombre_real || usr;
+            document.getElementById('h2-user-handle').innerText = "@" + usr;
+            
+            let misInsignias = data.insignias[usr] || [];
+            let insigniasHeaderHtml = "";
+            let insigniasH2Html = "";
+            let isAdmin = false;
+            
+            misInsignias.forEach(b => {
+                if (b.type === 'admin') isAdmin = true;
+                let cssColorClass = getBadgeCSS(b.type);
+                insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
+                
+                // NO tooltips, NO onclick for the top header badges! Just visual.
+                insigniasH2Html += `<img src="${URL_BADGE_GENERIC}" class="${cssColorClass}" style="width:14px; height:14px;">`;
+            });
+            
+            document.getElementById('h2-user-badges').innerHTML = insigniasH2Html;
+            
+            // Render lucide icons in the newly injected HTML
+            lucide.createIcons();
+            
+            if (isAdmin) {
+                document.getElementById('adminPanelWrapper').style.display = "block";
+                renderAdminPanel(data.equipos); 
+                
+                // POPULATE LIGAS
+                var ligasContainer = document.getElementById('adminLigasCheckboxes');
+                if (ligasContainer && data.todas_las_ligas) {
+                    ligasContainer.innerHTML = '';
+                    var allLigas = data.todas_las_ligas;
+                    allLigas.forEach(function(liga) {
+                        if (!liga) return; // Skip empty columns
+                        var div = document.createElement('div');
+                        div.innerHTML = '<label style="margin:0; cursor:pointer;"><input type="checkbox" value="' + liga + '" style="margin-right:5px;"> ' + liga + '</label>';
+                        ligasContainer.appendChild(div);
+                    });
+                }
+            } else {
+                document.getElementById('adminPanelWrapper').style.display = "none";
+            }
+
+             document.getElementById('tituloPrincipalSeccion').style.display = 'block';
+
+            data.equipos.sort((a, b) => {
+                let tsA = a.timestamp || Infinity; 
+                let tsB = b.timestamp || Infinity;
+                return tsA - tsB; 
+            });
+            
+            equiposTotalesInfo = data.equipos;
+
+            let htmlPartidos = ``;
+            let equiposPermitidos = 0;
+            let equiposCerrados = 0;
+            let nowMs = new Date().getTime();
+            
+            data.equipos.forEach(eq => {
+                if (eq.permitido && eq.visibilidad === "MOSTRAR") {
                     equiposPermitidos++;
-                    if (eq.estado === "CERRADO") equiposCerrados++;
-
                     let valJornada = String(eq.jornada_eq || "").trim();
-                    let infoJornadaEq = valJornada ? (isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#888;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#888;">(J${valJornada})</span>`) : "";
-                    
-                    let dt = new Date(eq.timestamp);
-                    let fechaFormateada = isNaN(dt) ? "" : `${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
-                    
-                    let infoPabellon = eq.pabellon_localizacion ? `<div style="font-size: 0.8rem; color: var(--text-muted); margin-top:2px;"><i data-lucide="map-pin" style="width: 10px; height: 10px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon_localizacion}</div>` : "";
-                    
-                    let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
-                    let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
-                    
-                    let localLogo = data.logos && data.logos[localTeamName] ? `<img src="${data.logos[localTeamName]}" style="width:100%; height:100%; object-fit:contain;">` : `<i data-lucide="shield" style="width:24px; height:24px; color:var(--text-muted);"></i>`;
-                    let visitLogo = data.logos && data.logos[visitTeamName] ? `<img src="${data.logos[visitTeamName]}" style="width:100%; height:100%; object-fit:contain;">` : `<i data-lucide="shield" style="width:24px; height:24px; color:var(--text-muted);"></i>`;
-
-                    let abrevLocalRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_local : eq.abrev_rival;
-                    let abrevVisitRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_rival : eq.abrev_local;
-                    let abrevLocal = abrevLocalRaw ? abrevLocalRaw.toUpperCase() : localTeamName.substring(0,3).toUpperCase();
-                    let abrevVisit = abrevVisitRaw ? abrevVisitRaw.toUpperCase() : visitTeamName.substring(0,3).toUpperCase();
-                    
-                    let destacadoHtml = "";
-
-                    let inputsHtml = "";
-                    if (eq.estado === "ABIERTO" && !isGuestMode) {
-                        inputsHtml = `
-                            <!-- PUNTOS TEXT -->
-                            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; font-weight: bold;">
-                                Sets Exactos: <span style="color:var(--success);">+${data.reglas?.puntos_sets_exactos || 80} pts</span> | 
-                                Diferencia: <span style="color:var(--success);">+${data.reglas?.puntos_diferencia_exacta || 100} pts</span>
-                            </div>
-                            
-                            <!-- HIDDEN INPUTS -->
-                            <input type="hidden" id="e${eq.id_partido}_sets" value="">
-                            <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
-                            <input type="hidden" id="e${eq.id_partido}_signo" value="">
-
-                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
-                                <div class="sets-grid-label-v2">
-                                  <span>Pronóstico de Sets</span>
-                                  <span style="color: var(--secondary-color);" class="sets-points-label">...</span>
-                                </div>
-                                <div class="sets-selector-grid-v2">
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-1', '${eq.id_partido}')">3-1</button>
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-2', '${eq.id_partido}')">3-2</button>
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '0-3', '${eq.id_partido}')">0-3</button>
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '1-3', '${eq.id_partido}')">1-3</button>
-                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '2-3', '${eq.id_partido}')">2-3</button>
-                                </div>
-
-                                <div class="sets-grid-label-v2" style="margin-top: 15px;">
-                                  <span>Diferencia de Puntos (Opcional)</span>
-                                  <span style="color: var(--secondary-color);" class="diff-points-label" id="lbl-puntos-${eq.id_partido}">14 pts</span>
-                                </div>
-                                <div class="diff-slider-container-v2">
-                                  <div class="diff-val-display-v2" id="val-display-${eq.id_partido}">14</div>
-                                  <input type="range" class="vcv-slider" min="2" max="25" value="14" oninput="actualizarSliderV2(this.value, '${eq.id_partido}')">
-                                  
-                                  <div style="display:flex; justify-content:space-between; margin-top:12px; gap:8px;">
-                                    <div class="slider-side-btn-container">
-                                      <div class="slider-side-label">${abrevLocal}</div>
-                                      <button type="button" class="slider-side-btn btn-left" id="btn-left-${eq.id_partido}" onclick="seleccionarSignoV2('left', '${eq.id_partido}')">
-                                        A favor
-                                      </button>
-                                    </div>
-                                    <div class="slider-side-btn-container">
-                                      <div class="slider-side-label">${abrevVisit}</div>
-                                      <button type="button" class="slider-side-btn btn-right" id="btn-right-${eq.id_partido}" onclick="seleccionarSignoV2('right', '${eq.id_partido}')">
-                                        En contra
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                            
-                            <div class="summary-v2" id="summary-v2-${eq.id_partido}" style="display:none; text-align:center; padding: 15px; background:var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 12px;">
-                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">TU PREDICCIÓN</div>
-                                <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
-                            </div>
-
-                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
-                                Guardar Predicción
-                            </button>
-                        `;
-                    } else if (eq.estado === "CERRADO") {
-                        let resultHtml = "";
-                        if (eq.oficial_sets) {
-                            resultHtml = `
-                            <div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);">
-                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div>
-                                <div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets}</div>
-                                <div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div>
-                            </div>
-                            `;
-                        } else {
-                            resultHtml = `
-                            <div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);">
-                                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span>
-                            </div>
-                            `;
-                        }
-                        inputsHtml = resultHtml;
+                    let infoJornadaEq = "";
+                    if(valJornada) {
+                        infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
                     }
+                    
+                    let iconoLoc = eq.ubicacion === "CASA" ? "🏠" : (eq.ubicacion === "FUERA" ? "✈️" : "");
+                    let streamIcon = eq.streaming ? ` <a href="${eq.streaming}" target="_blank" style="margin-left:8px; display:inline-block; vertical-align:middle;" title="Ver Streaming Oficial"><img src="files/images/play_icon.png" style="width:16px; height:16px; display:block;"></a>` : "";
+                    let infoLocFecha = (iconoLoc || eq.timestamp) ? `<div style="font-size:0.9rem; color:#555; margin-bottom:4px; font-weight:bold;">${iconoLoc} ${formatFecha(eq.timestamp)}${streamIcon}</div>` : (streamIcon ? `<div style="margin-bottom:4px;">${streamIcon}</div>` : "");
+                    let infoPabellon = eq.pabellon ? `<div style="font-size:0.85rem; color:#777; margin-bottom:10px;">📍 ${eq.pabellon}</div>` : "<div style='margin-bottom:10px;'></div>";
+                    
+                    let categoryHtml = getCategoryHTML(eq.categoria);
 
-                    htmlPartidos += `
+                    // --- LOGICA JUGADOR DESTACADO ---
+                      let destacadoHtml = "";
+                      // --- FIN LOGICA JUGADOR DESTACADO ---
+
+                    if (eq.estado === "ABIERTO" || eq.estado === "CERRADO") {
+                        let dt = new Date(eq.timestamp);
+                        let fechaFormateada = isNaN(dt) ? "" : `${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+
+                        setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
+
+                        let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                        let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                        
+                        let abrevLocalRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_local : eq.abrev_rival;
+                        let abrevVisitRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_rival : eq.abrev_local;
+                        
+                        let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
+                        let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
+
+                        let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
+                        let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
+                        
+                        let infoPabellon = eq.pabellon ? `<div style="margin-top:2px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon}</div>` : '';
+
+                        let btnStreaming = eq.streaming 
+                            ? `<a href="${eq.streaming}" target="_blank" class="btn-streaming-v2 active" style="text-decoration:none;"><i data-lucide="play" style="width:14px;height:14px;"></i> Streaming</a>` 
+                            : `<button class="btn-streaming-v2 disabled" disabled><i data-lucide="play-square" style="width:14px;height:14px;"></i> Sin enlace</button>`;
+
+                        htmlPartidos += `
                         <div class="vcv-card-v2" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
                             <div class="match-header-strip-v2">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
-                                      ${eq.categoria.toUpperCase()} ${eq.es_derby ? ' DERBY' : ''}
-                                    </span>
-                                    <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.65rem; font-weight:bold; padding:2px 6px; background:rgba(212, 175, 55, 0.1); color:var(--secondary-color); border: 1px solid var(--border-glow); border-radius:4px; display:inline-block;">Calculando tiempo...</div>
-                                </div>
+                                <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
+                                  ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
+                                </span>
                                 <div style="text-align: right;">
                                     <div><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${fechaFormateada}</div>
                                     ${infoPabellon}
@@ -1863,20 +1983,89 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                                 </div>
                                 <div class="vs-divider-v2" style="display:flex; flex-direction:column; align-items:center; gap:6px;">
                                   <div>VS</div>
-                                  ${eq.oficial_sets && eq.oficial_sets.includes("-") ? `<div style="font-size:1.2rem; font-weight:900; color:var(--text-main); background:var(--bg-input); padding:4px 8px; border-radius:6px;">${eq.oficial_sets}</div>` : ''}
+                                  ${btnStreaming}
                                 </div>
                                 <div class="team-box-v2">
                                   <div class="team-avatar-v2">${visitLogo}</div>
                                   <span class="team-name-v2">${visitTeamName}</span>
-                                  <span class="team-role-v2" style="color: var(--danger)">VISITANTE</span>
+                                  <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
                                 </div>
                             </div>
                             
-                            ${inputsHtml}
+                            
+
+                            ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
+                            <!-- PUNTOS TEXT -->
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; font-weight: bold;">
+                                Sets Exactos: <span style="color:var(--success);">+${data.reglas?.puntos_sets_exactos || 80} pts</span> | 
+                                Diferencia: <span style="color:var(--success);">+${data.reglas?.puntos_diferencia_exacta || 100} pts</span>
+                            </div>
+                            ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
+                            <!-- PUNTOS TEXT -->
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; font-weight: bold;">
+                                Sets Exactos: <span style="color:var(--success);">+${data.reglas?.puntos_sets_exactos || 80} pts</span> | 
+                                Diferencia: <span style="color:var(--success);">+${data.reglas?.puntos_diferencia_exacta || 100} pts</span>
+                            </div>
+                            <!-- HIDDEN INPUTS -->`}`}
+                            <input type="hidden" id="e${eq.id_partido}_sets" value="">
+                            <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
+                            <input type="hidden" id="e${eq.id_partido}_signo" value="">
+
+                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
+                                <div class="sets-grid-label-v2">
+                                  <span>Pronóstico de Sets</span>
+                                  <span style="color: var(--secondary-color);" class="sets-points-label">...</span>
+                                </div>
+                                <div class="sets-selector-grid-v2">
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-1', '${eq.id_partido}')">3-1</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-2', '${eq.id_partido}')">3-2</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '2-3', '${eq.id_partido}')">2-3</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '1-3', '${eq.id_partido}')">1-3</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '0-3', '${eq.id_partido}')">0-3</button>
+                                </div>
+
+                                <div class="points-diff-container-v2">
+                                  <div class="points-header-v2">
+                                    <span>PUNTOS DIFERENCIAL</span>
+                                    <span style="color: var(--text-gold);" class="diff-points-label">...</span>
+                                  </div>
+                                  <div class="points-controls-row-v2">
+                                    <div class="stepper-container-v2">
+                                      <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', -1)">-</button>
+                                      <div class="stepper-value-v2">
+                                        <span id="val-v2-${eq.id_partido}">14</span>
+                                        <small>PTS</small>
+                                      </div>
+                                      <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
+                                    </div>
+                                    <div class="sign-selector-v2">
+                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, true)">
+                                        <span style="font-size:0.7rem;">${localTeamName}</span>
+                                      </button>
+                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, false)">
+                                        <span style="font-size:0.7rem;">${visitTeamName}</span>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-v2" id="summary-v2-${eq.id_partido}" style="display:none; text-align:center; padding: 15px; background:var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">TU PREDICCIÓN</div>
+                                <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
+                            </div>
+
+                            ${eq.estado === "CERRADO" ? "" : `${eq.estado === "CERRADO" ? "" : `<button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
+                                Guardar Predicción
+                            </button>`}`}
+                            
                             ${destacadoHtml}
                         </div>`;
+                    }
                 }
             });
+
             if (equiposPermitidos === 0) {
                 htmlPartidos = `<div class="alert-box alert-warning" style="display:block;">No hay partidos pendientes de predecir o en curso en este momento.</div>`;
                 document.getElementById('btnSubmit').style.display = "none";
@@ -2061,8 +2250,8 @@ function iniciarRelojes() {
                 el.style.color = color;
                 el.style.border = '1px solid ' + color;
                 el.style.borderRadius = '8px';
-                el.style.padding = '2px 6px';
-                el.style.fontSize = '0.65rem';
+                el.style.padding = '6px 12px';
+                el.style.fontSize = '0.75rem';
                 el.style.fontWeight = '800';
             };
 
