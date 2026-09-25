@@ -884,9 +884,13 @@ function doPost(e) {
                     var oLocalWin = parseInt(oRes.sets.split("-")[0]) > parseInt(oRes.sets.split("-")[1]);
                     var oDiff = 0;
                     var setsParciales = oRes.parciales.split(",");
-                    for(var sp=0; sp<setsParciales.length; sp++){
-                       var nums = setsParciales[sp].split("-");
-                       if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                    if (setsParciales.length === 1 && !oRes.parciales.includes("-") && !isNaN(parseInt(oRes.parciales))) {
+                        oDiff = parseInt(oRes.parciales);
+                    } else {
+                        for(var sp=0; sp<setsParciales.length; sp++){
+                            var nums = setsParciales[sp].split("-");
+                            if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
+                        }
                     }
                     var uLocalWin = parseInt(uPred.sets.split("-")[0]) > parseInt(uPred.sets.split("-")[1]);
                     var uDiff = parseInt(uPred.puntos) || 0;
@@ -900,222 +904,18 @@ function doPost(e) {
 
                     if(esDerby) motivos.push("🔥 DERBY (x2)");
 
-                    if(uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
-                    else if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Acertar ganador (+" + pG + ")"); }
+                    if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Ganador (+" + pG + ")"); }
+                    if (uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
 
                     var distancia = Math.abs(oDiff - uDiff);
-                    if(distancia === 0) { ptsGanados += pDE; motivos.push("Dif. exacta (+" + pDE + ")"); }
-                    else if(distancia <= 5) { ptsGanados += pD5; motivos.push("Dif. aproximada (+" + ptsDiff5 + ")"); }
-                    if(ptsGanados === 0) { motivos.push("Sin aciertos"); }
-                }
-            }
-
-            var ligasEq = [];
-            for(var ligaName in ligasMap) { if(ligasMap[ligaName].indexOf(p.equipo_local) !== -1) ligasEq.push(ligaName); }
-
-            if(uPred || oRes || p.visibilidad === "MOSTRAR") {
-                matchdaysMap[rg].push({
-                    id_partido: p.id_partido, equipo_local: p.equipo_local, rival: p.rival, jornada_eq: p.jornada_eq,
-                    timestamp: p.timestamp, ubicacion: p.ubicacion, estado: p.estado, visibilidad: p.visibilidad,
-                    categoria: p.categoria, pabellon: p.pabellon, 
-                    ligas: ligasEq, sets: uPred ? uPred.sets : "", puntos: uPred ? uPred.puntos : "", signo: uPred ? uPred.signo : "",
-                    oficial_sets: oRes ? oRes.sets : "", oficial_parciales: oRes ? oRes.parciales : "", puntos_partido: ptsGanados, motivos: motivos.join(" | ")
-                });
-            }
-        }
-        for(var rG in matchdaysMap) { if(matchdaysMap[rG].length > 0) { miHistorial.push({ ronda: rG, partidos: matchdaysMap[rG] }); } }
-        return ContentService.createTextOutput(JSON.stringify({"status": "success", "history": miHistorial})).setMimeType(ContentService.MimeType.JSON);
-    }
-
-  } catch (error) { return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": error.message})).setMimeType(ContentService.MimeType.JSON); }
-}
-
-function onEdit(e) {
-  if (!e || !e.range) return;
-  var sheet = e.range.getSheet();
-  var row = e.range.getRow();
-  var col = e.range.getColumn();
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // ==========================================
-  // 1. CAMBIO DESDE EL FORMULARIO DE LA WEB
-  // ==========================================
-  if (sheet.getName() === "Peticiones_Nombre") {
-    if (col === 5 && row > 1) {
-      var valor = e.value ? e.value.toString().toUpperCase().trim() : "";
-      
-      if (valor === "OK" || valor === "APROBADO") {
-        var data = sheet.getRange(row, 1, 1, 5).getValues()[0];
-        
-        var usuarioActual = data[1] ? data[1].toString().trim() : "";
-        var nuevoUsuario = data[2] ? data[2].toString().trim() : "";
-        var nuevoNombre = data[3] ? data[3].toString().trim() : "";
-        
-        var sheetUsuarios = ss.getSheetByName("Usuarios");
-        
-        if (sheetUsuarios && usuarioActual) {
-          var usuariosData = getSafeData(sheetUsuarios);
-          var userRow = -1;
-          
-          for (var i = 1; i < usuariosData.length; i++) { 
-              var uSheet = usuariosData[i][0] ? usuariosData[i][0].toString().trim() : "";
-              if (uSheet.toLowerCase() === usuarioActual.toLowerCase()) { 
-                  userRow = i + 1; 
-                  break; 
-              } 
-          }
-          
-          if (userRow !== -1) {
-            if (nuevoNombre) { 
-                sheetUsuarios.getRange(userRow, 3).setValue(nuevoNombre); 
-            }
-            
-            if (nuevoUsuario && nuevoUsuario.toLowerCase() !== usuarioActual.toLowerCase()) {
-              sheetUsuarios.getRange(userRow, 1).setValue(nuevoUsuario);
-              
-              var sheetsColA = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"]; 
-              for (var s = 0; s < sheetsColA.length; s++) {
-                var sh = ss.getSheetByName(sheetsColA[s]);
-                if (sh) {
-                  var d = getSafeData(sh);
-                  for (var r = 1; r < d.length; r++) { 
-                      var celdaU = d[r][0] ? d[r][0].toString().trim() : "";
-                      if (celdaU.toLowerCase() === usuarioActual.toLowerCase()) { 
-                          sh.getRange(r + 1, 1).setValue(nuevoUsuario); 
-                      } 
-                  }
-                }
-              }
-              
-              var sheetsColB = ["Porras", "Predicciones_Secretas"];
-              for (var s = 0; s < sheetsColB.length; s++) {
-                var sh = ss.getSheetByName(sheetsColB[s]);
-                if (sh) {
-                  var d = getSafeData(sh);
-                  for (var r = 1; r < d.length; r++) { 
-                      var celdaU = d[r][1] ? d[r][1].toString().trim() : "";
-                      if (celdaU.toLowerCase() === usuarioActual.toLowerCase()) { 
-                          sh.getRange(r + 1, 2).setValue(nuevoUsuario); 
-                      } 
-                  }
-                }
-              }
-            }
-            
-            sheet.getRange(row, 5).setValue("✅ APROBADO Y APLICADO");
-            sheet.getRange(row, 5).setBackground("#d4edda"); 
-            
-          } else {
-            sheet.getRange(row, 5).setValue("❌ ERROR: Usuario original no encontrado");
-            sheet.getRange(row, 5).setBackground("#f8d7da"); 
-          }
-        }
-      } else if (valor === "NO" || valor === "RECHAZAR") {
-        sheet.getRange(row, 5).setValue("❌ RECHAZADO");
-        sheet.getRange(row, 5).setBackground("#f8d7da");
-      }
-    }
-  }
-  
-  // ==========================================
-  // 2. CAMBIO MANUAL DIRECTAMENTE EN LA PESTAÑA 'Usuarios'
-  // ==========================================
-  else if (sheet.getName() === "Usuarios") {
-    if (col === 1 && row > 1) {
-      // SI CAMBIA UN NOMBRE EXISTENTE
-      if (e.oldValue && e.value && e.oldValue !== e.value) {
-        var usuarioAntiguo = e.oldValue.toString().trim();
-        var usuarioNuevo = e.value.toString().trim();
-        
-        // CHECK FOR DUPLICATES FIRST
-        var usuariosData = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues();
-        var duplicateFound = false;
-        for (var i = 1; i < usuariosData.length; i++) {
-            if (i + 1 !== row && usuariosData[i][0] && usuariosData[i][0].toString().trim().toLowerCase() === usuarioNuevo.toLowerCase()) {
-                duplicateFound = true;
-                break;
-            }
-        }
-        
-        if (duplicateFound) {
-            sheet.getRange(row, col).setValue(usuarioAntiguo); // REVERT
-            ss.toast("Error: El usuario '" + usuarioNuevo + "' ya existe en la base de datos.", "Cambio Rechazado", 5);
-            return;
-        }
-        
-        // PROCEED WITH UPDATE
-        var sheetsColA = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"]; 
-        for (var s = 0; s < sheetsColA.length; s++) {
-          var sh = ss.getSheetByName(sheetsColA[s]);
-          if (sh && sh.getLastRow() > 0) {
-            var d = sh.getRange(1, 1, sh.getLastRow(), 1).getValues();
-            for (var r = 1; r < d.length; r++) { 
-                var celdaU = d[r][0] ? d[r][0].toString().trim() : "";
-                if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
-                    sh.getRange(r + 1, 1).setValue(usuarioNuevo); 
-                } 
-            }
-          }
-        }
-        
-        var sheetsColB = ["Porras", "Predicciones_Secretas", "Peticiones_Nombre"];
-        for (var s = 0; s < sheetsColB.length; s++) {
-          var sh = ss.getSheetByName(sheetsColB[s]);
-          if (sh && sh.getLastRow() > 0) {
-            var d = sh.getRange(1, 1, sh.getLastRow(), 2).getValues();
-            for (var r = 1; r < d.length; r++) { 
-                var celdaU = d[r][1] ? d[r][1].toString().trim() : "";
-                if (celdaU.toLowerCase() === usuarioAntiguo.toLowerCase()) { 
-                    sh.getRange(r + 1, 2).setValue(usuarioNuevo); 
-                } 
-            }
-          }
-        }
-        
-        clearAllCache();
-        ss.toast("Se ha actualizado el usuario en todas las pestañas.", "Actualización", 5);
-      }
-      // SI AÑADE UN USUARIO NUEVO DIRECTAMENTE EN LA CELDA VACÍA DEL EXCEL
-      else if (!e.oldValue && e.value) {
-        var usuarioNuevo = e.value.toString().trim();
-        
-        // CHECK FOR DUPLICATES
-        var usuariosData = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues();
-        var duplicateFound = false;
-        for (var i = 1; i < usuariosData.length; i++) {
-            if (i + 1 !== row && usuariosData[i][0] && usuariosData[i][0].toString().trim().toLowerCase() === usuarioNuevo.toLowerCase()) {
-                duplicateFound = true; break;
-            }
-        }
-        
-        if (duplicateFound) {
-            sheet.getRange(row, col).clearContent();
-            ss.toast("Error: El usuario '" + usuarioNuevo + "' ya existe.", "Rechazado", 5);
-            return;
-        }
-        
-        var sheetsToAppend = ["Permisos_Equipos", "Ligas", "Insignias", "Permisos_Secreta"];
-        for(var i=0; i<sheetsToAppend.length; i++) {
-            var sh = ss.getSheetByName(sheetsToAppend[i]);
-            if(sh) {
-                // Buscamos la primera fila vacia en la columna A
-                var vals = sh.getRange(1, 1, sh.getMaxRows(), 1).getValues();
-                var firstEmpty = 1;
-                for(var j=0; j<vals.length; j++){
-                    if(!vals[j][0] || vals[j][0].toString().trim() === "") {
-                        firstEmpty = j + 1;
-                        break;
+                    if(distancia === 0) { 
+                        ptsGanados += pDE; 
+                        motivos.push("Dif. exacta (+" + pDE + ")"); 
+                    } else if(maxDist > 0 && distancia < maxDist) { 
+                        var porcentaje = (maxDist - distancia) / maxDist;
+                        var ptsDiferencia = Math.round(pDE * porcentaje);
+                        ptsGanados += ptsDiferencia;
+                        motivos.push("Dif. acercada [" + distancia + "] (+" + ptsDiferencia + ")");
                     }
-                }
-                if(firstEmpty > sh.getMaxRows()) sh.appendRow([""]); // Just in case
-                
-                sh.getRange(firstEmpty, 1).setValue(usuarioNuevo);
-            }
-        }
-        
-        clearAllCache();
-        ss.toast("Usuario añadido a Permisos, Ligas e Insignias.", "Nuevo Usuario", 5);
-      }
-    }
-  }
-}
+
+                    
