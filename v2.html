@@ -2258,7 +2258,7 @@ function iniciarRelojes() {
                 } else if (diff <= -14400000) {
                     const inputs = document.getElementById('inputs_eq_' + eqId);
                     if(inputs) {
-                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
                     }
                     const btnSave = document.getElementById('btn-save-' + eqId);
                     if (btnSave) btnSave.style.display = 'none';
@@ -2274,7 +2274,7 @@ function iniciarRelojes() {
                 if (diff <= limite && diff > -14400000) {
                     const inputs = document.getElementById('inputs_eq_' + eqId);
                     if(inputs) {
-                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
                     }
                     const btnSave = document.getElementById('btn-save-' + eqId);
                     if (btnSave) btnSave.style.display = 'none';
@@ -2282,7 +2282,7 @@ function iniciarRelojes() {
                 } else if (diff <= -14400000) {
                     const inputs = document.getElementById('inputs_eq_' + eqId);
                     if(inputs) {
-                        inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>';
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
                     }
                     const btnSave = document.getElementById('btn-save-' + eqId);
                     if (btnSave) btnSave.style.display = 'none';
