@@ -2032,6 +2032,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                   <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
                                 </div>
                             </div>
+                            <div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">
+                                <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="display:inline-block;"></div>
+                            </div>
                             
                             
 
@@ -2043,7 +2046,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                             <div class="inputs-eq" id="inputs_eq_${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:none;' : 'display:block;'}">
                                 <div class="sets-grid-label-v2">
-                                  <span>Pronóstico de sets</span>
+                                  <span>Resultado</span>
                                   
                                 </div>
                                 <div class="sets-selector-grid-v2">
@@ -3173,9 +3176,9 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             <i data-lucide="info" style="width:20px; height:20px;"></i> Sistema de Puntos
         </h3>
         <div style="background:var(--bg-input); border:1px dashed var(--border-color); border-radius:12px; padding:20px 15px; font-size: 0.9rem; color:var(--text-muted); max-height:60vh; overflow-y:auto; line-height:1.5;">
-            <p style="margin-bottom: 10px;"><b>1. Pronóstico de sets:</b> Elige el resultado final del partido (ej. 3-1).</p>
-            <p style="margin-bottom: 10px;"><b>2. Diferencia de puntos:</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
-            <p style="margin-bottom: 0;"><b>3. Signo:</b> Indica si esa diferencia de puntos será a favor del VCV (+) o del equipo rival (-).</p>
+            <p style="margin-bottom: 10px;"><b>1. Resultado:</b> Elige el resultado final del partido (ej. 3-1).</p>
+            <p style="margin-bottom: 10px;"><b>2. Diferencia de puntos:</b> Es la diferencia total de puntos al final del partido entre ambos equipos (la suma de todos los sets).</p>
+            <p style="margin-bottom: 0;"><b>3. Signo:</b> Indica si la diferencia de puntos será a favor (+) o en contra (-) del equipo <b>LOCAL</b>.</p>
         </div>
         <button onclick="document.getElementById('guiaModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
     </div>
