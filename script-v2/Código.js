@@ -114,8 +114,18 @@ function doGet(e) {
 
   function getSafeData(sheet) {
     if (!sheet) return [];
-    var cache = CacheService.getScriptCache();
     var sheetName = sheet.getName();
+    
+    var lr = sheet.getLastRow();
+    var lc = sheet.getLastColumn();
+    
+    // Bypass cache for highly mutable sheets to prevent race conditions on login
+    if (sheetName === "Porras") {
+        if (lr > 0 && lc > 0) return sheet.getRange(1, 1, lr, lc).getValues();
+        return [];
+    }
+
+    var cache = CacheService.getScriptCache();
     var cacheKey = "vcv_sheet_" + sheetName;
     
     var cached = cache.get(cacheKey);
@@ -123,8 +133,6 @@ function doGet(e) {
         try { return JSON.parse(cached); } catch(e) {}
     }
     
-    var lr = sheet.getLastRow();
-    var lc = sheet.getLastColumn();
     var data = [];
     if (lr > 0 && lc > 0) {
         data = sheet.getRange(1, 1, lr, lc).getValues();
@@ -133,9 +141,10 @@ function doGet(e) {
     if (data.length > 0) {
         try {
             var str = JSON.stringify(data);
-            if (str.length < 90000) { cache.put(cacheKey, str, 21600); } // 15 second cache
+            if (str.length < 90000) { cache.put(cacheKey, str, 21600); } 
         } catch(e) {}
     }
+    
     return data;
 }
 
