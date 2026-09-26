@@ -839,7 +839,8 @@ function doPost(e) {
         return ContentService.createTextOutput(JSON.stringify({ 
             "status": "success", 
             "jornada": rondaAbierta, 
-            "equipos": cartelera, "todos_partidos": todosPartidos, 
+            "equipos": cartelera, "todos_partidos": todosPartidos,
+        "predicciones_usuario": porrasMap[usuario] || {}, 
             "ligas": misLigas,
             "todas_las_ligas": headersLigas.slice(1), 
             "clasificaciones": clasificacionesFormateadas,
