@@ -51,7 +51,6 @@
     #loginSection, #appSection, #adminPanelWrapper {
         animation: fadeScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    #loginSection { display: flex; align-items: center; justify-content: center; padding-top: calc(40px + env(safe-area-inset-top, 0px)); padding-bottom: 40px; padding-left: 20px; padding-right: 20px; flex-direction: column; }
 
     
     /* ---------------------------------------------------
@@ -102,7 +101,7 @@
     .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
     .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
 
-    padding-top: calc(40px + env(safe-area-inset-top, 0px)); padding-bottom: 40px; padding-left: 20px; padding-right: 20px; flex-direction: column; }
+    #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
     .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
     .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
@@ -273,7 +272,7 @@
     .vcv-faq-master summary::-webkit-details-marker { display: none; }
     .vcv-faq-master summary::after {
       content: '+';
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       color: var(--secondary-color);
       transition: transform 0.2s ease;
     }
@@ -419,17 +418,17 @@
     
     
     #appSection {
-        padding-top: calc(86px + env(safe-area-inset-top, 0px)); /* space for header */
+        padding-top: 76px; /* space for header */
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 36px 20px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
-    .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
     .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
     .header-title-row { display: flex; align-items: center; gap: 6px; }
-    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1.4; padding-bottom: 10px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
     .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
     .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
     .header-right-v2 { display: flex; align-items: center; gap: 8px; }
@@ -471,7 +470,11 @@
     .text-center.mt-4.mb-3 { display: none !important; }
 
     /* LOGIN STYLES */
-    padding-top: calc(40px + env(safe-area-inset-top, 0px)); padding-bottom: 40px; padding-left: 20px; padding-right: 20px;
+    #loginSection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
       flex-direction: column;
       background: var(--bg-surface);
       min-height: 100vh;
@@ -739,7 +742,7 @@
     .vcv-faq-master summary::-webkit-details-marker { display: none; }
     .vcv-faq-master summary::after {
       content: '+';
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       color: var(--secondary-color);
       transition: transform 0.2s ease;
     }
@@ -948,17 +951,17 @@
         border: 2px solid var(--bg-card);
     }
     #appSection {
-        padding-top: calc(86px + env(safe-area-inset-top, 0px)); /* space for header */
+        padding-top: 76px; /* space for header */
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 36px 20px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
-    .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
     .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
     .header-title-row { display: flex; align-items: center; gap: 6px; }
-    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1.4; padding-bottom: 10px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
     .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
     .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
     .header-right-v2 { display: flex; align-items: center; gap: 8px; }
@@ -1163,10 +1166,16 @@
         </div>
     </section>
     <section class="section-alt" id="clasificacionesSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
         <h2>🏆 Ranking</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Clasificación actual de nuestras ligas privadas según los puntos conseguidos.</p>
         <div id="tablasClasificacionContainer"></div>
-    </section>
+    </div></section>
     <section id="enlacesRfevbSection" style=" padding-bottom:30px;">
 
 <div class="vcv-card-v2" id="adminPanelWrapper" style="display:none; margin-bottom: 20px;">
@@ -1249,6 +1258,12 @@
     </div>
     </section>
     <section class="section-alt" id="historialSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
         <h2>✅ Mis Predicciones</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Historial completo de tus aciertos y puntos conseguidos en jornadas anteriores.</p>
         <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">
@@ -1264,8 +1279,14 @@
         </div>
 
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
-    </section>
+    </div></section>
     <section class="section-alt" id="calendarioSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
         <h2>📅 Próximos encuentros</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Calendario con todos los horarios y fechas de los partidos futuros programados.</p>
         <div class="form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
@@ -1284,7 +1305,7 @@
                 Si alguien ve que hay alguna errata o sabe de algún cambio en algún horario de partido, notifique al correo <a href="mailto:adminfantasyvcv@gmail.com" style="color:#1565c0;">adminfantasyvcv@gmail.com</a> lo antes posible por favor, por el bien de todos.
             </p>
         </div>
-    </section>
+    </div></section>
     <section id="prediccionesTotalesSection">
         <h2>🔮 Top Secret</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predicción de los puntos totales acumulados a final de temporada de cada equipo.</p>
@@ -1792,7 +1813,6 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
             document.getElementById('loginSection').style.display = "none";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             if(typeof iniciarRelojes === 'function') iniciarRelojes();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
@@ -1968,8 +1988,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
                         let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
 
-                        let localLogo = `<span style="font-weight:900; font-size: 1.25rem;">${localAbrev}</span>`;
-                        let visitLogo = `<span style="font-weight:900; font-size: 1.25rem;">${visitAbrev}</span>`;
+                        let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
+                        let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
                         
                         let infoPabellon = eq.pabellon ? `<div style="margin-top:2px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon}</div>` : '';
 
@@ -2221,7 +2241,6 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
 
             document.getElementById('loginSection').style.display = "none";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('appSection').style.display = "block";
             
             document.getElementById('btnLogout').style.display = "block";
@@ -3011,9 +3030,8 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             });
         }
     }
-
-    // Add FAQ scroll behavior on load
-    document.addEventListener('DOMContentLoaded', function() {
+    // Add FAQ scroll behavior directly
+    (function() {
         const masterFaq = document.getElementById('masterFaq');
         if(masterFaq) {
             masterFaq.addEventListener('toggle', function(e) {
@@ -3024,7 +3042,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                 }
             });
         }
-    });
+    })();
 </script>
 
 
@@ -3032,7 +3050,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 <!-- MODAL NOTIFICACIONES -->
 <div id="notificacionesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
     <div style="background:var(--bg-card); width:90%; max-width:400px; border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.5); position:relative; border: 1px solid var(--border-color);">
-        <button onclick="document.getElementById('notificacionesModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1.4; padding-bottom: 10px;">&times;</button>
+        <button onclick="document.getElementById('notificacionesModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
         
         <h3 style="margin-top:0; margin-bottom:20px; color:var(--text-main); font-weight:800; font-family:'Space Grotesk', sans-serif; display:flex; align-items:center; gap:8px;">
             <i data-lucide="bell" style="width:20px; height:20px;"></i> Notificaciones
@@ -3050,7 +3068,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 <!-- MODAL GUIA -->
 <div id="guiaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
     <div style="background:var(--bg-card); width:90%; max-width:400px; border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.5); position:relative; border: 1px solid var(--border-color);">
-        <button onclick="document.getElementById('guiaModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1.4; padding-bottom: 10px;">&times;</button>
+        <button onclick="document.getElementById('guiaModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
         <h3 style="margin-top:0; margin-bottom:15px; color:var(--text-main); font-weight:800; font-family:'Space Grotesk', sans-serif; display:flex; align-items:center; gap:8px;">
             <i data-lucide="info" style="width:20px; height:20px;"></i> Sistema de Puntos
         </h3>
