@@ -444,8 +444,8 @@
     .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
     .category-filter-strip::-webkit-scrollbar { display: none; }
     .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
-    .cat-filter-btn:hover { border-color: rgba(221, 185, 103, 0.5); }
-    .cat-filter-btn.active { background: var(--vcv-dorado); color: #000; border-color: var(--vcv-dorado); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
+    .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
 
 </style>
 
@@ -988,8 +988,8 @@
     .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
     .category-filter-strip::-webkit-scrollbar { display: none; }
     .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
-    .cat-filter-btn:hover { border-color: rgba(221, 185, 103, 0.5); }
-    .cat-filter-btn.active { background: var(--vcv-dorado); color: #000; border-color: var(--vcv-dorado); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
+    .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
 
 </style>
 
@@ -3068,8 +3068,10 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             let totalCount = 0;
             
             cards.forEach(card => {
-                const cat = card.getAttribute('data-category');
-                if(cat) {
+                const catAttr = card.getAttribute('data-category');
+                if(catAttr) {
+                    let cat = catAttr.trim().toUpperCase();
+                    card._normalizedCat = cat;
                     categories.add(cat);
                     totalCount++;
                 }
@@ -3085,7 +3087,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             
             Array.from(categories).sort().forEach(cat => {
                 // Count how many matches in this category
-                let count = Array.from(cards).filter(c => c.getAttribute('data-category') === cat).length;
+                let count = Array.from(cards).filter(c => c._normalizedCat === cat).length;
                 
                 // Format category name nicely (e.g. "Superliga Masc 2")
                 let displayName = cat;
@@ -3118,7 +3120,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                     
                     // Filter cards
                     cards.forEach(card => {
-                        if(filter === 'all' || card.getAttribute('data-category') === filter) {
+                        if(filter === 'all' || card._normalizedCat === filter) {
                             card.style.display = ''; // Reset display
                         } else {
                             card.style.display = 'none';
