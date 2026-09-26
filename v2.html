@@ -447,6 +447,14 @@
     .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
     .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
 
+
+    .sign-btn-v2.selected {
+      background: var(--secondary-color);
+      color: #000;
+      border-color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
 </style>
 
 
@@ -991,6 +999,14 @@
     .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
     .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
 
+
+    .sign-btn-v2.selected {
+      background: var(--secondary-color);
+      color: #000;
+      border-color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
 </style>
 
 
@@ -2060,7 +2076,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                                 <div class="points-diff-container-v2">
                                   <div class="points-header-v2">
-                                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; display:flex; align-items:center; justify-content:center; gap:5px;">DIFERENCIA DE PUNTOS <i data-lucide="help-circle" style="width:14px; height:14px; cursor:pointer; color:var(--primary-color);" onclick="document.getElementById(\'guiaModal\').style.display=\'flex\'"></i></span>
+                                    <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 700; text-transform: uppercase; display:flex; align-items:center; justify-content:center; gap:5px; letter-spacing:0.5px;">DIFERENCIA DE PUNTOS <i data-lucide="help-circle" style="width:14px; height:14px; cursor:pointer; color:var(--primary-color);" onclick="document.getElementById(\'guiaModal\').style.display=\'flex\'"></i></span>
                                     
                                   </div>
                                   <div class="points-controls-row-v2">
@@ -3176,9 +3192,17 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             <i data-lucide="info" style="width:20px; height:20px;"></i> Sistema de Puntos
         </h3>
         <div style="background:var(--bg-input); border:1px dashed var(--border-color); border-radius:12px; padding:20px 15px; font-size: 0.9rem; color:var(--text-muted); max-height:60vh; overflow-y:auto; line-height:1.5;">
-            <p style="margin-bottom: 10px;"><b>1. Resultado:</b> Elige el resultado final del partido (ej. 3-1).</p>
-            <p style="margin-bottom: 10px;"><b>2. Diferencia de puntos:</b> Es la diferencia total de puntos al final del partido entre ambos equipos (la suma de todos los sets).</p>
-            <p style="margin-bottom: 0;"><b>3. Signo:</b> Indica si la diferencia de puntos será a favor (+) o en contra (-) del equipo <b>LOCAL</b>.</p>
+            
+            <p style="margin-bottom: 10px;">La <b>diferencia de puntos</b> se calcula como la suma de las diferencias de puntos de todos y cada uno de los sets de un partido.</p>
+            <div style="background: var(--bg-card-alt); padding: 10px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px; font-size: 0.85rem;">
+                <b>Ejemplo real:</b> Si el VCV juega en casa y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
+                • Set 1: VCV gana de +5<br>
+                • Set 2: VCV pierde de -2<br>
+                • Set 3: VCV gana de +10<br>
+                • Set 4: VCV gana de +3<br>
+                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica y seleccionar el signo a favor del <b>VCV (LOCAL)</b>.
+            </div>
+            <p style="margin-bottom: 0;"><b>¿Qué gano con esto?</b> Acertar exactamente la diferencia suma <span style="color:var(--text-gold); font-weight:bold;">+<span id="puntosExactosModal">X</span> pts</span> según el excel oficial. Si fallas por un pequeño margen (hasta 5 puntos de error), no te vas de vacío, te llevas <span style="color:var(--text-gold); font-weight:bold;">+<span id="puntosAproxModal">X</span> pts</span>.</p>
         </div>
         <button onclick="document.getElementById('guiaModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
     </div>
