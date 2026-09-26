@@ -1,6 +1,6 @@
-# Fantasy VCV 26/27
+# VCV Play 26/27
 
-Bienvenido al repositorio oficial del **Fantasy VCV 26/27**, una aplicación web interactiva diseñada para gestionar una liga de pronósticos (porras) de partidos de voleibol.
+Bienvenido al repositorio oficial del **VCV Play 26/27**, una aplicación web interactiva diseñada para gestionar una liga de pronósticos (porras) de partidos de voleibol.
 
 ## 🏐 Sobre el Proyecto
 

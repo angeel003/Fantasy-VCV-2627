@@ -1,5 +1,7 @@
-with open('script-dev/Código.js', 'r', encoding='utf-8') as f:
+import sys
+with open('script-v2/Código.js', 'r', encoding='utf-8') as f:
     text = f.read()
-import re
-m = re.search(r'"reglas": \{[^\}]+\}', text)
-if m: print(m.group(0))
+if '"predicciones_usuario"' in text:
+    print('Found')
+else:
+    print('Not found')

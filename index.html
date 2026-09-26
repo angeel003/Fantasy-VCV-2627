@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Fantasy VCV 26/27">
-<title>Fantasy VCV 26/27</title>
+<meta name="apple-mobile-web-app-title" content="VCV Play 26/27">
+<title>VCV Play 26/27</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#783b7a">
 <link rel="icon" type="image/png" href="files/images/logo_vcv_circle.png">
@@ -20,17 +20,27 @@
        1. VARIABLES DE COLOR OFICIALES DEL VCV
        --------------------------------------------------- */
     :root {
-        --vcv-morado: #783b7a; 
-        --vcv-blanco: #ffffff; 
-        --vcv-dorado: #cfb359; 
-        --vcv-rojo: #d24442; 
-        --vcv-negro: #000000;
-        --bg-general: #f4f6f9; /* Gris muy clarito para fondo */
+      --primary-color: #7b3382;
+      --primary-hover: #8e3c96;
+      --secondary-color: #d4af37;
+      --secondary-hover: #e5bf43;
+      --bg-surface: #190c1f;
+      --bg-card: #271330;
+      --bg-card-alt: #32193d;
+      --bg-input: #1f0f26;
+      --border-color: #4c2659;
+      --border-glow: rgba(212, 175, 55, 0.4);
+      --text-main: #f9f5fa;
+      --text-muted: #b7a4be;
+      --text-gold: #f3ce5e;
+      --success: #2ecc71;
+      --danger: #e74c3c;
     }
 
     html { scroll-behavior: smooth; }
     html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); }
+    a, button, input, select, textarea { touch-action: manipulation; }
+    body { font-family: \'Segoe UI\', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); overflow-x: hidden; }
 
     /* ---------------------------------------------------
        2. TRANSICIONES Y ANIMACIONES (Fade-in)
@@ -59,7 +69,7 @@
     /* ---------------------------------------------------
        4. TABLAS Y CAJAS
        --------------------------------------------------- */
-    table { width: 100%; max-width: 900px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+    table { width: 100%; max-width: 500px; margin: 0 auto; border-collapse: collapse; background: var(--vcv-blanco); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
     th, td { padding: 14px 18px; border-bottom: 1px solid #ddd; text-align: left; }
     thead { background: var(--vcv-morado); color: var(--vcv-blanco); text-align: center; }
     .medal-1 { background: #fff8e1; font-weight: bold; }
@@ -95,7 +105,7 @@
     #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
     .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
-    .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
+    .faq-container { width: 100%; max-width: 500px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
     .faq-title { font-weight: bold; color: var(--vcv-morado); margin-bottom: 20px; font-size: 1.3rem; text-align: center; }
     .faq-details { margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 12px; }
     .faq-details:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -169,31 +179,8 @@
     /* ---------------------------------------------------
        8. BOTÓN FLOTANTE DE RECARGA Y AVISOS
        --------------------------------------------------- */
-    #btnReload {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background-color: var(--vcv-dorado);
-        color: var(--vcv-morado);
-        border: 2px solid var(--vcv-morado);
-        border-radius: 50%;
-        width: 55px;
-        height: 55px;
-        font-size: 1.6rem;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        cursor: pointer;
-        z-index: 9999;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-        padding: 0;
-        outline: none;
-    }
-    #btnReload:hover {
-        background-color: #b89c45;
-        transform: scale(1.1);
-    }
+    
+    
     .spin-anim {
         animation: spin 1s linear infinite;
     }
@@ -260,115 +247,890 @@
         animation: slideOutRight 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
     }
 
+
+    /* FAQ V2 STYLES */
+    .vcv-faq-master {
+      background: linear-gradient(to right, rgba(93, 23, 137, 0.3), var(--bg-card), var(--bg-card));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      margin-top: 15px;
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .vcv-faq-master summary {
+      padding: 16px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--secondary-color);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .vcv-faq-master summary::-webkit-details-marker { display: none; }
+    .vcv-faq-master summary::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      transition: transform 0.2s ease;
+    }
+    .vcv-faq-master[open] summary::after {
+      content: '−';
+      transform: rotate(180deg);
+    }
+    .vcv-faq-master .faq-content-v2 {
+      padding: 0 16px 16px 16px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .faq-inner-item {
+      background: var(--bg-card-alt);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .faq-inner-title {
+      font-weight: 700;
+      color: var(--text-gold);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .faq-inner-item input {
+      background: var(--bg-input);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+  
+    /* BOTTOM NAV V2 */
+    .bottom-nav-v2 {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item-v2 {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 20%;
+    }
+    .nav-item-v2 i {
+        width: 22px;
+        height: 22px;
+        margin-bottom: 2px;
+    }
+    .nav-item-v2.active {
+        color: var(--secondary-color);
+    }
+    .nav-item-v2.active i {
+        transform: scale(1.15);
+    }
+    
+    /* Hide all sections by default except when active */
+    #appSection > section {
+        display: none;
+        padding-bottom: 10px;
+    }
+    #appSection > section.active-tab {
+        display: block;
+        animation: fadeInTab 0.3s ease;
+    }
+    @keyframes fadeInTab {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+  
+    .tied-btn {
+        background: var(--secondary-color) !important;
+        color: #000 !important;
+        border-color: var(--secondary-color) !important;
+        opacity: 0.7;
+    }
+
+  
+    /* STREAMING V2 */
+    .btn-streaming-v2 {
+        display: flex; align-items: center; justify-content: center; gap: 4px;
+        font-size: 0.6rem; font-weight: 800; border-radius: 6px;
+        padding: 4px 6px; text-decoration: none; border: none;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .btn-streaming-v2.active {
+        background: var(--danger); color: #fff;
+        box-shadow: 0 2px 8px rgba(231,76,60,0.4);
+    }
+    .btn-streaming-v2.disabled {
+        background: var(--bg-card-alt); color: var(--text-muted); border: 1px solid var(--border-color);
+        cursor: not-allowed;
+    }
+
+  
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 10px !important;
+            border-radius: 0px !important; /* maybe 0px or small radius if it takes full width? */
+            border-left: none !important;
+            border-right: none !important;
+        }
+        body {
+            padding: 0 !important;
+            padding-right: 0px !important;
+        }
+        .vcv-card-v2 {
+            padding: 12px;
+            border-radius: 12px;
+        }
+    }
+
+    /* V2 HEADER */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #appSection {
+        padding-top: 60px;
+        padding-bottom: 80px;
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* V2 TAILWIND-MIMIC HEADER CSS */
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
+    .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
+    .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
+    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
+    .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
+    .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
+    .header-right-v2 { display: flex; align-items: center; gap: 8px; }
+    .header-user-chip { display: flex; align-items: center; gap: 6px; background: #221127; padding:  8px 12px; border-radius: 20px; border: 1px solid #3e1d45; }
+    .header-rank { font-size: 12px; color: #d4af37; font-weight: 700; }
+    .header-dot { width: 4px; height: 4px; border-radius: 50%; background: #71717a; }
+    .header-pts { font-size: 12px; font-weight: 600; color: #e4e4e7; }
+    .header-bell-btn { width:  40px; height:  40px; border-radius: 50%; background: #221127; border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+    .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
+
+#h2-user-badges img { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+
+    .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .category-filter-strip::-webkit-scrollbar { display: none; }
+    .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
+    .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
+    .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+
+
+    .sign-btn-v2.selected {
+      background: var(--secondary-color);
+      color: #000;
+      border-color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    
+    </style>
+
+
+  <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --primary-color: #6a2c70;
+      --primary-hover: #7e3686;
+      --secondary-color: #d4af37;
+      --secondary-hover: #e5bf43;
+      --bg-surface: #140818;
+      --bg-card: #200f25;
+      --bg-card-alt: #2a1532;
+      --bg-input: #1a0b1e;
+      --border-color: #3b1d45;
+      --border-glow: rgba(212, 175, 55, 0.4);
+      --text-main: #f9f5fa;
+      --text-muted: #b7a4be;
+      --text-gold: #f3ce5e;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+    }
+    
+    body { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
+    #prediccionForm button[type="submit"] { display: none !important; }
+    footer { display: none !important; }
+    .text-center.mt-4.mb-3 { display: none !important; }
+
+    /* LOGIN STYLES */
+    #loginSection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      flex-direction: column;
+      background: var(--bg-surface);
+      min-height: 100vh;
+    }
+    .modal-card-v2 {
+      background: linear-gradient(to right, rgba(93, 23, 137, 0.3), var(--bg-card), var(--bg-card));
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .club-crest-v2 {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-gold-v2 {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, #d4af37 100%);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 800;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .btn-outline-v2 {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* CARTELERA STYLES */
+    .vcv-card-v2 {
+      background: linear-gradient(to right, rgba(93, 23, 137, 0.3), var(--bg-card), var(--bg-card));
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-color);
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .match-header-strip-v2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+    .teams-versus-container-v2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .team-box-v2 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      text-align: center;
+    }
+    .team-avatar-v2 {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .team-avatar-v2.vcv-local {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      border: 1px solid var(--primary-hover);
+    }
+    .team-name-v2 {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .team-role-v2 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .vs-divider-v2 {
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--text-muted);
+      opacity: 0.4;
+      padding: 0 10px;
+    }
+    .sets-grid-label-v2 {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .sets-selector-grid-v2 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .set-option-btn-v2 {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 10px 0;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .set-option-btn-v2.selected {
+      background: var(--secondary-color);
+      color: #000;
+      border-color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
+    .points-diff-container-v2 {
+      background: var(--bg-card-alt);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid var(--border-color);
+    }
+    .points-header-v2 {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+    .points-controls-row-v2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stepper-container-v2 {
+      display: flex;
+      align-items: center;
+      background: var(--bg-input);
+      border-radius: 10px;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .btn-step-v2 {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg-card-alt);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .stepper-value-v2 {
+      min-width: 46px;
+      text-align: center;
+    }
+    .stepper-value-v2 span {
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: var(--secondary-color);
+    }
+    .stepper-value-v2 small {
+      display: block;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: -2px;
+    }
+    .sign-selector-v2 {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+    }
+    .sign-btn-v2 {
+      flex: 1;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 10px 0;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+  
+    /* FAQ V2 STYLES */
+    .vcv-faq-master {
+      background: linear-gradient(to right, rgba(93, 23, 137, 0.3), var(--bg-card), var(--bg-card));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      margin-top: 15px;
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .vcv-faq-master summary {
+      padding: 16px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--secondary-color);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .vcv-faq-master summary::-webkit-details-marker { display: none; }
+    .vcv-faq-master summary::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      transition: transform 0.2s ease;
+    }
+    .vcv-faq-master[open] summary::after {
+      content: '−';
+      transform: rotate(180deg);
+    }
+    .vcv-faq-master .faq-content-v2 {
+      padding: 0 16px 16px 16px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .faq-inner-item {
+      background: var(--bg-card-alt);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .faq-inner-title {
+      font-weight: 700;
+      color: var(--text-gold);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .faq-inner-item input {
+      background: var(--bg-input);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+  
+    /* BOTTOM NAV V2 */
+    .bottom-nav-v2 {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item-v2 {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 20%;
+    }
+    .nav-item-v2 i {
+        width: 22px;
+        height: 22px;
+        margin-bottom: 2px;
+    }
+    .nav-item-v2.active {
+        color: var(--secondary-color);
+    }
+    .nav-item-v2.active i {
+        transform: scale(1.15);
+    }
+    
+    /* Hide all sections by default except when active */
+    #appSection > section {
+        display: none;
+        padding-bottom: 10px;
+    }
+    #appSection > section.active-tab {
+        display: block;
+        animation: fadeInTab 0.3s ease;
+    }
+    @keyframes fadeInTab {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+  
+    .tied-btn {
+        background: var(--secondary-color) !important;
+        color: #000 !important;
+        border-color: var(--secondary-color) !important;
+        opacity: 0.7;
+    }
+
+  
+    /* STREAMING V2 */
+    .btn-streaming-v2 {
+        display: flex; align-items: center; justify-content: center; gap: 4px;
+        font-size: 0.6rem; font-weight: 800; border-radius: 6px;
+        padding: 4px 6px; text-decoration: none; border: none;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .btn-streaming-v2.active {
+        background: var(--danger); color: #fff;
+        box-shadow: 0 2px 8px rgba(231,76,60,0.4);
+    }
+    .btn-streaming-v2.disabled {
+        background: var(--bg-card-alt); color: var(--text-muted); border: 1px solid var(--border-color);
+        cursor: not-allowed;
+    }
+
+  
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 10px !important;
+            border-radius: 0px !important; /* maybe 0px or small radius if it takes full width? */
+            border-left: none !important;
+            border-right: none !important;
+        }
+        body {
+            padding: 0 !important;
+            padding-right: 0px !important;
+        }
+        .vcv-card-v2 {
+            padding: 12px;
+            border-radius: 12px;
+        }
+    }
+
+    /* V2 HEADER */
+    .app-header-v2 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 64px;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header-brand-v2 h1 {
+        font-size: 1.25rem;
+        font-weight: 900;
+        margin: 0;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+    .header-user-v2 {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 2px;
+    }
+    .header-user-name {
+        font-weight: 700;
+        color: var(--text-main);
+    }
+    .header-user-handle {
+        font-family: monospace;
+        opacity: 0.8;
+    }
+    .header-badges-v2 {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+    .header-badges-v2 img {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+    }
+    .header-actions-v2 {
+        display: flex;
+        align-items: center;
+    }
+    .bell-btn-v2 {
+        background: none;
+        border: none;
+        color: var(--text-main);
+        position: relative;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bell-dot-v2 {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        border: 2px solid var(--bg-card);
+    }
+    #appSection {
+        padding-top: 60px;
+        padding-bottom: 80px;
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* V2 TAILWIND-MIMIC HEADER CSS */
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
+    .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
+    .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
+    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
+    .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
+    .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
+    .header-right-v2 { display: flex; align-items: center; gap: 8px; }
+    .header-user-chip { display: flex; align-items: center; gap: 6px; background: #221127; padding:  8px 12px; border-radius: 20px; border: 1px solid #3e1d45; }
+    .header-rank { font-size: 12px; color: #d4af37; font-weight: 700; }
+    .header-dot { width: 4px; height: 4px; border-radius: 50%; background: #71717a; }
+    .header-pts { font-size: 12px; font-weight: 600; color: #e4e4e7; }
+    .header-bell-btn { width:  40px; height:  40px; border-radius: 50%; background: #221127; border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+    .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
+
+#h2-user-badges img { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+
+    .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .category-filter-strip::-webkit-scrollbar { display: none; }
+    .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
+    .cat-filter-btn:hover { border-color: var(--secondary-color); color: var(--text-main); }
+    .cat-filter-btn.active { background: var(--secondary-color); color: #000; border-color: var(--secondary-color); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+
+
+    .sign-btn-v2.selected {
+      background: var(--secondary-color);
+      color: #000;
+      border-color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
 </style>
+
+
 </head>
 <body>
 
+
+    <!-- BOTTOM NAV V2 -->
+    <div id="bottomNavWrapperV2" style="display:none;">
+        <nav class="bottom-nav-v2" id="bottomNavV2">
+          <button class="nav-item-v2 active" onclick="switchTabV2('carteleraSection', this)">
+            <i data-lucide="volleyball"></i>
+            <span>Partidos</span>
+          </button>
+          <button class="nav-item-v2" onclick="switchTabV2('clasificacionesSection', this)">
+            <i data-lucide="trophy"></i>
+            <span>Ranking</span>
+          </button>
+          <button class="nav-item-v2" onclick="switchTabV2('historialSection', this)">
+            <i data-lucide="check-circle-2"></i>
+            <span>Mis predicciones</span>
+          </button>
+          <button class="nav-item-v2" onclick="switchTabV2('calendarioSection', this)">
+            <i data-lucide="calendar"></i>
+            <span>Calendario</span>
+          </button>
+          <button class="nav-item-v2" onclick="switchTabV2('enlacesRfevbSection', this)">
+            <i data-lucide="user"></i>
+            <span>Perfil</span>
+          </button>
+        </nav>
+    </div>
+
 <div id="mobileTooltip"></div>
-<button id="btnReload" title="Sincronizar y recargar datos">
-    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-</button>
+
 <div id="toastNotification">✅ Datos actualizados</div>
 
-<header>
+<header style="display:none !important;">
     <button id="btnLogout" title="Volver atrás">&#10094;</button>
     <div class="header-content">
-        <h1 style="margin-bottom: 0px; line-height:1.2;">Fantasy VCV 26/27</h1>
+        <h1 style="margin-bottom: 0px; line-height:1.2;">VCV Play 26/27</h1>
     </div>
     
 </header>
 
 <div id="loginSection">
-    <div class="login-card">
-        <h3 style="color: var(--vcv-morado); margin-bottom: 25px; font-weight:bold;">Acceso a la Liga</h3>
-        <div class="form-group text-left">
-            <label>Usuario</label>
-            <input type="text" id="loginUsuario" class="form-control" placeholder="Tu nombre" required>
+    <div class="modal-card-v2">
+        <div style="text-align: center; margin-bottom: 18px;">
+          <div class="club-crest-v2" style="margin: 0 auto 12px; width: 52px; height: 52px;">
+            <img src="files/images/logo_vcv_circle.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+          </div>
+          <h2 style="font-size: 1.5rem; font-weight: 900; color:var(--text-main); margin-bottom:4px; letter-spacing: -0.5px;">VCV Play <span style="color:var(--secondary-color);">2627</span></h2>
+          <p style="font-size: 0.85rem; font-weight:600; color: var(--text-muted); margin-top: 4px;">El juego oficial del club</p>
         </div>
-        <div class="form-group text-left">
-            <label>Contraseña</label>
-            <input type="password" id="loginPassword" class="form-control" placeholder="Tu contraseña" required>
+
+        <div>
+          <div class="form-group text-left" style="margin-bottom:10px;">
+            <label style="font-size:0.85rem; font-weight:600;">Usuario</label>
+            <input type="text" id="loginUsuario" class="form-control" placeholder="@tu_usuario" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+          </div>
+          <div class="form-group text-left" style="margin-bottom:10px;">
+            <label style="font-size:0.85rem; font-weight:600;">Contraseña</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+          </div>
+
+          <button id="btnLogin" class="btn-gold-v2" style="margin-top: 14px;">
+            <span>Entrar</span>
+          </button>
         </div>
-        <button id="btnLogin" class="btn btn-primary btn-block mt-4" style="font-weight:bold; font-size:1.1rem; padding:10px;">Entrar al Fantasy</button>
-        <button id="btnGuest" class="btn btn-outline-secondary btn-block mt-2" style="font-weight:bold;">👀 Entrar como Invitado</button>
-        <div id="loginMessage" class="alert-box mt-3"></div>
+
+        <button id="btnGuest" class="btn-outline-v2" style="width: 100%; margin-top: 10px;">
+          👀 Entrar como invitado
+        </button>
+        
+        <div id="loginMessage" class="alert-box" style="margin-top:10px; display:none; background-color:#ff4444; color:white; padding:10px; border-radius:8px; text-align:center; font-weight:bold;"></div>
     </div>
 
-    <div class="faq-container">
-        <div class="faq-title">❓ Preguntas Frecuentes y Gestión</div>
+    <div class="faq-container" style="width:100%; max-width:500px; margin:0 auto; padding:0; background:transparent; border:none; box-shadow:none;">
+    <details class="vcv-faq-master" id="masterFaq" style="scroll-margin-top: calc(20px + env(safe-area-inset-top, 0px));">
+        <summary>Preguntas Frecuentes y Gestión</summary>
+        <div class="faq-content-v2">
+            
+            <div class="faq-inner-item">
+                <div class="faq-inner-title">¿Qué es VCV Play?</div>
+                <div>Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
+            </div>
 
-        <details class="faq-details">
-            <summary class="faq-summary">¿Qué es el Fantasy VCV?</summary>
-            <div class="faq-content">Es la competición privada del club donde participamos prediciendo los resultados de nuestros equipos en cada jornada. ¡Demuestra quién sabe más de voleibol!</div>
-        </details>
-        <details class="faq-details">
-            <summary class="faq-summary">¿Cómo van las puntuaciones?</summary>
-            <div class="faq-content">El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
-        </details>
-        <details class="faq-details">
-            <summary class="faq-summary">📱 Cómo instalar la App (Android / iOS)</summary>
-            <div class="faq-content">
-                <div style="font-size:0.9rem; text-align:left; line-height: 1.5; color:#444;">
-                    <p style="margin-bottom:10px;">No necesitas descargar ningún archivo APK. Al entrar en esta web desde tu móvil, haz lo siguiente:</p>
+            <div class="faq-inner-item">
+                <div class="faq-inner-title">¿Cómo van las puntuaciones?</div>
+                <div>El sistema calcula tus puntos automáticamente al acabar la jornada comparándolo con los resultados oficiales. Sumarás puntos dependiendo de si aciertas el resultado exacto de los sets, si aciertas quién gana el partido, o de lo cerca que te quedes de la diferencia final de puntos. <b>(Una vez inicies sesión verás el apartado exacto con los puntos que se otorgan)</b>.</div>
+            </div>
+
+            <div class="faq-inner-item">
+                <div class="faq-inner-title">¿Cómo instalar la App?</div>
+                <div style="font-size:0.85rem; text-align:left; line-height: 1.5;">
+                    <p style="margin-bottom:8px;">No necesitas descargar ningún archivo APK. Al entrar en esta web desde tu móvil, haz lo siguiente:</p>
                     <ul style="padding-left:20px; margin-bottom:0;">
-                        <li style="margin-bottom:10px;"><b>En Android (Chrome):</b> Tocar los 3 puntitos arriba a la derecha > "Instalar aplicación" (o "Añadir a pantalla de inicio").</li>
+                        <li style="margin-bottom:8px;"><b>En Android (Chrome):</b> Tocar los 3 puntitos arriba a la derecha > "Instalar aplicación" (o "Añadir a pantalla de inicio").</li>
                         <li><b>En iPhone (Safari):</b> Tocar el botón de compartir (el cuadrado con la flecha) > "Añadir a la pantalla de inicio".</li>
                     </ul>
                 </div>
             </div>
-        </details>
-        
-        <details class="faq-details">
-            <summary class="faq-summary">🔐 Gestionar mi contraseña</summary>
-            <div class="faq-content">
-                <p>Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña deseada. El cambio será automático.</p>
-                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
-                    
-                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
-                        ⚠️ <b>Atención:</b> Por motivos de seguridad, te rogamos encarecidamente que <b>NO utilices la misma contraseña que usas para cosas importantes</b> (como tu correo electrónico, banco o redes sociales). Esta es una plataforma lúdica.
-                    </div>
-
-                    <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required>
-                    <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required>
-                    <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required>
-                    <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite la nueva contraseña" required>
-                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnChangePwd" style="font-weight:bold;">Actualizar Contraseña</button>
-                    <div id="msgChangePwd" class="alert-box mt-3" style="padding:10px;"></div>
-                </div>
-                <p class="mt-3">¿La has olvidado y no puedes entrar? Escríbeme a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> para que te la restablezca.</p>
+            <div class="faq-inner-item">
+                <div class="faq-inner-title">¿Olvidaste tu usuario o contraseña?</div>
+                <div>Si no recuerdas tus credenciales de acceso, no te preocupes. Escríbenos a nuestro correo de soporte técnico y te ayudaremos a recuperarlas: <br><a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a></div>
             </div>
-        </details>
 
-        <details class="faq-details">
-            <summary class="faq-summary">✏️ Cambiar mi usuario o nombre real</summary>
-            <div class="faq-content">
-                <p>Por motivos de seguridad, los cambios de nombre o usuario no son automáticos. Rellena este formulario y lo aprobaré en la base de datos lo antes posible.</p>
-                <div style="background:var(--bg-general); padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
-                    <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required>
-                    <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required>
-                    <hr>
-                    <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (déjalo en blanco si no quieres cambiarlo)">
-                    <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (déjalo en blanco si no quieres cambiarlo)">
-                    <button class="btn btn-primary btn-sm btn-block mt-3" id="btnReqName" style="font-weight:bold;">Enviar Solicitud</button>
-                    <div id="msgReqName" class="alert-box mt-3" style="padding:10px;"></div>
-                </div>
-            </div>
-        </details>
 
-        <details class="faq-details">
-            <summary class="faq-summary">🆕 Aún no tengo cuenta / Crear cuenta</summary>
-            <div class="faq-content">
-                <p>¡Únete a la liga! Para solicitar tu cuenta, envíame un correo a <a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a> con la siguiente información:</p>
-                <ul style="margin-top: 5px; padding-left: 20px;">
-                    <li><b>Nombre de usuario</b> deseado (ej: @juan_vcv).</li>
-                    <li><b>Contraseña</b> deseada.</li>
-                    <li><b>Relación con el club</b> (si juegas o entrenas, dinos en qué equipo/categoría) para añadir insignias a tu perfil.</li>
-                    <li><b>Equipos</b> que te gustaría seguir y predecir.</li>
-                    <li style="margin-top:5px;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con amigos. Escribe los usuarios de todos y los equipos que puntuarán en ella.</li>
-                </ul>
-            </div>
-        </details>
-    </div>
+            
+
+            
+
+        </div>
+    </details></div>
 </div>
 
 <div id="appSection" style="display: none;">
@@ -376,24 +1138,82 @@
     
 
     
+    
+    <header class="app-header-v2" id="tituloPrincipalSeccion" style="display:none;">
+    <div class="header-container-v2">
+      <div class="header-brand-v2">
+        <div class="header-logo-circle">
+          <div class="header-logo-inner">
+            <i data-lucide="volleyball" style="width:20px; height:20px;"></i>
+          </div>
+        </div>
+        <div>
+          <div class="header-title-row">
+            <h1 class="header-title-text">VCV PLAY</h1>
+            <span class="header-title-badge">26/27</span>
+          </div>
+          <div class="header-subtitle" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:4px;">
+            <span style="color: #a1a1aa; font-weight:500;">Valladolid Club Voleibol</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right-v2">
+        <div class="header-user-chip" id="h2-user-chip">
+          <span class="header-rank" id="h2-user-rank">Top -</span>
+          <span class="header-dot"></span>
+          <span class="header-pts" id="h2-user-pts">0 pts</span>
+        </div>
+        <button class="header-bell-btn" onclick="document.getElementById('notificacionesModal').style.display='flex'">
+          <i data-lucide="bell" style="width:18px; height:18px;"></i>
+          <span class="header-bell-dot"></span>
+        </button>
+      </div>
+    </div>
+</header>
+
     <section id="carteleraSection">
         
         <div class="form-container">
-            <div class="row mb-3" style="background:var(--bg-general); border: 2px solid var(--vcv-morado); padding:15px; border-radius:8px; align-items:center;">
-                <div class="col-md-12 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;">
-                    <div style="font-size:1.4rem; font-weight:bold; color:var(--vcv-morado);" id="displayJugador"></div>
-                    <div id="displayBadges" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px;"></div>
-                </div>
-                
-            </div>
             
-            <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
-            <div id="adminPanelWrapper" style="display: none; background: #343a40; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--vcv-dorado);">
-                <details>
-                    <summary style="font-weight:bold; color:var(--vcv-dorado); font-size:1.2rem; cursor:pointer; outline:none; text-align:center;">
-                        🛠️ INTRANET ADMINISTRADOR
-                    </summary>
-                    <div style="margin-top: 20px;">
+            
+            
+            
+            <form id="prediccionForm">
+                
+                <div id="perfilUsuarioTop"></div>
+                
+                
+                <hr>
+                <div id="categoryFilterWrapper" class="category-filter-strip"></div>
+                <div id="contenedorPartidos"></div>
+
+                
+
+                <div id="appMessage" class="alert-box"></div>
+
+                <button type="submit" id="btnSubmit" style="width:100%; padding: 14px; border-radius: 12px; font-weight: 900; border: none; background: var(--secondary-color); color: #000; cursor:pointer; font-size:1.1rem; transition: all 0.2s; margin-top:10px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">💾 Guardar Mis Predicciones</button>
+            </form>
+        </div>
+    </section>
+    <section id="clasificacionesSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
+        <h2>🏆 Ranking</h2>
+<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Clasificación actual de nuestras ligas privadas según los puntos conseguidos.</p>
+        <div id="tablasClasificacionContainer"></div>
+    </div></section>
+    <section id="enlacesRfevbSection" style=" padding-bottom:30px;">
+
+<div class="vcv-card-v2" id="adminPanelWrapper" style="display:none; margin-bottom: 20px;">
+    <div class="header-eq" style="background:var(--vcv-dorado); color:#000;">
+        <h3 style="color:#000;"><i data-lucide="settings" style="color:#000;"></i> Intranet Administrador</h3>
+    </div>
+    <div style="padding:15px;">
+        
                         
                         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                             <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
@@ -418,76 +1238,62 @@
                         <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
                         <div id="adminListaPartidos"></div>
                         
-                    </div>
-                </details>
+                    
+    </div>
+</div>
+
+<div class="vcv-card-v2" style="margin-bottom: 20px;">
+    <div class="header-eq">
+        <h3><i data-lucide="user-cog"></i> Gestión de Cuenta</h3>
+    </div>
+    <div style="padding:15px; display:flex; flex-direction:column; gap:15px;">
+        <div class="faq-inner-item">
+                <div class="faq-inner-title">Gestionar mi contraseña</div>
+                <p style="font-size:0.8rem; margin-bottom:10px;">Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña.</p>
+                <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnChangePwd" style="font-weight:bold; background:var(--primary-color); border:none;">Actualizar Contraseña</button>
+                <div id="msgChangePwd" class="alert-box mt-2" style="padding:10px; display:none;"></div>
             </div>
-            
-            <form id="prediccionForm">
-                
-                <h2 id="tituloPrincipalSeccion">🏐 Cartelera de Partidos</h2>
-        <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predice los resultados de tus equipos favoritos esta jornada.</p>
-                <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;"><details>
-                        <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
-                            ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
-                        </summary>
-                        <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                            <p style="margin-bottom: 8px;"><b>1. Diferencia de Puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
-                            <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
-                                <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
-                                • Set 1: VCV gana de 5<br>
-                                • Set 2: VCV pierde de 2<br>
-                                • Set 3: VCV gana de 10<br>
-                                • Set 4: VCV gana de 3<br>
-                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica.
-                            </div>
-                            
-                            <p style="margin-bottom: 8px;"><b>2. Signo <span style="color:var(--vcv-rojo);">(¡VITAL!)</span>:</b> Indica si esa diferencia de puntos será a favor del VCV o del equipo rival.</p>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px dashed #ffeeba; margin-bottom: 12px; font-size: 0.85rem; color: #856404;">
-                                <b>En el ejemplo anterior:</b> Como el VCV ha ganado el partido por una diferencia global de 16 puntos, tendrías que elegir <b>"A favor (+)"</b>. <br>
-                                ⚠️ Si escribes 16 pero marcas <i>"En contra (-)"</i>, tu predicción fallará por completo, ya que el sistema entenderá que creías que el VCV iba a <b>perder</b> por 16 puntos de diferencia. ¡Asegúrate de poner el signo correcto!
-                            </div>
-                            
-                            <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
-                            
-                            <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
-                            <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
-                                <li>Cargando sistema de puntuación...</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
-                
-                <hr>
-                <div id="contenedorPartidos"></div>
+        <div class="faq-inner-item">
+                <div class="faq-inner-title">Cambiar mi usuario / nombre</div>
+                <p style="font-size:0.8rem; margin-bottom:10px;">Rellena este formulario para solicitar el cambio en la base de datos.</p>
+                <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <hr style="border-color:var(--border-color);">
+                <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnReqName" style="font-weight:bold; background:var(--primary-color); border:none;">Enviar Solicitud</button>
+                <div id="msgReqName" class="alert-box mt-2" style="padding:10px; display:none;"></div>
+            </div>
+    </div>
+</div>
 
-                <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
-                    <p style="color:var(--vcv-rojo); font-size:0.95rem; font-weight:bold; margin:0;">
-                        ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
-                    </p>
-                </div>
-
-                <div id="appMessage" class="alert-box"></div>
-
-                <button type="submit" class="btn btn-success btn-block" id="btnSubmit" style="font-weight: bold; font-size: 1.1rem; padding: 12px;">💾 Guardar Mis Predicciones</button>
-            </form>
+    <div class="vcv-card-v2" style="margin-bottom: 20px;">
+        <div class="header-eq">
+            <h3><i data-lucide="external-link"></i> Enlaces Oficiales</h3>
         </div>
-    </section>
-    <section class="section-alt" id="clasificacionesSection">
-        <h2>🏆 Ranking</h2>
-<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Clasificación actual de nuestras ligas privadas según los puntos conseguidos.</p>
-        <div id="tablasClasificacionContainer"></div>
-    </section>
-    <section id="enlacesRfevbSection">
-        <h2>🔗 Enlaces Rfevb</h2>
-<p style="color:#555; margin-bottom:25px; font-weight: 500; font-size: 0.95rem;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales de la Federación.</p>
+        <div style="padding:15px;">
+            
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
         </div>
+    
+        </div>
+    </div>
     </section>
-    <section class="section-alt" id="historialSection">
+    <section id="historialSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
         <h2>✅ Mis Predicciones</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Historial completo de tus aciertos y puntos conseguidos en jornadas anteriores.</p>
         <button type="button" class="btn btn-primary mb-4" id="btnHistory" style="font-weight:bold; padding: 10px 25px;">
@@ -503,11 +1309,17 @@
         </div>
 
         <div id="historyListContainer" style="max-width:700px; margin: 0 auto; text-align:left;"></div>
-    </section>
-    <section class="section-alt" id="calendarioSection">
+    </div></section>
+    <section id="calendarioSection">
+    <div style="padding: 60px 20px; text-align: center; color: var(--text-muted);">
+        <i data-lucide="hammer" style="width: 48px; height: 48px; color: var(--vcv-dorado); margin-bottom: 16px;"></i>
+        <h3 style="color: var(--text-main); margin-bottom: 8px;">En construcción</h3>
+        <p>¡Estoy trabajando en implementar esto cuanto antes! 😊</p>
+    </div>
+<div style="display:none;">
         <h2>📅 Próximos encuentros</h2>
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Calendario con todos los horarios y fechas de los partidos futuros programados.</p>
-        <div class="form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+        <div class="form-container" style="max-width: 500px; margin: 0 auto; text-align: left;">
             <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
                 <select id="calendarTeamSelect" class="form-control" style="flex:2; font-weight:bold; min-width:200px; border:2px solid var(--vcv-dorado);">
                     <option value="">-- Selecciona un Equipo --</option>
@@ -523,13 +1335,31 @@
                 Si alguien ve que hay alguna errata o sabe de algún cambio en algún horario de partido, notifique al correo <a href="mailto:adminfantasyvcv@gmail.com" style="color:#1565c0;">adminfantasyvcv@gmail.com</a> lo antes posible por favor, por el bien de todos.
             </p>
         </div>
-    </section>
-    <section id="prediccionesTotalesSection" style="display:none;">
-        <h2>🔮 Top Secret</h2>
-<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predicción de los puntos totales acumulados a final de temporada de cada equipo.</p>
-        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; border-top: 5px solid var(--vcv-dorado);">
-            <!-- Se rellenará automáticamente -->
-        </div>
+    </div></section>
+    <section id="prediccionesTotalesSection">
+        <details class="vcv-faq-master" style="margin-top:-12px; margin-bottom:20px; max-width:100%; border: 1px solid var(--border-color);">
+            <summary style="padding:16px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.3rem;">🔒</span>
+                    <span style="font-size:1.1rem; font-weight:900; color:var(--text-main); letter-spacing:0.5px;">TOP SECRET</span>
+                </div>
+                <div id="relojTotales" style="font-size:0.95rem; font-weight:800; color:#ef4444; text-align:right;">Calculando...</div>
+            </summary>
+            <div class="faq-content-v2" style="padding:0 15px 15px 15px; border-top:1px solid rgba(255,255,255,0.05);">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 10px 0 15px 0; text-align:left;">
+                  Predicción de los <span style="color: var(--vcv-dorado); font-weight: 700;">puntos totales</span> acumulados a final de temporada.
+                </p>
+                <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 10px 12px; margin-bottom: 15px; border-radius: 4px;">
+                    <div style="font-weight: 900; color: #ef4444; font-size: 0.85rem; margin-bottom: 4px; display: flex; align-items: center; gap: 5px;">
+                        <span style="font-size: 1rem;">🤫</span> ALTO SECRETO
+                    </div>
+                    <div style="color: var(--text-main); font-size: 0.8rem; line-height: 1.4;">
+                        No todo el mundo puede ver esta sección. Si estás viéndola, considérate un afortunado... <strong>¡shhh!</strong>
+                    </div>
+                </div>
+                <div id="contenedorPrediccionesTotales"></div>
+            </div>
+        </details>
     </section>
 
 
@@ -546,7 +1376,7 @@
 
 </div>
 
-<footer><p>© Fantasy VCV 2026-2027</p></footer>
+<footer><p>© VCV Play 2026-2027</p></footer>
 
 <script>
 
@@ -567,7 +1397,7 @@ const fetchSeguro = (url, options, retries = 1) => {
       sessionStorage.removeItem('vcv_slide_left');
   }
 
-const scriptURL = "https://script.google.com/macros/s/AKfycbyw9L6Te3q2ibdRBaaAwaiPpEPWLbsNdb8JA9yO272DBHgxaZA2l3TLkH9ofAXlQiWfAg/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbypusqyphzLfam-6xra5BCVAFXqGxOA-RMjVuZOAJyp4OQ5CCR_xZs-dT5tIy4EcZIEKQ/exec";
 
 // --- PON AQUÍ TUS ENLACES DE GITHUB CUANDO LOS TENGAS ---
 const URL_BADGE_GENERIC = "https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"; 
@@ -637,23 +1467,7 @@ function mostrarToast(mensaje) {
 // ------------------------------------------------------------------
 // BOTÓN DE RECARGAR
 // ------------------------------------------------------------------
-document.getElementById('btnReload').addEventListener('click', function() {
-    const btn = this;
-    if(btn.classList.contains('spin-anim')) return; 
-    btn.classList.add('spin-anim');
-    
-    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
-    else { document.getElementById('btnLogin').click(); }
-    
-    let checkInterval = setInterval(() => {
-        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
-        if (!targetBtn.disabled) {
-            btn.classList.remove('spin-anim');
-            clearInterval(checkInterval);
-            mostrarToast("✅ Datos sincronizados");
-        }
-    }, 300);
-});
+
 
 // ------------------------------------------------------------------
 // FUNCIONES INTRANET ADMINISTRADOR
@@ -664,9 +1478,11 @@ function renderAdminPanel(equipos) {
     equipos.forEach(eq => {
         let ts = eq.timestamp || Infinity;
         if (now - ts < 48 * 60 * 60 * 1000) {
+            let adminLocal = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+            let adminVisit = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
             html += `
             <div class="admin-match-box">
-                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
+                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${adminLocal} vs ${adminVisit} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <div style="display:flex; gap:10px;">
                           <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="${now >= ts ? 'Sets (3-1)' : 'Bloqueado (No ha empezado)'}" value="${eq.oficial_sets || ''}" ${now >= ts ? '' : 'disabled'}>
@@ -901,22 +1717,23 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             isGuestMode = true;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
-            document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = "Modo Invitado";
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@lectura";
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = "";
             document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             document.querySelector('#prediccionForm > div').style.display = "none"; 
             document.getElementById('adminPanelWrapper').style.display = "none";
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
-            document.getElementById('clasificacionesSection').style.display = "none";
-            document.getElementById('historialSection').style.display = "none";
-            document.getElementById('prediccionesTotalesSection').style.display = "none";
-            let calSec = document.getElementById('calendarioSection');
-            if (calSec) calSec.style.display = "none";
+            
+            
+            
+            
             
             // Mostrar banner promo de invitados
             let promoDiv = document.getElementById('guestPromoBanner');
@@ -935,7 +1752,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
                         <li>Qué equipos te gustaría seguir.</li>
                         <li style="margin-top:8px; font-weight:normal;"><i>(Opcional)</i> <b>Liga Privada:</b> Puedes tener una clasificación privada con tus amigos. Escribe en el correo los nombres de usuario de todos los que os queráis unir y qué equipos puntuarán en vuestra clasificación.</li>
                     </ul>
-                    <p style="font-size: 0.95rem; opacity: 0.9;"><i>Te crearemos la cuenta y te avisaremos enseguida para que puedas acceder al Fantasy VCV.</i></p>
+                    <p style="font-size: 0.95rem; opacity: 0.9;"><i>Te crearemos la cuenta y te avisaremos enseguida para que puedas acceder al VCV Play.</i></p>
                 `;
                 document.getElementById('prediccionForm').parentNode.appendChild(promoDiv);
             }
@@ -1043,6 +1860,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
+            if(window.updateCategoryFilter) window.updateCategoryFilter();
             document.getElementById('loginSection').style.display = "none";
             if(typeof iniciarRelojes === 'function') iniciarRelojes();
         } else {
@@ -1051,7 +1869,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "👀 Entrar como Invitado"; 
+        btn.innerText = "👀 Entrar como invitado"; 
         btn.disabled = false; 
     });
 });
@@ -1075,14 +1893,70 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         if(data.status === "success") {
             
             currentUser = usr; currentPassword = pwd;
-            let calSec2 = document.getElementById('calendarioSection');
-            if (calSec2) calSec2.style.display = "block";
+            
+            
+            let totalOpen = 0;
+            let predictedOpen = 0;
+            if (data.equipos && data.equipos.length > 0) {
+                data.equipos.forEach(eq => {
+                    if (eq.estado !== "CERRADO") {
+                        totalOpen++;
+                        if (data.predicciones_usuario && data.predicciones_usuario[eq.id_partido]) { predictedOpen++; }
+                    }
+                });
+            }
+            let porcentaje = totalOpen > 0 ? Math.round((predictedOpen / totalOpen) * 100) : 100;
+            
+            let myBadges = data.insignias ? (data.insignias[currentUser] || []) : [];
+            let insigniasHTML = "";
+            if (myBadges.length > 0) {
+                insigniasHTML += `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">`;
+                myBadges.forEach(b => {
+                    let cssColorClass = getBadgeCSS(b.type);
+                    insigniasHTML += `<div style="display:inline-flex; align-items:center; gap:4px; font-size:0.7rem; padding:2px 6px; border-radius:4px; background:var(--bg-general); border:1px solid var(--border-color);"><img src="${URL_BADGE_GENERIC}" class="badge-icon ${cssColorClass}" style="width:12px; height:12px;"><span style="color:var(--text-muted); font-weight:600;">${b.text}</span></div>`;
+                });
+                insigniasHTML += `</div>`;
+            }
+
+            let htmlPerfil = `
+            <div style="padding: 14px; border-radius: 16px; background: linear-gradient(to right, rgba(93, 23, 137, 0.4), var(--bg-card), var(--bg-card)); border: 1px solid var(--border-color); position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-top: -12px; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; justify-content: flex-start; font-size: 0.75rem; margin-bottom: 12px;">
+                <span style="display: inline-flex; align-items: center; font-weight: bold; padding: 3px 10px; border-radius: 9999px; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                  <span style="width: 6px; height: 6px; border-radius: 9999px; background: #10b981; margin-right: 6px; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span> Jornada ${data.jornada || "Activa"}
+                </span>
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                  <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-main); margin:0; letter-spacing:-0.5px; line-height:1.1; text-align:left;">¡Hola ${data.nombre_real || currentUser}!</h2>
+                  <p style="font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 0 0; text-align:left;">
+                    <span style="color: var(--vcv-dorado); font-weight: 700;">@${currentUser}</span>
+                  </p>
+                  ${insigniasHTML}
+                </div>
+                <span style="font-size: 0.8rem; font-weight: bold; color: var(--vcv-dorado); background: rgba(212, 175, 55, 0.1); padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); white-space: nowrap; margin-left:10px;">${porcentaje}% Listo</span>
+              </div>
+
+              <div style="width: 100%; background: rgba(0, 0, 0, 0.15); border-radius: 9999px; height: 6px; margin-top: 14px; overflow: hidden;">
+                <style>
+                @keyframes fillProgress {
+                  from { width: 0%; }
+                  to { width: ${porcentaje}%; }
+                }
+                </style>
+                <div style="background: linear-gradient(to right, var(--vcv-morado), var(--vcv-dorado)); height: 100%; border-radius: 9999px; width: ${porcentaje}%; animation: fillProgress 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;"></div>
+              </div>
+            </div>`;
+            document.getElementById('perfilUsuarioTop').innerHTML = htmlPerfil;
+            
             let promoDiv2 = document.getElementById('guestPromoBanner');
             if (promoDiv2) promoDiv2.style.display = "none";
             currentJornadaGlobal = data.jornada;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
             
+            
+
             if(data.reglas) {
                 let listaReglas = document.getElementById('listaReglasPuntuacion');
                 if(listaReglas) {
@@ -1090,24 +1964,80 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         <li>Acertar el <b>Resultado Exacto (Sets)</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.sets} pts</span></li>
                         <li>Acertar el <b>Ganador del partido</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.ganador} pts</span></li>
                         <li>Acertar la <b>Diferencia de puntos exacta</b>: <span style="color:var(--vcv-rojo); font-weight:bold;">+${data.reglas.diff_exacta} pts</span> extra</li>
-                        <li><b>Aproximarse a la diferencia</b> (margen de error de ${data.reglas.max_dist} pts): <span style="color:var(--vcv-rojo); font-weight:bold;">Puntos proporcionales</span> a tu cercanía</li>
+                        <li>Aproximarse a la diferencia (margen de ${data.reglas.max_dist} pts): <span style="color:var(--vcv-rojo); font-weight:bold;">Bonus proporcional</span></li>
                     `;
                 }
-            }
+                const pExact = document.getElementById('puntosExactosModal');
+                const pMargen = document.getElementById('puntosMargenModal');
+                if (pExact) pExact.innerText = data.reglas.diff_exacta;
+                if (pMargen) pMargen.innerText = data.reglas.max_dist;
+
+                const ejCont = document.getElementById('ejemploProporcionalModal');
+                if(ejCont && data.reglas.diff_exacta && data.reglas.max_dist) {
+                    let pDE = parseInt(data.reglas.diff_exacta);
+                    let mD = parseInt(data.reglas.max_dist);
+                    let calcP = (d) => {
+                        if(d >= mD) return 0;
+                        return Math.round(pDE * ((mD - d) / mD));
+                    };
+                    
+                    let htmlEjemplo = `<b>Reparto actual de puntos:</b><br>`;
+                    htmlEjemplo += `• Alejarte 1 punto exacto: +${calcP(1)} pts<br>`;
+                    if (mD > 2) htmlEjemplo += `• Alejarte 2 puntos exactos: +${calcP(2)} pts<br>`;
+                    if (mD > 3) htmlEjemplo += `• Alejarte 3 puntos exactos: +${calcP(3)} pts<br>`;
+                    
+                    if (mD > 4) {
+                       htmlEjemplo += `• ...<br>`;
+                    }
+                    htmlEjemplo += `• Alejarte ${mD} o más puntos: 0 pts`;
+                    
+                    ejCont.innerHTML = htmlEjemplo;
+                }
+
+
+                
+                // Update match cards dynamically
+                                            }
 
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
-            document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
+            
+            
+            // Populating new Header V2
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = data.nombre_real || usr;
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@" + usr;
             
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
+            let insigniasH2Html = "";
             let isAdmin = false;
+
+            // Calculate Rank from Global Leaderboard
+            let globalRankList = data.clasificaciones && data.clasificaciones["Global"] ? data.clasificaciones["Global"] : [];
+            let myRankIndex = globalRankList.findIndex(r => r.jugador === usr);
+            let myRank = myRankIndex !== -1 ? myRankIndex + 1 : 0;
+            let rankText = myRank > 0 ? "Top " + myRank : "-";
+            
+            let myPoints = myRankIndex !== -1 ? globalRankList[myRankIndex].puntos : 0;
+            
+            let rankEl = document.getElementById('h2-user-rank');
+            if(rankEl) rankEl.innerText = rankText;
+            let ptsEl = document.getElementById('h2-user-pts');
+            if(ptsEl) ptsEl.innerText = myPoints + " pts";
+
             
             misInsignias.forEach(b => {
                 if (b.type === 'admin') isAdmin = true;
                 let cssColorClass = getBadgeCSS(b.type);
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
+                
+                // NO tooltips, NO onclick for the top header badges! Just visual.
+                insigniasH2Html += `<img src="${URL_BADGE_GENERIC}" class="${cssColorClass}" style="width:14px; height:14px;">`;
             });
-            document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
+            
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = insigniasH2Html;
+            
+            // Render lucide icons in the newly injected HTML
+            lucide.createIcons();
             
             if (isAdmin) {
                 document.getElementById('adminPanelWrapper').style.display = "block";
@@ -1147,7 +2077,28 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.visibilidad === "MOSTRAR") {
                     equiposPermitidos++;
-                    let valJornada = String(eq.jornada_eq || "").trim();
+                    
+                let isPredicted = false;
+                let pSets = "", pPts = "", pSig = "";
+                let ptsText = "", formStr = "";
+                let savedLocalName = "", savedVisitName = "", formattedSets = "";
+                
+                console.log('Preds para ' + eq.id_partido + ':', data.predicciones_usuario ? data.predicciones_usuario[eq.id_partido] : 'none');
+                if (data.predicciones_usuario && data.predicciones_usuario[eq.id_partido]) {
+                    isPredicted = true;
+                    pSets = data.predicciones_usuario[eq.id_partido].sets || "";
+                    pPts = data.predicciones_usuario[eq.id_partido].puntos || "";
+                    pSig = data.predicciones_usuario[eq.id_partido].signo || "";
+                    savedLocalName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                    savedVisitName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                    let winnerName = "";
+                    if (pSig.toLowerCase().includes('a favor')) winnerName = savedLocalName;
+                    else if (pSig.toLowerCase().includes('en contra')) winnerName = savedVisitName;
+                    formStr = winnerName ? `(+${pPts} pts para ${winnerName})` : `(${pPts} pts)`;
+                    if(pPts == 0) formStr = `(0 pts)`;
+                    formattedSets = String(pSets).replace('-', ' - ');
+                }
+                let valJornada = String(eq.jornada_eq || "").trim();
                     let infoJornadaEq = "";
                     if(valJornada) {
                         infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
@@ -1164,54 +2115,121 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                       let destacadoHtml = "";
                       // --- FIN LOGICA JUGADOR DESTACADO ---
 
-                    if (eq.estado === "ABIERTO") {
+                    if (eq.estado === "ABIERTO" || eq.estado === "CERRADO") {
+                        let dt = new Date(eq.timestamp);
+                        let fechaFormateada = isNaN(dt) ? "" : `${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+
+                        
+
+                        let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                        let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                        
+                        let abrevLocalRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_local : eq.abrev_rival;
+                        let abrevVisitRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_rival : eq.abrev_local;
+                        
+                        let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
+                        let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
+
+                        let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
+                        let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
+                        
+                        let infoPabellon = eq.pabellon ? `<div style="margin-top:2px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon}</div>` : '';
+
+                        let btnStreaming = eq.streaming 
+                            ? `<a href="${eq.streaming}" target="_blank" class="btn-streaming-v2 active" style="text-decoration:none;"><i data-lucide="play" style="width:14px;height:14px;"></i> Streaming</a>` 
+                            : `<button class="btn-streaming-v2 disabled" disabled><i data-lucide="play-square" style="width:14px;height:14px;"></i> Sin enlace</button>`;
+
                         htmlPartidos += `
-                        <div class="p-3 mb-3 partido-activo card-match" style="background: var(--vcv-blanco); border-radius: 8px; border: 1px solid var(--vcv-dorado); border-left: 5px solid var(--vcv-dorado); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            ${categoryHtml}
-                            <h5 style="margin-bottom: 5px; color:var(--vcv-morado); font-weight:bold; padding-right: 90px;">🏐 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                      ${eq.es_derby ? `<div style="margin-bottom:10px; background:#fff3cd; color:#856404; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.85rem; border:1px solid #ffeeba;">⚔️ ¡DERBY LOCAL! Los puntos valen DOBLE en este partido.</div>` : ""}
-                            ${infoLocFecha}
-                            ${infoPabellon}
-                            
-                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.85rem; font-weight:bold; padding:4px 8px; background:#fff3cd; color:#856404; border-radius:4px; display:inline-block; margin-bottom:15px;">Calculando tiempo...</div>
-                            <div class="row inputs-eq" id="inputs_eq_${eq.id_partido}">
-                                <div class="form-group col-md-4">
-                                    <label>Sets</label>
-                                    <select class="form-control" id="e${eq.id_partido}_sets" style="border-color: #ddd;">
-                                        <option value="">Elige...</option>
-                                        <option value="3-0">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-0" : "Victoria 3-0"}</option>
-                                        <option value="3-1">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-1" : "Victoria 3-1"}</option>
-                                        <option value="3-2">${eq.es_derby ? "Gana " + eq.equipo_local + " 3-2" : "Victoria 3-2"}</option>
-                                        <option value="2-3">${eq.es_derby ? "Gana " + eq.rival + " 3-2" : "Derrota 2-3"}</option>
-                                        <option value="1-3">${eq.es_derby ? "Gana " + eq.rival + " 3-1" : "Derrota 1-3"}</option>
-                                        <option value="0-3">${eq.es_derby ? "Gana " + eq.rival + " 3-0" : "Derrota 0-3"}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Puntos Dif. <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, 'Diferencia de puntos sumando TODOS los sets. (Mira el ejemplo arriba ❓)')">❓</span></label>
-                                    <input type="number" class="form-control" id="e${eq.id_partido}_puntos" placeholder="Ej: 12" min="0" style="border-color: #ddd;">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Signo <span style="cursor:pointer; font-size:0.85rem;" onclick="showMobileTooltip(event, '¿Esa diferencia de puntos es a favor de quién?')">❓</span></label>
-                                    <select class="form-control" id="e${eq.id_partido}_signo" style="border-color: #ddd;">
-                                        <option value="">Elige...</option>
-                                        <option value="A favor">${eq.es_derby ? "A favor de " + eq.equipo_local : "A favor (+)"}</option>
-                                        <option value="En contra">${eq.es_derby ? "A favor de " + eq.rival : "En contra (-)"}</option>
-                                    </select>
+                        <div class="vcv-card-v2 ${isPredicted && eq.estado !== 'CERRADO' ? 'collapsed' : ''}" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
+                            <div class="match-header-strip-v2">
+                                <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
+                                  ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
+                                </span>
+                                <div style="text-align: right;">
+                                    <div><i data-lucide="calendar" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${fechaFormateada}</div>
+                                    ${infoPabellon}
                                 </div>
                             </div>
-                            ${destacadoHtml}
-                        </div>`;
-                    } else if (eq.estado === "CERRADO") {
-                        equiposCerrados++;
-                        htmlPartidos += `
-                        <div class="p-3 mb-3 card-match" style="background: var(--bg-general); border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                            ${categoryHtml}
-                            <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                            ${infoLocFecha}
-                            ${infoPabellon}
+
+                            <div class="teams-versus-container-v2">
+                                <div class="team-box-v2">
+                                  <div class="team-avatar-v2">${localLogo}</div>
+                                  <span class="team-name-v2">${localTeamName}</span>
+                                  <span class="team-role-v2" style="color: var(--success)">LOCAL</span>
+                                </div>
+                                <div class="vs-divider-v2" style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                                  <div>VS</div>
+                                  ${btnStreaming}
+                                </div>
+                                <div class="team-box-v2">
+                                  <div class="team-avatar-v2">${visitLogo}</div>
+                                  <span class="team-name-v2">${visitTeamName}</span>
+                                  <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">
+                                <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="display:inline-block;"></div>
+                            </div>
                             
-                            <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
+                            
+
+                            ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
+                            <!-- HIDDEN INPUTS -->
+                            <input type="hidden" id="e${eq.id_partido}_sets" value="${pSets}">
+                            <input type="hidden" id="e${eq.id_partido}_puntos" value="${pPts || '14'}">
+                            <input type="hidden" id="e${eq.id_partido}_signo" value="${pSig}">
+
+                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:none;' : 'display:block;'}">
+                                <div class="sets-grid-label-v2">
+                                  <span>Resultado</span>
+                                  
+                                </div>
+                                <div class="sets-selector-grid-v2">
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-1', '${eq.id_partido}')">3-1</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-2', '${eq.id_partido}')">3-2</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '2-3', '${eq.id_partido}')">2-3</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '1-3', '${eq.id_partido}')">1-3</button>
+                                    <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '0-3', '${eq.id_partido}')">0-3</button>
+                                </div>
+
+                                <div class="points-diff-container-v2">
+                                  <div class="points-header-v2">
+                                    <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 700; text-transform: uppercase; display:flex; align-items:center; justify-content:center; gap:5px; letter-spacing:0.5px;">DIFERENCIA DE PUNTOS <i data-lucide="help-circle" style="width:14px; height:14px; cursor:pointer; color:var(--primary-color);" onclick="document.getElementById(\'guiaModal\').style.display=\'flex\'"></i></span>
+                                    
+                                  </div>
+                                  <div class="points-controls-row-v2">
+                                    <div class="stepper-container-v2">
+                                      <button type="button" class="btn-step-v2" id="btn-step-minus-${eq.id_partido}" onclick="cambiarPuntosV2('${eq.id_partido}', -1)">-</button>
+                                      <div class="stepper-value-v2">
+                                        <input type="number" id="val-v2-${eq.id_partido}" value="14" oninput="sincronizarPuntosV2(\'${eq.id_partido}\')" style="background:transparent; border:none; text-align:center; font-size:1.3rem; font-weight:900; color:var(--secondary-color); width:46px; max-width:46px; outline:none; -moz-appearance:textfield; padding:0; margin:0; height:30px;">
+                                        <small>PTS</small>
+                                      </div>
+                                      <button type="button" class="btn-step-v2" id="btn-step-plus-${eq.id_partido}" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
+                                    </div>
+                                    <div class="sign-selector-v2">
+                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, true)">
+                                        <span style="font-size:0.7rem;">${localTeamName}</span>
+                                      </button>
+                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, false)">
+                                        <span style="font-size:0.7rem;">${visitTeamName}</span>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-v2" id="summary-v2-${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:block;' : 'display:none;'} margin-bottom: 12px;">
+                                <div id="summary-text-${eq.id_partido}">
+                                ${isPredicted ? `<div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); text-align: left;"><i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i><span>Guardada: <strong style="color: var(--text-main); font-weight:800;">${savedLocalName} ${formattedSets} ${savedVisitName} ${formStr}</strong></span></div>` : ``}
+                                </div>
+                            </div>
+
+                            
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:10px; padding:12px; border-radius:10px; ${isPredicted ? "background:transparent; color:var(--text-muted); font-weight:800; border:1px solid var(--border-color);" : "background:var(--secondary-color); color:#000; font-weight:800; border:none;"} cursor:pointer; transition: all 0.2s;">
+                                ${isPredicted ? "Modificar Predicción" : "Guardar Predicción"}
+                            </button>`}
+                            
                             ${destacadoHtml}
                         </div>`;
                     }
@@ -1224,7 +2242,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             } else if (equiposPermitidos === equiposCerrados) { document.getElementById('btnSubmit').style.display = "none"; }
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
+            if(window.updateCategoryFilter) window.updateCategoryFilter();
             iniciarRelojes();
+            if(window.lucide) setTimeout(() => lucide.createIcons(), 50);
 
             let clasifHtml = "";
             if(data.ligas.length === 0) { 
@@ -1270,62 +2290,74 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
             if(data.equipos_totales && data.equipos_totales.length > 0) {
-                document.getElementById('prediccionesTotalesSection').style.display = "block";
+                
                 
                 let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
                 
-                let htmlTot = `
-                <div id="relojTotales" style="font-size:1.1rem; font-weight:bold; padding:10px; background:#e3f2fd; color:#1565c0; border-radius:8px; text-align:center; margin-bottom:20px;">
-                    Calculando tiempo...
-                </div>`;
+                let htmlTot = ``;
                 
                 data.equipos_totales.forEach(eq => {
                     let ptsActuales = data.puntos_reales[eq] || 0;
                     let misPts = "";
                     let listaOtros = "";
+                    let categoriaEq = "";
+                    let matchEncontrado = data.equipos.find(m => m.equipo_local === eq || m.rival === eq);
+                    if (matchEncontrado && matchEncontrado.categoria) {
+                        categoriaEq = matchEncontrado.categoria;
+                    }
                     let porrasEq = data.predicciones_totales[eq] || [];
                     
+                    let agrupados = {};
                     porrasEq.forEach(porra => {
                         if (porra.usuario === usr) misPts = porra.puntos;
+                        if (!agrupados[porra.puntos]) agrupados[porra.puntos] = [];
+                        agrupados[porra.puntos].push(porra.nombre);
+                    });
+                    
+                    let sortedPts = Object.keys(agrupados).map(Number).sort((a, b) => b - a);
+                    sortedPts.forEach(pts => {
+                        let nombresStr = agrupados[pts].map(n => `👤 ${n}`).join(', ');
                         listaOtros += `
-                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
-                            <span>👤 ${porra.nombre}</span>
-                            <span style="font-weight:bold; color:var(--vcv-morado);">${porra.puntos} pts</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color); gap:12px;">
+                            <div style="font-weight:900; color:var(--secondary-color); font-size:1.1rem; white-space:nowrap;">${pts} pts</div>
+                            <div style="color:var(--text-muted); font-size:0.75rem; line-height:1.4; text-align:right;">${nombresStr}</div>
                         </div>`;
                     });
 
-                    if (listaOtros === "") { listaOtros = "<div style='color:#999; font-size:0.9rem; margin-top:10px;'>Nadie ha hecho su predicción todavía.</div>"; }
+                    if (listaOtros === "") { listaOtros = "<div style='color:var(--text-muted); font-size:0.85rem; padding:10px 0;'>Nadie ha hecho su predicción todavía.</div>"; }
 
                     let miCajonHTML = "";
                     if (isClosed) {
-                        let textoMiPrediccion = misPts !== "" ? `${misPts} pts` : "No participaste";
-                        miCajonHTML = `
-                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
-                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
-                            <div style="font-size:1.2rem; font-weight:bold; color:var(--vcv-morado);">${textoMiPrediccion}</div>
-                        </div>`;
+                        miCajonHTML = ""; // El usuario pidió que al cerrarse solo quede el desplegable
                     } else {
                         miCajonHTML = `
-                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
-                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
+                        <div style="background:var(--bg-card-alt); padding:10px; border-radius:10px; border:1px solid var(--border-color); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-weight:700; color:var(--text-muted); font-size:0.75rem; margin:0; text-transform:uppercase;">Tu predicción:</label>
+                            <div class="stepper-container-v2" style="width: 140px; background:var(--bg-input);">
+                                <button type="button" class="btn-step-v2" style="width:30px; height:30px; border-radius:6px;" onclick="document.getElementById('pt_${eq}').stepDown()">-</button>
+                                <div class="stepper-value-v2" style="flex:1; min-width:auto;">
+                                    <input type="number" id="pt_${eq}" placeholder="0" value="${misPts}" style="background:transparent; border:none; text-align:center; font-size:1.1rem; font-weight:900; color:var(--secondary-color); width:100%; outline:none; -moz-appearance:textfield; margin:0; padding:0; height:30px;">
+                                </div>
+                                <button type="button" class="btn-step-v2" style="width:30px; height:30px; border-radius:6px;" onclick="document.getElementById('pt_${eq}').stepUp()">+</button>
                             </div>
                         </div>`;
                     }
 
                     htmlTot += `
-                    <div style="background:var(--bg-general); border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--vcv-dorado);">
-                        <h4 style="color:var(--vcv-morado); margin-bottom:5px; font-weight:bold;">${eq}</h4>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos reales</span>
+                    <div class="vcv-card-v2" style="margin-bottom:10px; padding: 12px; border-left:4px solid var(--vcv-dorado);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                            <div style="display:flex; flex-direction:column;">
+                                <h4 style="color:var(--text-main); margin:0; font-weight:800; font-size:1.1rem; letter-spacing:-0.5px;">${eq}</h4>
+                                ${categoriaEq ? `<span style="color:var(--text-muted); font-size:0.7rem; font-weight:700; margin-top:2px; text-transform:uppercase; letter-spacing:0.5px;">${categoriaEq}</span>` : ''}
+                            </div>
+                            <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:4px 8px; border-radius:6px; border:1px solid rgba(16, 185, 129, 0.3); font-weight:bold; font-size:0.75rem; white-space:nowrap; margin-left:8px;">Llevan: ${ptsActuales} pts</span>
                         </div>
                         
                         ${miCajonHTML}
 
                         <details>
-                            <summary style="font-weight:bold; color:var(--vcv-morado); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
-                            <div style="margin-top:10px; background:var(--vcv-blanco); padding:10px 15px; border-radius:5px; border:1px solid #eee;">
+                            <summary style="font-weight:700; font-size:0.85rem; color:var(--text-muted); cursor:pointer; outline:none;">👀 Ver predicciones del resto</summary>
+                            <div style="margin-top:10px; background:var(--bg-card-alt); padding:10px 15px; border-radius:12px; border:1px solid var(--border-color);">
                                 ${listaOtros}
                             </div>
                         </details>
@@ -1335,7 +2367,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 htmlTot += `<div id="msgPrediccionesTotales" class="alert-box mt-3" style="padding:10px;"></div>`;
                 
                 if (!isClosed) {
-                    htmlTot += `<button class="btn btn-success btn-block mt-3" id="btnSaveTotales" style="font-weight:bold; font-size:1.1rem; padding:10px;">💾 Guardar Predicciones</button>`;
+                    htmlTot += `<button type="button" id="btnSaveTotales" style="width:100%; padding: 14px; border-radius: 12px; font-weight: 900; border: none; background: var(--secondary-color); color: #000; cursor:pointer; font-size:1.1rem; transition: all 0.2s; margin-top:10px; margin-bottom:10px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);">💾 Guardar Predicciones</button>`;
                 }
 
                 document.getElementById('contenedorPrediccionesTotales').innerHTML = htmlTot;
@@ -1370,7 +2402,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             iniciarRelojTotales();
         } else if (data.status === "ok") {
@@ -1381,7 +2413,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "Entrar al Fantasy"; 
+        btn.innerText = "Entrar"; 
         btn.disabled = false; 
     });
 });
@@ -1396,45 +2428,85 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 15 * 60 * 1000; 
+            const limite = 0; 
 
-                        if (isGuestMode) {
+            const applyStyle = (bg, color, text) => {
+                el.innerHTML = text;
+                el.style.backgroundColor = bg;
+                el.style.color = color;
+                el.style.border = '1px solid ' + color;
+                el.style.borderRadius = '8px';
+                el.style.padding = '6px 12px';
+                el.style.fontSize = '0.75rem';
+                el.style.fontWeight = '800';
+            };
+
+            const darkBg = 'var(--bg-input)';
+            const red = 'var(--danger)';
+            const blue = '#3498db';
+            const yellow = 'var(--secondary-color)';
+            const green = 'var(--success)';
+            const gray = 'var(--text-muted)';
+
+            if (isGuestMode) {
                 if (diff <= 0 && diff > -14400000) {
-                    el.innerHTML = "⏱️ Partido en curso";
-                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
+                    applyStyle('rgba(231,76,60,0.1)', red, " Partido en curso");
                 } else if (diff <= -14400000) {
-                    el.innerHTML = "🏁 Partido Finalizado";
-                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
+                    applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let d = Math.floor(diff / (1000 * 60 * 60 * 24));
                     let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     let s = Math.floor((diff % (1000 * 60)) / 1000);
-                    el.innerHTML = `⏳ Empieza en: ${d}d ${h}h ${m}m ${s}s`;
-                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                    let timeStr = "";
+                    if (d > 0) timeStr = `${d}d ${h}h ${m}m ${s}s`;
+                    else if (h > 0) timeStr = `${h}h ${m}m ${s}s`;
+                    else if (m > 0) timeStr = `${m}m ${s}s`;
+                    else timeStr = `${s}s`;
+                    applyStyle('rgba(52,152,219,0.1)', blue, ` Empieza en: ${timeStr}`);
                 }
             } else {
-                if (diff <= limite && diff > -14400000) { 
-                    el.innerHTML = "🔒 CERRADO (Empieza en menos de 15 min)";
-                    el.style.backgroundColor = "#fde8e8"; el.style.color = "var(--vcv-rojo)";
-                    if(eqId) {
-                        const divInputs = document.getElementById(`inputs_eq_${eqId}`);
-                        if(divInputs) divInputs.querySelectorAll('input, select').forEach(i => i.disabled = true);
+                if (diff <= limite && diff > -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
                     }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
+                    applyStyle('rgba(231,76,60,0.1)', red, " PREDICCIONES CERRADAS");
                 } else if (diff <= -14400000) {
-                    el.innerHTML = "🏁 Partido en curso o Finalizado";
-                    el.style.backgroundColor = "#e9ecef"; el.style.color = "#495057";
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
+                    applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
-                    let diffToClose = diff - limite; 
-                    let d = Math.floor(diffToClose / (1000 * 60 * 60 * 24));
-                    let h = Math.floor((diffToClose % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    let m = Math.floor((diffToClose % (1000 * 60 * 60)) / (1000 * 60));
-                    let s = Math.floor((diffToClose % (1000 * 60)) / 1000);
-                    el.innerHTML = `🔒 Se cierra en: ${d}d ${h}h ${m}m ${s}s`;
-                    el.style.backgroundColor = "#e3f2fd"; el.style.color = "#1565c0";
+                    let diffLimit = diff - limite;
+                    let d = Math.floor(diffLimit / (1000 * 60 * 60 * 24));
+                    let h = Math.floor((diffLimit % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((diffLimit % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((diffLimit % (1000 * 60)) / 1000);
+                    let timeStr = "";
+                    if (d > 0) timeStr = `${d}d ${h}h ${m}m ${s}s`;
+                    else if (h > 0) timeStr = `${h}h ${m}m ${s}s`;
+                    else if (m > 0) timeStr = `${m}m ${s}s`;
+                    else timeStr = `${s}s`;
+                    
+                    if (d > 0 || h > 0) {
+                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Faltan: ${timeStr}`);
+                    } else {
+                        applyStyle('rgba(231,76,60,0.1)', red, ` Faltan: ${timeStr}`);
+                    }
                 }
             }
-        
         });
     }, 1000);
 }
@@ -1448,15 +2520,15 @@ function iniciarRelojTotales() {
         const now = new Date().getTime();
         const diff = deadline - now;
         if(diff <= 0) {
-            el.innerHTML = "🔒 PLAZO CERRADO. Las predicciones son definitivas.";
+            el.innerHTML = "CERRADO";
             el.style.color = "var(--vcv-rojo)";
-            el.style.backgroundColor = "#fde8e8";
+            el.style.backgroundColor = "transparent";
         } else {
             let d = Math.floor(diff / (1000 * 60 * 60 * 24));
             let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             let s = Math.floor((diff % (1000 * 60)) / 1000);
-            el.innerHTML = `⏳ El plazo de predicciones finales cierra en: ${d}d ${h}h ${m}m ${s}s`;
+            el.innerHTML = `⏳ Cierra en: ${d}d ${h}h ${m}m ${s}s`;
         }
     }, 1000);
 }
@@ -1472,6 +2544,72 @@ function cargarDatosAntiguos() {
                 setVal(`e${idPart}_sets`, preds[idPart].sets);
                 setVal(`e${idPart}_puntos`, preds[idPart].puntos);
                 setVal(`e${idPart}_signo`, preds[idPart].signo);
+                
+                // --- V2 UI Sync ---
+                let isFilled = false;
+                if (preds[idPart].sets) {
+                    const btn = document.querySelector(`button[onclick*="seleccionarSetV2(this, '${preds[idPart].sets}', '${idPart}')"]`);
+                    if (btn) btn.classList.add('selected');
+                    isFilled = true;
+                }
+                if (preds[idPart].puntos !== undefined) {
+                    const span = document.getElementById(`val-v2-${idPart}`);
+                    if (span) span.innerText = preds[idPart].puntos;
+                    // If it's 0, we can also force the tied state just in case
+                    if (parseInt(preds[idPart].puntos) === 0) {
+                        const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);
+                        const btnMinus = document.getElementById(`signo-minus-v2-${idPart}`);
+                        const btnStepMinus = document.getElementById(`btn-step-minus-${idPart}`);
+                        if(btnPlus) { btnPlus.classList.add('tied-btn'); btnPlus.disabled = true; }
+                        if(btnMinus) { btnMinus.classList.add('tied-btn'); btnMinus.disabled = true; }
+                        if(btnStepMinus) {
+                            btnStepMinus.disabled = true;
+                            btnStepMinus.style.background = 'var(--secondary-color)';
+                            btnStepMinus.style.color = '#000';
+                            btnStepMinus.style.cursor = 'not-allowed';
+                        }
+                    }
+                }
+                if (preds[idPart].signo) {
+                    const signoVal = preds[idPart].signo;
+                    if (signoVal === "A favor") {
+                        const btn = document.getElementById(`signo-plus-v2-${idPart}`);
+                        if (btn) btn.classList.add('selected');
+                    } else if (signoVal === "En contra") {
+                        const btn = document.getElementById(`signo-minus-v2-${idPart}`);
+                        if (btn) btn.classList.add('selected');
+                    } else if (signoVal === "Empate") {
+                        const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);
+                        const btnMinus = document.getElementById(`signo-minus-v2-${idPart}`);
+                        if(btnPlus) { btnPlus.classList.add('tied-btn'); btnPlus.disabled = true; }
+                        if(btnMinus) { btnMinus.classList.add('tied-btn'); btnMinus.disabled = true; }
+                    }
+                }
+                
+                if (isFilled) {
+                    const card = document.getElementById('card-v2-' + idPart);
+                    const btn = document.getElementById('btn-save-' + idPart);
+                    const summary = document.getElementById('summary-v2-' + idPart);
+                    const inputs = document.getElementById('inputs_eq_' + idPart);
+                    if(card && btn && summary && inputs) {
+                        const s = preds[idPart].sets;
+                        const p = preds[idPart].puntos;
+                        const sig = preds[idPart].signo;
+                        
+                    const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
+                    let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
+                    if(p == 0) signText = "Empate";
+                    
+
+                        card.classList.add('collapsed');
+                        inputs.style.display = 'none';
+                        summary.style.display = 'block';
+                        btn.innerText = 'Modificar Predicción';
+                        btn.style.background = 'transparent';
+                        btn.style.color = 'var(--text-muted)';
+                        btn.style.border = '1px solid var(--border-color)';
+                    }
+                }
             }
         }
     });
@@ -1485,8 +2623,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
 
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
-    let validacionFallida = false;
-
+    
     equiposTotalesInfo.forEach(eq => {
         const elSet = document.getElementById(`e${eq.id_partido}_sets`);
         if(elSet && !elSet.disabled) {
@@ -1494,21 +2631,15 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
             let vPuntos = getVal(`e${eq.id_partido}_puntos`);
             let vSigno = getVal(`e${eq.id_partido}_signo`);
 
-            let numRellenos = (vSet !== "" ? 1 : 0) + (vPuntos !== "" ? 1 : 0) + (vSigno !== "" ? 1 : 0);
-            if (numRellenos > 0 && numRellenos < 3) {
-                validacionFallida = true;
+            // ONLY send this prediction if the user has actually made one (or is modifying an existing one).
+            // This prevents overwriting valid backend predictions with empty ones.
+            if (vSet !== "") {
+                prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
             }
-
-            prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
         }
     });
 
-    if (validacionFallida) {
-        msgBox.className = "alert-box alert-danger"; 
-        msgBox.innerText = "❌ Si predices un partido, debes rellenar sus 3 campos (Sets, Puntos y Signo). Puedes dejar partidos enteros en blanco si no quieres jugarlos hoy."; 
-        msgBox.style.display = "block";
-        return; 
-    }
+    
 
     btnSubmit.disabled = true; 
     btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
@@ -1850,99 +2981,406 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 
     
     
-    <!-- FAB MENU NAV (Navegación Rápida) FUERA DEL APPSECTION PARA QUE POSITION FIXED FUNCIONE BIEN -->
-    <div id="fab-menu" style="position: fixed; bottom: 90px; right: 25px; z-index: 9999; text-align: right; display: none;">
-        <div id="fab-links" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border: 2px solid var(--vcv-dorado); text-align: left; backdrop-filter: blur(5px);">
-            <a id="fab-cartelera" href="#carteleraSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏐 Cartelera de Partidos</a>
-            <a id="fab-ranking" href="#clasificacionesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🏆 Ranking</a>
-            <a id="fab-enlaces" href="#enlacesRfevbSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">🔗 Enlaces Rfevb</a>
-            <a id="fab-historial" href="#historialSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">✅ Mis Predicciones</a>
-            <a id="fab-calendario" href="#calendarioSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none; border-bottom: 1px solid #ddd;">📅 Próximos encuentros</a>
-            <a id="fab-totales" href="#prediccionesTotalesSection" onclick="toggleFab()" style="color: var(--vcv-morado); font-weight: bold; font-size: 1.1rem; text-decoration: none; padding: 8px 10px; display: none;">🔮 Top Secret</a>
-        </div>
-        <button id="fab-btn" onclick="toggleFab()" style="background: var(--vcv-dorado); color: var(--vcv-morado); border: 2px solid var(--vcv-morado); border-radius: 50%; width: 55px; height: 55px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: auto; transition: transform 0.2s;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </button>
-    </div>
     
-    <script>
-        function toggleFab() {
-            var links = document.getElementById('fab-links');
-            var btn = document.getElementById('fab-btn');
-            if (links.style.display === 'none' || links.style.display === '') {
-                links.style.display = 'flex';
-                btn.style.transform = 'rotate(45deg)';
-            } else {
-                links.style.display = 'none';
-                btn.style.transform = 'rotate(0deg)';
-            }
-        }
-        
-        
-        // Cierra el menú de la lupa al hacer click fuera
-        document.addEventListener('click', function(event) {
-            var fabMenu = document.getElementById('fab-menu');
-            var links = document.getElementById('fab-links');
-            var btn = document.getElementById('fab-btn');
-            
-            if (fabMenu && links && btn) {
-                var isClickInside = fabMenu.contains(event.target);
-                if (!isClickInside && links.style.display === 'flex') {
-                    links.style.display = 'none';
-                    btn.style.transform = 'rotate(0deg)';
+
+
+
+
+<script>
+    // --- V2 INTERACTIVE LOGIC ---
+    document.addEventListener("DOMContentLoaded", () => {
+        if(window.lucide) lucide.createIcons();
+    });
+
+    function seleccionarSetV2(btn, val, matchId) {
+      const hiddenInput = document.getElementById('e' + matchId + '_sets');
+      if (hiddenInput) {
+          hiddenInput.value = val;
+      }
+      const container = btn.parentElement;
+      container.querySelectorAll('.set-option-btn-v2').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+    
+    
+    function sincronizarPuntosV2(matchId) {
+      const hiddenInput = document.getElementById('e' + matchId + '_puntos');
+      const valInput = document.getElementById('val-v2-' + matchId);
+      if (hiddenInput && valInput) {
+          let current = parseInt(valInput.value);
+          if (isNaN(current) || current < 0) {
+              current = 0;
+          }
+          hiddenInput.value = current;
+          actualizarEstadoEmpate(matchId, current);
+      }
+    }
+
+    function actualizarEstadoEmpate(matchId, next) {
+      const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
+      const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
+      const signInput = document.getElementById('e' + matchId + '_signo');
+      const minusStep = document.getElementById('btn-step-minus-' + matchId);
+      
+      if (next === 0) {
+          if (minusStep) {
+              minusStep.disabled = true;
+              minusStep.style.background = 'var(--secondary-color)';
+              minusStep.style.color = '#000';
+              minusStep.style.opacity = '1';
+              minusStep.style.cursor = 'not-allowed';
+          }
+          if(plusBtn) {
+              plusBtn.classList.add('tied-btn');
+              plusBtn.disabled = true;
+              plusBtn.style.pointerEvents = 'none';
+          }
+          if(minusBtn) {
+              minusBtn.classList.add('tied-btn');
+              minusBtn.disabled = true;
+              minusBtn.style.pointerEvents = 'none';
+          }
+          if(signInput) signInput.value = 'Empate';
+      } else {
+          if (minusStep) {
+              minusStep.disabled = false;
+              minusStep.style.background = '';
+              minusStep.style.color = '';
+              minusStep.style.opacity = '1';
+              minusStep.style.cursor = 'pointer';
+          }
+          if(plusBtn) {
+              plusBtn.classList.remove('tied-btn');
+              plusBtn.disabled = false;
+              plusBtn.style.pointerEvents = 'auto';
+          }
+          if(minusBtn) {
+              minusBtn.classList.remove('tied-btn');
+              minusBtn.disabled = false;
+              minusBtn.style.pointerEvents = 'auto';
+          }
+          if(signInput && signInput.value === 'Empate') {
+              signInput.value = '';
+              if(plusBtn) plusBtn.classList.remove('selected');
+              if(minusBtn) minusBtn.classList.remove('selected');
+          }
+      }
+    }
+
+    function cambiarPuntosV2(matchId, delta) {
+      const hiddenInput = document.getElementById('e' + matchId + '_puntos');
+      const valSpan = document.getElementById('val-v2-' + matchId);
+      const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
+      const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
+      const signInput = document.getElementById('e' + matchId + '_signo');
+
+      if (hiddenInput && valSpan) {
+          let current = parseInt(hiddenInput.value);
+          if (isNaN(current)) current = 14; 
+          let next = current + delta;
+          if (next < 0) next = 0; 
+          
+          hiddenInput.value = next;
+          if (valSpan.tagName === "INPUT") valSpan.value = next; else valSpan.innerText = next;
+
+          actualizarEstadoEmpate(matchId, next);
+      }
+    }
+
+    
+    function cambiarSignoV2(matchId, btn, isLocal) {
+      const hiddenInput = document.getElementById('e' + matchId + '_signo');
+      if (hiddenInput) {
+          hiddenInput.value = isLocal ? 'A favor' : 'En contra';
+      }
+      const plusBtn = document.getElementById('signo-plus-v2-' + matchId);
+      const minusBtn = document.getElementById('signo-minus-v2-' + matchId);
+      if(plusBtn) plusBtn.classList.remove('selected');
+      if(minusBtn) minusBtn.classList.remove('selected');
+      
+      btn.classList.add('selected');
+    }
+    
+    
+    
+    // Observer for Bottom Nav
+    document.addEventListener("DOMContentLoaded", () => {
+        const appSec = document.getElementById('appSection');
+        const navWrap = document.getElementById('bottomNavWrapperV2');
+        if(appSec && navWrap) {
+            const observer = new MutationObserver(() => {
+                if(appSec.style.display !== 'none') {
+                    navWrap.style.display = 'block';
+                } else {
+                    navWrap.style.display = 'none';
                 }
-            }
-        });
-        
-        function checkFabVisibility() {
-            var appSec = document.getElementById('appSection');
-            
-            // NO MOSTRAR EN MODO INVITADO
-            // currentUser usa 'let', así que no está en 'window'. Lo comprobamos de forma segura.
-            var isGuest = true;
-            try {
-                if (typeof currentUser !== 'undefined' && currentUser && currentUser !== "INVITADO") {
-                    isGuest = false;
-                }
-            } catch(e) {}
-            
-            if(appSec && appSec.style.display !== 'none' && !isGuest) {
-                document.getElementById('fab-menu').style.display = 'block';
-                
-                // Show/hide specific links based on section visibility
-                var cartelera = document.getElementById('carteleraSection');
-                var ranking = document.getElementById('clasificacionesSection');
-                var enlaces = document.getElementById('enlacesRfevbSection');
-                var historial = document.getElementById('historialSection');
-                var calendario = document.getElementById('calendarioSection');
-                var totales = document.getElementById('prediccionesTotalesSection');
-                
-                document.getElementById('fab-cartelera').style.display = (cartelera && cartelera.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-ranking').style.display = (ranking && ranking.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-enlaces').style.display = (enlaces && enlaces.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-historial').style.display = (historial && historial.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-calendario').style.display = (calendario && calendario.style.display !== 'none') ? 'block' : 'none';
-                document.getElementById('fab-totales').style.display = (totales && totales.style.display !== 'none') ? 'block' : 'none';
-                
-            } else {
-                document.getElementById('fab-menu').style.display = 'none';
-                document.getElementById('fab-links').style.display = 'none';
-            }
-        }
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                checkFabVisibility();
             });
+            observer.observe(appSec, { attributes: true, attributeFilter: ['style'] });
+        }
+    });
+
+    function switchTabV2(sectionId, btn) {
+        // Hide all sections in appSection
+        const sections = ['carteleraSection', 'clasificacionesSection', 'historialSection', 'calendarioSection', 'enlacesRfevbSection', 'prediccionesTotalesSection'];
+        sections.forEach(s => {
+            const el = document.getElementById(s);
+            if (el) el.classList.remove('active-tab');
         });
         
-        var appSec = document.getElementById('appSection');
-        if(appSec) {
-            observer.observe(appSec, { attributes: true, subtree: true });
+        // Show target section
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active-tab');
+        window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 10);
+        
+        // If historial, also show prediccionesTotalesSection right below it (if they were separate)
+        if (sectionId === 'carteleraSection') {
+            const extra = document.getElementById('prediccionesTotalesSection');
+            if (extra) extra.classList.add('active-tab');
         }
-        setInterval(checkFabVisibility, 1000);
-    </script>
+
+        // Update active button state
+        document.querySelectorAll('.nav-item-v2').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        
+        window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 10);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Initialize first tab as active
+        const firstSec = document.getElementById('carteleraSection');
+        if (firstSec) firstSec.classList.add('active-tab');
+        const tsSec = document.getElementById('prediccionesTotalesSection');
+        if (tsSec) tsSec.classList.add('active-tab');
+    });
+
+    function handleSaveOrModifyV2(idPart) {
+        const card = document.getElementById('card-v2-' + idPart);
+        const btn = document.getElementById('btn-save-' + idPart);
+        const summary = document.getElementById('summary-v2-' + idPart);
+        const inputs = document.getElementById('inputs_eq_' + idPart);
+        const isCollapsed = card.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            card.classList.remove('collapsed');
+            summary.style.display = 'none';
+            inputs.style.display = 'block';
+            btn.innerText = 'Guardar Predicción';
+            btn.style.background = 'var(--secondary-color)';
+            btn.style.color = '#000';
+            btn.style.border = 'none';
+        } else {
+            const s = document.getElementById('e' + idPart + '_sets').value;
+            const p = document.getElementById('e' + idPart + '_puntos').value;
+            const sig = document.getElementById('e' + idPart + '_signo').value;
+
+            if (!s || !p || !sig) {
+                alert('Faltan campos por rellenar en este partido.');
+                return;
+            }
+            if(window.isGuestMode) { alert("Modo invitado. No puedes guardar."); return; }
+            if(!currentUser) { alert("Tu sesión ha expirado."); window.location.reload(); return; }
+
+            // OPTIMISTIC UI UPDATE
+            const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
+            let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
+            if(p == 0) signText = "Empate";
+            
+            let localAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[0].innerText : '';
+            let visitAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[1].innerText : '';
+            let winnerName = "";
+            if (sig.toLowerCase().includes('a favor')) winnerName = localAb;
+            else if (sig.toLowerCase().includes('en contra')) winnerName = visitAb;
+            let formStr = winnerName ? `(+${p} pts para ${winnerName})` : `(${p} pts)`;
+            if(p==0) formStr = `(0 pts)`;
+            let formattedS = s.replace('-', ' - ');
+            document.getElementById('summary-text-' + idPart).innerHTML = `<div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); text-align: left;"><i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i><span>Guardada: <strong style="color: var(--text-main); font-weight:800;">${localAb} ${formattedS} ${visitAb} ${formStr}</strong></span></div>`;
+            if(window.lucide) setTimeout(() => window.lucide.createIcons(), 10);
+
+            card.classList.add('collapsed');
+            inputs.style.display = 'none';
+            summary.style.display = 'block';
+            
+            const oldBtnHtml = btn.innerHTML;
+            btn.innerHTML = 'Guardando... <span class="spinner-border spinner-border-sm" style="width:12px;height:12px;border-width:2px;margin-left:5px;"></span>';
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-muted)';
+            btn.style.border = '1px solid var(--border-color)';
+            btn.disabled = true;
+
+            let singlePred = {};
+            singlePred[idPart] = { sets: s, puntos: p, signo: sig };
+
+            fetchSeguro(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, predicciones: singlePred }),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            }).then(res => res.json()).then(data => {
+                if(data.status === "success") {
+                    btn.disabled = false;
+                    btn.innerText = 'Modificar Predicción';
+                } else {
+                    alert('Error al guardar: ' + data.message);
+                    card.classList.remove('collapsed');
+                    summary.style.display = 'none';
+                    inputs.style.display = 'block';
+                    btn.innerHTML = oldBtnHtml;
+                    btn.style.background = 'var(--secondary-color)';
+                    btn.style.color = '#000';
+                    btn.style.border = 'none';
+                    btn.disabled = false;
+                }
+            }).catch(err => {
+                alert('Error de conexión.');
+                card.classList.remove('collapsed');
+                summary.style.display = 'none';
+                inputs.style.display = 'block';
+                btn.innerHTML = oldBtnHtml;
+                btn.style.background = 'var(--secondary-color)';
+                btn.style.color = '#000';
+                btn.style.border = 'none';
+                btn.disabled = false;
+            });
+        }
+    }
+    // Add FAQ scroll behavior directly
+    (function() {
+        const masterFaq = document.getElementById('masterFaq');
+        if(masterFaq) {
+            masterFaq.addEventListener('toggle', function(e) {
+                if(this.open) {
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 150);
+                }
+            });
+        }
+    })();
+
+    // --- CATEGORY FILTER LOGIC ---
+    window.updateCategoryFilter = function() {
+        const contenedor = document.getElementById('contenedorPartidos');
+        const wrapper = document.getElementById('categoryFilterWrapper');
+        if(!contenedor || !wrapper) return;
+            // Find all match cards (v2 and guest)
+            const cards = contenedor.querySelectorAll('.vcv-card-v2, .card.mb-3');
+            let categories = new Set();
+            let totalCount = 0;
+            
+            cards.forEach(card => {
+                const catAttr = card.getAttribute('data-category');
+                if(catAttr) {
+                    let cat = catAttr.trim().toUpperCase();
+                    card._normalizedCat = cat;
+                    categories.add(cat);
+                    totalCount++;
+                }
+            });
+
+            if(categories.size <= 1) {
+                wrapper.innerHTML = ''; // No need for filter if 0 or 1 category
+                return;
+            }
+
+            // Build buttons
+            let html = `<button type="button" class="cat-filter-btn active" data-filter="all">Todos (${totalCount})</button>`;
+            
+            Array.from(categories).sort().forEach(cat => {
+                // Count how many matches in this category
+                let count = Array.from(cards).filter(c => c._normalizedCat === cat).length;
+                
+                // Format category name nicely (e.g. "Superliga Masc 2")
+                // Fallback title case for unknown categories
+                let displayName = cat.replace(/_/g, ' ').toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                
+                if(cat === "SM2") displayName = "Superliga Masc. 2";
+                else if(cat === "1DIV_MASC") displayName = "1ª Masc";
+                else if(cat === "1DIV_FEM") displayName = "1ª Fem";
+                else if(cat === "2DIV_MASC") displayName = "2ª Masc";
+                else if(cat === "2DIV_FEM") displayName = "2ª Fem";
+                else if(cat === "JUNIOR_MASC") displayName = "Junior Masc";
+                else if(cat === "JUNIOR_FEM") displayName = "Junior Fem";
+                else if(cat === "JUV_MASC") displayName = "Juv Masc";
+                else if(cat === "JUV_FEM") displayName = "Juv Fem";
+                else if(cat === "CAD_MASC") displayName = "Cad Masc";
+                else if(cat === "CAD_FEM") displayName = "Cad Fem";
+                
+                html += `<button type="button" class="cat-filter-btn" data-filter="${cat}">${displayName} (${count})</button>`;
+            });
+
+            wrapper.innerHTML = html;
+
+            // Add click listeners
+            const btns = wrapper.querySelectorAll('.cat-filter-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active class
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Filter cards
+                    cards.forEach(card => {
+                        if(filter === 'all' || card._normalizedCat === filter) {
+                            card.style.display = ''; // Reset display
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        
+
+</script>
 
 
 
+<!-- MODAL NOTIFICACIONES -->
+<div id="notificacionesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+    <div style="background:var(--bg-card); width:90%; max-width:400px; border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.5); position:relative; border: 1px solid var(--border-color);">
+        <button onclick="document.getElementById('notificacionesModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
+        
+        <h3 style="margin-top:0; margin-bottom:20px; color:var(--text-main); font-weight:800; font-family:'Space Grotesk', sans-serif; display:flex; align-items:center; gap:8px;">
+            <i data-lucide="bell" style="width:20px; height:20px;"></i> Notificaciones
+        </h3>
+        
+        <div style="background:var(--bg-input); border:1px dashed var(--border-color); border-radius:12px; padding:30px 20px; text-align:center; color:var(--text-muted);">
+            <i data-lucide="hammer" style="width:36px; height:36px; margin-bottom:12px; color:var(--primary-color);"></i>
+            <p style="margin:0; font-size:0.95rem; line-height:1.5;"><strong>¡En construcción!</strong><br><br>Estoy trabajando para implementar las notificaciones reales más adelante. :)</p>
+        </div>
+        
+        <button onclick="document.getElementById('notificacionesModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
+    </div>
+</div>
+
+<!-- MODAL GUIA -->
+<div id="guiaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+    <div style="background:var(--bg-card); width:90%; max-width:400px; border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.5); position:relative; border: 1px solid var(--border-color);">
+        <button onclick="document.getElementById('guiaModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
+        <h3 style="margin-top:0; margin-bottom:15px; color:var(--text-main); font-weight:800; font-family:'Space Grotesk', sans-serif; display:flex; align-items:center; gap:8px;">
+            <i data-lucide="info" style="width:20px; height:20px;"></i> Sistema de Puntos
+        </h3>
+        <div style="background:var(--bg-input); border:1px dashed var(--border-color); border-radius:12px; padding:20px 15px; font-size: 0.9rem; color:var(--text-muted); max-height:60vh; overflow-y:auto; line-height:1.5;">
+            
+            <p style="margin-bottom: 10px;">La <b>diferencia de puntos</b> se calcula como la suma de las diferencias de puntos de todos y cada uno de los sets de un partido.</p>
+            <div style="background: var(--bg-card-alt); padding: 10px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 12px; font-size: 0.85rem;">
+                <b>Ejemplo real:</b> Si el VCV juega en casa y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
+                • Set 1: VCV gana de +5<br>
+                • Set 2: VCV pierde de -2<br>
+                • Set 3: VCV gana de +10<br>
+                • Set 4: VCV gana de +3<br>
+                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica y seleccionar el signo a favor del <b>VCV (LOCAL)</b>.
+            </div>
+            <p style="margin-bottom: 0;"><b>¿Qué gano con esto?</b> Acertar la diferencia exacta te suma <span style="color:var(--secondary-color); font-weight:bold;">+<span id="puntosExactosModal">...</span> pts</span> de golpe. Si fallas, el sistema te otorga puntos <b>proporcionales</b>: por cada punto de error que te alejes del resultado real ganarás un poco menos, hasta llegar al límite de <b><span id="puntosMargenModal">...</span> puntos de error</b>, donde ya no ganarías bonus.
+            <div id="ejemploProporcionalModal" style="background: var(--bg-card); padding: 10px; border-radius: 8px; margin-top: 12px; font-size: 0.8rem; border: 1px dashed var(--border-color); color: var(--text-muted);">
+                <!-- Dynamic Content injected via JS -->
+            </div></p>
+        </div>
+        <button onclick="document.getElementById('guiaModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
+    </div>
+</div>
 </body>
+
 </html>
