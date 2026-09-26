@@ -101,7 +101,7 @@
     .alert-warning { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
     .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
 
-    #loginSection { display: flex; align-items: center; justify-content: center; padding: 40px 20px; flex-direction: column; }
+    padding-top: calc(40px + env(safe-area-inset-top, 0px)); padding-bottom: 40px; padding-left: 20px; padding-right: 20px; flex-direction: column; }
     .login-card { background: var(--vcv-blanco); padding: 40px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; margin-bottom: 40px; border-top: 5px solid var(--vcv-dorado); }
     
     .faq-container { width: 100%; max-width: 800px; text-align: left; background: var(--vcv-blanco); padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; border-top: 5px solid var(--vcv-morado); }
@@ -272,7 +272,7 @@
     .vcv-faq-master summary::-webkit-details-marker { display: none; }
     .vcv-faq-master summary::after {
       content: '+';
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--secondary-color);
       transition: transform 0.2s ease;
     }
@@ -418,14 +418,14 @@
     
     
     #appSection {
-        padding-top: 76px; /* space for header */
+        padding-top: calc(86px + env(safe-area-inset-top, 0px)); /* space for header */
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 20px 20px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
-    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
     .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
     .header-title-row { display: flex; align-items: center; gap: 6px; }
     .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
@@ -470,11 +470,7 @@
     .text-center.mt-4.mb-3 { display: none !important; }
 
     /* LOGIN STYLES */
-    #loginSection {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+    padding-top: calc(40px + env(safe-area-inset-top, 0px)); padding-bottom: 40px; padding-left: 20px; padding-right: 20px;
       flex-direction: column;
       background: var(--bg-surface);
       min-height: 100vh;
@@ -488,7 +484,7 @@
       max-width: 360px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       position: relative;
-      margin-bottom: 40px;
+      margin-bottom: 40px; margin-top: calc(20px + env(safe-area-inset-top, 0px));
     }
     .club-crest-v2 {
       background: var(--primary-color);
@@ -742,7 +738,7 @@
     .vcv-faq-master summary::-webkit-details-marker { display: none; }
     .vcv-faq-master summary::after {
       content: '+';
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--secondary-color);
       transition: transform 0.2s ease;
     }
@@ -951,14 +947,14 @@
         border: 2px solid var(--bg-card);
     }
     #appSection {
-        padding-top: 76px; /* space for header */
+        padding-top: calc(86px + env(safe-area-inset-top, 0px)); /* space for header */
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding:  14px 18px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 20px 20px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
-    .header-logo-circle { width:  44px; height:  44px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
     .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
     .header-title-row { display: flex; align-items: center; gap: 6px; }
     .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size:  1.2rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
@@ -1051,7 +1047,7 @@
     </div>
 
     <div class="faq-container" style="width:100%; max-width:360px; margin:0 auto; padding:0; background:transparent; border:none; box-shadow:none;">
-    <details class="vcv-faq-master" id="masterFaq">
+    <details class="vcv-faq-master" id="masterFaq" style="scroll-margin-top: calc(20px + env(safe-area-inset-top, 0px));">
         <summary>Preguntas Frecuentes y Gestión</summary>
         <div class="faq-content-v2">
             
@@ -1083,6 +1079,11 @@
                     </ol>
                 </div>
             </div>
+            <div class="faq-inner-item">
+                <div class="faq-inner-title">¿Olvidaste tu usuario o contraseña?</div>
+                <div>Si no recuerdas tus credenciales de acceso, no te preocupes. Escríbenos a nuestro correo de soporte técnico y te ayudaremos a recuperarlas: <br><a href="mailto:adminfantasyvcv@gmail.com" class="faq-email">adminfantasyvcv@gmail.com</a></div>
+            </div>
+
 
             
 
@@ -1790,6 +1791,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
             document.getElementById('loginSection').style.display = "none";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             if(typeof iniciarRelojes === 'function') iniciarRelojes();
         } else {
             msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error cargando modo invitado."; msgBox.style.display = "block";
@@ -1965,8 +1967,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                         let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
                         let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
 
-                        let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
-                        let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
+                        let localLogo = `<span style="font-weight:900; font-size: 1.25rem;">${localAbrev}</span>`;
+                        let visitLogo = `<span style="font-weight:900; font-size: 1.25rem;">${visitAbrev}</span>`;
                         
                         let infoPabellon = eq.pabellon ? `<div style="margin-top:2px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline; vertical-align: middle; margin-top:-2px;"></i> ${eq.pabellon}</div>` : '';
 
@@ -2218,6 +2220,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
 
             document.getElementById('loginSection').style.display = "none";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('appSection').style.display = "block";
             
             document.getElementById('btnLogout').style.display = "block";
@@ -2901,6 +2904,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
         // Show target section
         const target = document.getElementById(sectionId);
         if (target) target.classList.add('active-tab');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         
         // If historial, also show prediccionesTotalesSection right below it (if they were separate)
         if (sectionId === 'carteleraSection') {
