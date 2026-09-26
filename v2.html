@@ -1318,9 +1318,21 @@
         </div>
     </div></section>
     <section id="prediccionesTotalesSection">
-        <h2>🔮 Top Secret</h2>
-<p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predicción de los puntos totales acumulados a final de temporada de cada equipo.</p>
-        <div id="contenedorPrediccionesTotales" class="form-container" style="max-width: 700px; margin: 0 auto; background: var(--vcv-blanco); padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: left; border-top: 5px solid var(--vcv-dorado);">
+        <div style="padding: 14px; border-radius: 16px; background: linear-gradient(to right, rgba(93, 23, 137, 0.4), var(--bg-card), var(--bg-card)); border: 1px solid var(--border-color); position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-top: -12px; margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; justify-content: flex-start; font-size: 0.75rem; margin-bottom: 12px;">
+            <span style="display: inline-flex; align-items: center; font-weight: bold; padding: 3px 10px; border-radius: 9999px; background: rgba(212, 175, 55, 0.15); color: var(--vcv-dorado); border: 1px solid rgba(212, 175, 55, 0.3);">
+              <span style="width: 6px; height: 6px; border-radius: 9999px; background: var(--vcv-dorado); margin-right: 6px; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span> Misión Final
+            </span>
+          </div>
+          
+          <div>
+            <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-main); margin:0; letter-spacing:-0.5px; line-height:1.1; text-align:left;">🔮 Top Secret</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 0 0; text-align:left;">
+              Predicción de los <span style="color: var(--vcv-dorado); font-weight: 700;">puntos totales</span> acumulados a final de temporada.
+            </p>
+          </div>
+        </div>
+        <div id="contenedorPrediccionesTotales">
             <!-- Se rellenará automáticamente -->
         </div>
     </section>
@@ -2256,7 +2268,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
                 
                 let htmlTot = `
-                <div id="relojTotales" style="font-size:1.1rem; font-weight:bold; padding:10px; background:#e3f2fd; color:#1565c0; border-radius:8px; text-align:center; margin-bottom:20px;">
+                <div id="relojTotales" style="font-size:1rem; font-weight:bold; padding:12px; background:var(--bg-card-alt); color:var(--vcv-dorado); border:1px solid var(--border-color); border-radius:12px; text-align:center; margin-bottom:20px;">
                     Calculando tiempo...
                 </div>`;
                 
@@ -2269,7 +2281,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     porrasEq.forEach(porra => {
                         if (porra.usuario === usr) misPts = porra.puntos;
                         listaOtros += `
-                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
+                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color); color:var(--text-main);">
                             <span>👤 ${porra.nombre}</span>
                             <span style="font-weight:bold; color:var(--vcv-morado);">${porra.puntos} pts</span>
                         </div>`;
@@ -2281,14 +2293,14 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     if (isClosed) {
                         let textoMiPrediccion = misPts !== "" ? `${misPts} pts` : "No participaste";
                         miCajonHTML = `
-                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
-                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
+                        <div style="background:var(--bg-card-alt); padding:15px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:15px;">
+                            <label style="font-weight:bold; color:var(--text-muted); font-size:0.85rem; display:block; margin-bottom:6px;">Tu predicción final:</label>
                             <div style="font-size:1.2rem; font-weight:bold; color:var(--vcv-morado);">${textoMiPrediccion}</div>
                         </div>`;
                     } else {
                         miCajonHTML = `
-                        <div style="background:var(--vcv-blanco); padding:15px; border-radius:5px; border:1px solid #ddd; margin-bottom:15px;">
-                            <label style="font-weight:bold; color:#333;">Tu predicción final:</label>
+                        <div style="background:var(--bg-card-alt); padding:15px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:15px;">
+                            <label style="font-weight:bold; color:var(--text-muted); font-size:0.85rem; display:block; margin-bottom:6px;">Tu predicción final:</label>
                             <div style="display:flex; gap:10px;">
                                 <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
                             </div>
@@ -2296,17 +2308,17 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     }
 
                     htmlTot += `
-                    <div style="background:var(--bg-general); border-radius:8px; padding:20px; margin-bottom:20px; border-left:5px solid var(--vcv-dorado);">
+                    <div class="vcv-card-v2" style="margin-bottom:20px; border-left:4px solid var(--vcv-dorado);">
                         <h4 style="color:var(--vcv-morado); margin-bottom:5px; font-weight:bold;">${eq}</h4>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <span style="background:#d4edda; color:#155724; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:0.9rem;">Llevan: ${ptsActuales} puntos reales</span>
+                            <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:4px 10px; border-radius:8px; border:1px solid rgba(16, 185, 129, 0.3); font-weight:bold; font-size:0.85rem;">Llevan: ${ptsActuales} puntos reales</span>
                         </div>
                         
                         ${miCajonHTML}
 
                         <details>
                             <summary style="font-weight:bold; color:var(--vcv-morado); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
-                            <div style="margin-top:10px; background:var(--vcv-blanco); padding:10px 15px; border-radius:5px; border:1px solid #eee;">
+                            <div style="margin-top:10px; background:var(--bg-card-alt); padding:10px 15px; border-radius:12px; border:1px solid var(--border-color);">
                                 ${listaOtros}
                             </div>
                         </details>
