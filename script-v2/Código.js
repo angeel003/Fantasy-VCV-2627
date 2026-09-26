@@ -869,19 +869,6 @@ function doPost(e) {
             "predicciones": pMap
         })).setMimeType(ContentService.MimeType.JSON);
     }
-        var pData = getSafeData(sheetPorras);
-        var pMap = {};
-        for(var i=1; i<pData.length; i++) {
-            var pUser = pData[i][1];
-            var pIdPart = pData[i][2].toString().trim();
-            if(!pMap[pUser]) pMap[pUser] = {};
-            pMap[pUser][pIdPart] = { sets: parseSheetText(pData[i][3]), puntos: pData[i][4], signo: pData[i][5] };
-        }
-        return ContentService.createTextOutput(JSON.stringify({
-            "status": "success",
-            "predicciones": pMap[usuario] || {}
-        })).setMimeType(ContentService.MimeType.JSON);
-    }
 
     if (action === "save") {
         var pData = getSafeData(sheetPorras);
