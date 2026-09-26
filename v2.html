@@ -440,6 +440,13 @@
     .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
 
 #h2-user-badges img { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+
+    .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .category-filter-strip::-webkit-scrollbar { display: none; }
+    .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
+    .cat-filter-btn:hover { border-color: rgba(221, 185, 103, 0.5); }
+    .cat-filter-btn.active { background: var(--vcv-dorado); color: #000; border-color: var(--vcv-dorado); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
 </style>
 
 
@@ -977,6 +984,13 @@
     .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
 
 #h2-user-badges img { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+
+    .category-filter-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .category-filter-strip::-webkit-scrollbar { display: none; }
+    .cat-filter-btn { padding: 6px 14px; border-radius: 9999px; background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); font-size: 0.75rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
+    .cat-filter-btn:hover { border-color: rgba(221, 185, 103, 0.5); }
+    .cat-filter-btn.active { background: var(--vcv-dorado); color: #000; border-color: var(--vcv-dorado); font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
 </style>
 
 
@@ -1147,6 +1161,7 @@
                 
                 
                 <hr>
+                <div id="categoryFilterWrapper" class="category-filter-strip"></div>
                 <div id="contenedorPartidos"></div>
 
                 <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
@@ -3039,6 +3054,88 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             });
         }
     })();
+
+    // --- CATEGORY FILTER LOGIC ---
+    (function() {
+        const contenedor = document.getElementById('contenedorPartidos');
+        const wrapper = document.getElementById('categoryFilterWrapper');
+        if(!contenedor || !wrapper) return;
+
+        function updateCategoryFilter() {
+            // Find all match cards (v2 and guest)
+            const cards = contenedor.querySelectorAll('.vcv-card-v2, .card.mb-3');
+            let categories = new Set();
+            let totalCount = 0;
+            
+            cards.forEach(card => {
+                const cat = card.getAttribute('data-category');
+                if(cat) {
+                    categories.add(cat);
+                    totalCount++;
+                }
+            });
+
+            if(categories.size <= 1) {
+                wrapper.innerHTML = ''; // No need for filter if 0 or 1 category
+                return;
+            }
+
+            // Build buttons
+            let html = `<button class="cat-filter-btn active" data-filter="all">● Todos (${totalCount})</button>`;
+            
+            Array.from(categories).sort().forEach(cat => {
+                // Count how many matches in this category
+                let count = Array.from(cards).filter(c => c.getAttribute('data-category') === cat).length;
+                
+                // Format category name nicely (e.g. "Superliga Masc 2")
+                let displayName = cat;
+                if(cat === "SM2") displayName = "🏆 Superliga Masc 2";
+                else if(cat === "1DIV_MASC") displayName = "1ª Masc";
+                else if(cat === "1DIV_FEM") displayName = "1ª Fem";
+                else if(cat === "2DIV_MASC") displayName = "2ª Masc";
+                else if(cat === "2DIV_FEM") displayName = "2ª Fem";
+                else if(cat === "JUNIOR_MASC") displayName = "Junior Masc";
+                else if(cat === "JUNIOR_FEM") displayName = "Junior Fem";
+                else if(cat === "JUV_MASC") displayName = "Juv Masc";
+                else if(cat === "JUV_FEM") displayName = "Juv Fem";
+                else if(cat === "CAD_MASC") displayName = "Cad Masc";
+                else if(cat === "CAD_FEM") displayName = "Cad Fem";
+                
+                html += `<button class="cat-filter-btn" data-filter="${cat}">${displayName} (${count})</button>`;
+            });
+
+            wrapper.innerHTML = html;
+
+            // Add click listeners
+            const btns = wrapper.querySelectorAll('.cat-filter-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active class
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Filter cards
+                    cards.forEach(card => {
+                        if(filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = ''; // Reset display
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Observe DOM changes in contenedorPartidos
+        const observer = new MutationObserver((mutations) => {
+            updateCategoryFilter();
+        });
+        
+        observer.observe(contenedor, { childList: true, subtree: true });
+    })();
+
 </script>
 
 
