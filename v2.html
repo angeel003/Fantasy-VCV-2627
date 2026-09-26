@@ -407,6 +407,122 @@
     }
 
     /* V2 HEADER */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #appSection {
+        padding-top: 76px; /* space for header */
+    }
+
+    /* V2 TAILWIND-MIMIC HEADER CSS */
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: 12px 16px; z-index: 1000; }
+    .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
+    .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
+    .header-logo-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size: 1.125rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
+    .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
+    .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
+    .header-right-v2 { display: flex; align-items: center; gap: 8px; }
+    .header-user-chip { display: flex; align-items: center; gap: 6px; background: #221127; padding: 6px 10px; border-radius: 20px; border: 1px solid #3e1d45; }
+    .header-rank { font-size: 12px; color: #d4af37; font-weight: 700; }
+    .header-dot { width: 4px; height: 4px; border-radius: 50%; background: #71717a; }
+    .header-pts { font-size: 12px; font-weight: 600; color: #e4e4e7; }
+    .header-bell-btn { width: 36px; height: 36px; border-radius: 50%; background: #221127; border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+    .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
+
+</style>
+
+
+  <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --primary-color: #6a2c70;
+      --primary-hover: #7e3686;
+      --secondary-color: #d4af37;
+      --secondary-hover: #e5bf43;
+      --bg-surface: #140818;
+      --bg-card: #200f25;
+      --bg-card-alt: #2a1532;
+      --bg-input: #1a0b1e;
+      --border-color: #3b1d45;
+      --border-glow: rgba(212, 175, 55, 0.4);
+      --text-main: #f9f5fa;
+      --text-muted: #b7a4be;
+      --text-gold: #f3ce5e;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+    }
+    
+    body { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
+    #prediccionForm button[type="submit"] { display: none !important; }
+    footer { display: none !important; }
+    .text-center.mt-4.mb-3 { display: none !important; }
+
+    /* LOGIN STYLES */
+    #loginSection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      flex-direction: column;
+      background: var(--bg-surface);
+      min-height: 100vh;
+    }
+    .modal-card-v2 {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .club-crest-v2 {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-gold-v2 {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, #d4af37 100%);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 800;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .btn-outline-v2 {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* CARTELERA STYLES */
     .vcv-card-v2 {
       background: var(--bg-card);
       border-radius: 16px;
@@ -775,69 +891,85 @@
         z-index: 1000;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
-    
-    
-    
+    .header-brand-v2 h1 {
+        font-size: 1.25rem;
+        font-weight: 900;
+        margin: 0;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+    .header-user-v2 {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 2px;
+    }
+    .header-user-name {
+        font-weight: 700;
+        color: var(--text-main);
+    }
+    .header-user-handle {
+        font-family: monospace;
+        opacity: 0.8;
+    }
     .header-badges-v2 {
         display: flex;
         align-items: center;
         gap: 3px;
     }
-    
-    
-    
-    
+    .header-badges-v2 img {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+    }
+    .header-actions-v2 {
+        display: flex;
+        align-items: center;
+    }
+    .bell-btn-v2 {
+        background: none;
+        border: none;
+        color: var(--text-main);
+        position: relative;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bell-dot-v2 {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        border: 2px solid var(--bg-card);
+    }
     #appSection {
         padding-top: 76px; /* space for header */
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 {
-        position: fixed; top: 0; left: 0; width: 100%;
-        background: rgba(22, 10, 25, 0.95);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid #3e1d45;
-        padding: 12px 16px; z-index: 1000;
-    }
-    .header-container-v2 {
-        display: flex; justify-content: space-between; align-items: center;
-        max-width: 450px; margin: 0 auto;
-    }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: 12px 16px; z-index: 1000; }
+    .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
-    .header-logo-circle {
-        width: 40px; height: 40px; border-radius: 50%;
-        background: linear-gradient(to top right, #6a2c70, #d4af37);
-        padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        display: flex; align-items: center; justify-content: center;
-    }
-    .header-logo-inner {
-        width: 100%; height: 100%; background: #240f28; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; color: #d4af37;
-    }
+    .header-logo-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { width: 100%; height: 100%; background: #240f28; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d4af37; }
     .header-title-row { display: flex; align-items: center; gap: 6px; }
     .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size: 1.125rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
     .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
     .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
-    
     .header-right-v2 { display: flex; align-items: center; gap: 8px; }
-    .header-user-chip {
-        display: flex; align-items: center; gap: 6px; background: #221127;
-        padding: 6px 10px; border-radius: 20px; border: 1px solid #3e1d45;
-    }
+    .header-user-chip { display: flex; align-items: center; gap: 6px; background: #221127; padding: 6px 10px; border-radius: 20px; border: 1px solid #3e1d45; }
     .header-rank { font-size: 12px; color: #d4af37; font-weight: 700; }
     .header-dot { width: 4px; height: 4px; border-radius: 50%; background: #71717a; }
     .header-pts { font-size: 12px; font-weight: 600; color: #e4e4e7; }
-    
-    .header-bell-btn {
-        width: 36px; height: 36px; border-radius: 50%; background: #221127;
-        border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center;
-        position: relative; cursor: pointer;
-    }
-    .header-bell-dot {
-        position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
-        border-radius: 50%; background: #d4af37; border: 2px solid #160a19;
-    }
+    .header-bell-btn { width: 36px; height: 36px; border-radius: 50%; background: #221127; border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+    .header-bell-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #d4af37; border: 2px solid #160a19; }
 
 </style>
 
@@ -985,7 +1117,6 @@
     
     <header class="app-header-v2" id="tituloPrincipalSeccion" style="display:none;">
     <div class="header-container-v2">
-      <!-- Brand Logo / Badge -->
       <div class="header-brand-v2">
         <div class="header-logo-circle">
           <div class="header-logo-inner">
@@ -1000,8 +1131,6 @@
           <p class="header-subtitle">Club Voleibol Valencia</p>
         </div>
       </div>
-
-      <!-- User Chip & Notification -->
       <div class="header-right-v2">
         <div class="header-user-chip" id="h2-user-chip">
           <span class="header-rank" id="h2-user-rank">Top -</span>
