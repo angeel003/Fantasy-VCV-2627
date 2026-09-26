@@ -1164,11 +1164,7 @@
                 <div id="categoryFilterWrapper" class="category-filter-strip"></div>
                 <div id="contenedorPartidos"></div>
 
-                <div id="warningPredicciones" style="background-color:#fde8e8; border: 1px solid var(--vcv-rojo); border-radius: 8px; padding: 12px; margin-top: 25px; margin-bottom: 15px; text-align: center;">
-                    <p style="color:var(--vcv-rojo); font-size:0.95rem; font-weight:bold; margin:0;">
-                        ⚠️ ATENCIÓN: Las predicciones se cerrarán automáticamente 15 minutos antes de la hora oficial de comienzo de cada partido.
-                    </p>
-                </div>
+                
 
                 <div id="appMessage" class="alert-box"></div>
 
@@ -2277,7 +2273,7 @@ function iniciarRelojes() {
             if(!ts) { el.style.display = 'none'; return; }
             
             const diff = ts - now;
-            const limite = 15 * 60 * 1000; 
+            const limite = 0; 
 
             const applyStyle = (bg, color, text) => {
                 el.innerHTML = text;
@@ -2313,7 +2309,12 @@ function iniciarRelojes() {
                     let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     let s = Math.floor((diff % (1000 * 60)) / 1000);
-                    applyStyle('rgba(52,152,219,0.1)', blue, ` Empieza en: ${d}d ${h}h ${m}m ${s}s`);
+                    let timeStr = "";
+                    if (d > 0) timeStr = `${d}d ${h}h ${m}m ${s}s`;
+                    else if (h > 0) timeStr = `${h}h ${m}m ${s}s`;
+                    else if (m > 0) timeStr = `${m}m ${s}s`;
+                    else timeStr = `${s}s`;
+                    applyStyle('rgba(52,152,219,0.1)', blue, ` Empieza en: ${timeStr}`);
                 }
             } else {
                 if (diff <= limite && diff > -14400000) {
@@ -2338,14 +2339,16 @@ function iniciarRelojes() {
                     let h = Math.floor((diffLimit % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let m = Math.floor((diffLimit % (1000 * 60 * 60)) / (1000 * 60));
                     let s = Math.floor((diffLimit % (1000 * 60)) / 1000);
-                    if (d > 0) {
-                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Se cierra en: ${d}d ${h}h`);
-                    } else if (h > 0) {
-                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Se cierra en: ${h}h ${m}m`);
-                    } else if (m > 0) {
-                        applyStyle('rgba(231,76,60,0.1)', red, ` Se cierra en: ${m}m ${s}s`);
+                    let timeStr = "";
+                    if (d > 0) timeStr = `${d}d ${h}h ${m}m ${s}s`;
+                    else if (h > 0) timeStr = `${h}h ${m}m ${s}s`;
+                    else if (m > 0) timeStr = `${m}m ${s}s`;
+                    else timeStr = `${s}s`;
+                    
+                    if (d > 0 || h > 0) {
+                        applyStyle('rgba(212,175,55,0.1)', yellow, ` Faltan: ${timeStr}`);
                     } else {
-                        applyStyle('rgba(231,76,60,0.1)', red, ` Se cierra en: ${s}s`);
+                        applyStyle('rgba(231,76,60,0.1)', red, ` Faltan: ${timeStr}`);
                     }
                 }
             }
