@@ -422,7 +422,7 @@
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 20px 20px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 26px 20px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
     .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
@@ -484,7 +484,7 @@
       max-width: 360px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       position: relative;
-      margin-bottom: 40px; margin-top: calc(20px + env(safe-area-inset-top, 0px));
+      margin-bottom: 40px;
     }
     .club-crest-v2 {
       background: var(--primary-color);
@@ -951,7 +951,7 @@
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
-    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 20px 20px; z-index: 1000; }
+    .app-header-v2 { position: fixed; top: 0; left: 0; width: 100%; background: rgba(22, 10, 25, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #3e1d45; padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 26px 20px; z-index: 1000; }
     .header-container-v2 { display: flex; justify-content: space-between; align-items: center; max-width: 450px; margin: 0 auto; }
     .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
     .header-logo-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(to top right, #6a2c70, #d4af37); padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
@@ -1014,7 +1014,7 @@
     
 </header>
 
-<div id="loginSection">
+<div id="loginSection" style="padding-top: calc(20px + env(safe-area-inset-top, 0px));">
     <div class="modal-card-v2">
         <div style="text-align: center; margin-bottom: 18px;">
           <div class="club-crest-v2" style="margin: 0 auto 12px; width: 52px; height: 52px;">
@@ -3010,7 +3010,22 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             });
         }
     }
+
+    // Add FAQ scroll behavior on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const masterFaq = document.getElementById('masterFaq');
+        if(masterFaq) {
+            masterFaq.addEventListener('toggle', function(e) {
+                if(this.open) {
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 150);
+                }
+            });
+        }
+    });
 </script>
+
 
 
 <!-- MODAL NOTIFICACIONES -->
