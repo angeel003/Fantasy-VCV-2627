@@ -129,7 +129,7 @@
     .badge-entrenador { filter: hue-rotate(270deg) saturate(150%); }
     .badge-staff { filter: hue-rotate(180deg) saturate(200%); }
     .badge-admin { filter: hue-rotate(215deg) saturate(200%) brightness(1.2); }
-    .badge-exjugador { filter: grayscale(100%) brightness(0%); }
+    .badge-exjugador { filter: grayscale(100%) opacity(0.6) brightness(1.2); }
 
     #mobileTooltip {
         position: fixed;
@@ -1895,9 +1895,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
               
               <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
-                  <h2 style="font-size: 1.15rem; font-weight: bold; color: var(--text-main); margin:0;">Pronósticos del Club</h2>
+                  <h2 style="font-size: 1.15rem; font-weight: bold; color: var(--text-main); margin:0;">¡Hola ${data.nombre_real || currentUser}!</h2>
                   <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0 0;">
-                    Jugador: <span style="color: var(--vcv-dorado); font-weight: 700;">@${currentUser}</span> • ${data.nombre_real !== currentUser ? data.nombre_real : '¡Demuestra quién sabe más!'}
+                    <span style="color: var(--vcv-dorado); font-weight: 700;">@${currentUser}</span> • ¡Demuestra quién sabe más!
                   </p>
                   ${insigniasHTML}
                 </div>
@@ -1905,7 +1905,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
               </div>
 
               <div style="width: 100%; background: rgba(0, 0, 0, 0.15); border-radius: 9999px; height: 6px; margin-top: 14px; overflow: hidden;">
-                <div style="background: linear-gradient(to right, var(--vcv-morado), var(--vcv-dorado)); height: 100%; border-radius: 9999px; width: ${porcentaje}%; transition: width 1s ease-in-out;"></div>
+                <style>
+                @keyframes fillProgress {
+                  from { width: 0%; }
+                  to { width: ${porcentaje}%; }
+                }
+                </style>
+                <div style="background: linear-gradient(to right, var(--vcv-morado), var(--vcv-dorado)); height: 100%; border-radius: 9999px; width: ${porcentaje}%; animation: fillProgress 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;"></div>
               </div>
             </div>`;
             document.getElementById('perfilUsuarioTop').innerHTML = htmlPerfil;
