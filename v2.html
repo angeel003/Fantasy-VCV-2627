@@ -1875,6 +1875,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 .then(res => res.json())
                 .then(pData => {
                     if (pData.status === 'success' && pData.predicciones) {
+                        let countPreds = Object.keys(pData.predicciones).length;
+                        if(typeof mostrarToast === 'function') mostrarToast(`Cargadas ${countPreds} predicciones guardadas`);
                         if(!window.appData) window.appData = {};
                         window.appData.predicciones_usuario = pData.predicciones;
                         
@@ -1886,8 +1888,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             let btnSave = document.getElementById('btn-save-' + idPart);
                             
                             if (summaryTextDiv && card) {
-                                let localAb = card.querySelectorAll('.team-name-v2')[0]?.innerText || "";
-                                let visitAb = card.querySelectorAll('.team-name-v2')[1]?.innerText || "";
+                                let localAbNodes = card.querySelectorAll('.team-name-v2');
+                                let localAb = localAbNodes.length > 0 ? localAbNodes[0].innerText : "";
+                                let visitAb = localAbNodes.length > 1 ? localAbNodes[1].innerText : "";
                                 
                                 let pSig = pred.signo || "";
                                 let pPts = pred.puntos || "";
@@ -1941,7 +1944,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             }
                         }
                     }
-                }).catch(e => console.log('Error silente al cargar preds', e));
+                }).catch(e => { console.log('Error silente al cargar preds', e); if(typeof mostrarToast === 'function') mostrarToast('Error cargando predicciones: ' + e.message); });
             }, 1500); // 1.5s delay to let UI render and settle
 
             if(data.reglas) {
