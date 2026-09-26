@@ -853,6 +853,36 @@ function doPost(e) {
         })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    if (action === "get_mis_predicciones") {
+        var pData = getSafeData(sheetPorras);
+        var pMap = {};
+        var userLower = usuario.toLowerCase();
+        for(var i=1; i<pData.length; i++) {
+            var pUser = pData[i][1] ? pData[i][1].toString().trim().toLowerCase() : "";
+            var pIdPart = pData[i][2] ? pData[i][2].toString().trim() : "";
+            if(pUser === userLower) {
+                pMap[pIdPart] = { sets: parseSheetText(pData[i][3]), puntos: pData[i][4], signo: pData[i][5] };
+            }
+        }
+        return ContentService.createTextOutput(JSON.stringify({
+            "status": "success",
+            "predicciones": pMap
+        })).setMimeType(ContentService.MimeType.JSON);
+    }
+        var pData = getSafeData(sheetPorras);
+        var pMap = {};
+        for(var i=1; i<pData.length; i++) {
+            var pUser = pData[i][1];
+            var pIdPart = pData[i][2].toString().trim();
+            if(!pMap[pUser]) pMap[pUser] = {};
+            pMap[pUser][pIdPart] = { sets: parseSheetText(pData[i][3]), puntos: pData[i][4], signo: pData[i][5] };
+        }
+        return ContentService.createTextOutput(JSON.stringify({
+            "status": "success",
+            "predicciones": pMap[usuario] || {}
+        })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     if (action === "save") {
         var pData = getSafeData(sheetPorras);
         for (var i = pData.length - 1; i >= 1; i--) { if (pData[i][1] == usuario && params.predicciones[pData[i][2].toString()]) { sheetPorras.deleteRow(i + 1); } }
