@@ -1989,6 +1989,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 let isPredicted = false;
                 let pSets = "", pPts = "", pSig = "";
                 let ptsText = "", formStr = "";
+                let savedSummaryHtml = "";
                 if (data.predicciones_usuario && data.predicciones_usuario[eq.id_partido]) {
                     isPredicted = true;
                     pSets = data.predicciones_usuario[eq.id_partido].sets || "";
@@ -1997,6 +1998,15 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     ptsText = pSig === 'A favor (+)' ? 'a favor' : (pSig === 'En contra (-)' ? 'en contra' : '');
                     formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
                     if(pPts == 0) formStr = `(0 pts)`;
+                    
+                    let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                    let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                    let formattedSets = pSets.replace('-', ' - ');
+                    
+                    savedSummaryHtml = `<div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
+                                          <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success);"></i>
+                                          <span>Configurada: <strong style="color: var(--text-main); font-weight:800;">${localTeamName} ${formattedSets} ${visitTeamName} ${formStr}</strong></span>
+                                        </div>`;
                 }
                 let valJornada = String(eq.jornada_eq || "").trim();
                     let infoJornadaEq = "";
@@ -2124,7 +2134,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
                             </div>
 
-                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; ${isPredicted ? "background:transparent; color:var(--text-muted); font-weight:800; border:1px solid var(--border-color);" : "background:var(--secondary-color); color:#000; font-weight:800; border:none;"} cursor:pointer; transition: all 0.2s;">
+                            ${savedSummaryHtml}
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:10px; padding:12px; border-radius:10px; ${isPredicted ? "background:transparent; color:var(--text-muted); font-weight:800; border:1px solid var(--border-color);" : "background:var(--secondary-color); color:#000; font-weight:800; border:none;"} cursor:pointer; transition: all 0.2s;">
                                 ${isPredicted ? "Modificar Predicción" : "Guardar Predicción"}
                             </button>`}
                             
@@ -2901,7 +2912,8 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
       const signInput = document.getElementById('e' + matchId + '_signo');
 
       if (hiddenInput && valSpan) {
-          let current = parseInt(hiddenInput.value) || 14; 
+          let current = parseInt(hiddenInput.value);
+          if (isNaN(current)) current = 14; 
           let next = current + delta;
           if (next < 0) next = 0; 
           
