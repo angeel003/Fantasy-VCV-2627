@@ -1995,14 +1995,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     pSets = data.predicciones_usuario[eq.id_partido].sets || "";
                     pPts = data.predicciones_usuario[eq.id_partido].puntos || "";
                     pSig = data.predicciones_usuario[eq.id_partido].signo || "";
+                    let savedLocalName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                    let savedVisitName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
                     let winnerName = "";
                     if (pSig.includes('A favor')) winnerName = savedLocalName;
                     else if (pSig.includes('En contra')) winnerName = savedVisitName;
                     formStr = winnerName ? `(+${pPts} pts para ${winnerName})` : `(${pPts} pts)`;
                     if(pPts == 0) formStr = `(0 pts)`;
-                    
-                    let savedLocalName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
-                    let savedVisitName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
                     let formattedSets = pSets.replace('-', ' - ');
                     
                     
@@ -3066,13 +3065,13 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
             if(p == 0) signText = "Empate";
             
+            let localAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[0].innerText : '';
+            let visitAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[1].innerText : '';
             let winnerName = "";
             if (sig.includes('A favor')) winnerName = localAb;
             else if (sig.includes('En contra')) winnerName = visitAb;
             let formStr = winnerName ? `(+${p} pts para ${winnerName})` : `(${p} pts)`;
             if(p==0) formStr = `(0 pts)`;
-            let localAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[0].innerText : '';
-            let visitAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[1].innerText : '';
             let formattedS = s.replace('-', ' - ');
             document.getElementById('summary-text-' + idPart).innerHTML = `<div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); text-align: left;"><i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i><span>Guardada: <strong style="color: var(--text-main); font-weight:800;">${localAb} ${formattedS} ${visitAb} ${formStr}</strong></span></div>`;
             if(window.lucide) setTimeout(() => window.lucide.createIcons(), 10);
