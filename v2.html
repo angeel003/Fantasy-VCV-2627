@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fantasy VCV 26/27">
@@ -39,7 +39,8 @@
 
     html { scroll-behavior: smooth; }
     html, body { -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); overflow-x: hidden; }
+    a, button, input, select, textarea { touch-action: manipulation; }
+    body { font-family: \'Segoe UI\', Tahoma, sans-serif; background: var(--bg-general); margin: 0; color: var(--vcv-negro); overflow-x: hidden; }
 
     /* ---------------------------------------------------
        2. TRANSICIONES Y ANIMACIONES (Fade-in)
@@ -420,6 +421,9 @@
     #appSection {
         padding-top: 60px;
         padding-bottom: 80px;
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
@@ -974,6 +978,9 @@
     #appSection {
         padding-top: 60px;
         padding-bottom: 80px;
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
     }
 
     /* V2 TAILWIND-MIMIC HEADER CSS */
