@@ -455,7 +455,17 @@
       box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
       transform: translateY(-2px);
     }
-</style>
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    
+    </style>
 
 
   <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
@@ -2293,31 +2303,35 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     if (isClosed) {
                         let textoMiPrediccion = misPts !== "" ? `${misPts} pts` : "No participaste";
                         miCajonHTML = `
-                        <div style="background:var(--bg-card-alt); padding:15px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:15px;">
-                            <label style="font-weight:bold; color:var(--text-muted); font-size:0.85rem; display:block; margin-bottom:6px;">Tu predicción final:</label>
-                            <div style="font-size:1.2rem; font-weight:bold; color:var(--vcv-morado);">${textoMiPrediccion}</div>
+                        <div style="background:var(--bg-card-alt); padding:10px; border-radius:10px; border:1px solid var(--border-color); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-weight:700; color:var(--text-muted); font-size:0.75rem; margin:0; text-transform:uppercase;">Tu predicción:</label>
+                            <div style="font-size:1.1rem; font-weight:900; color:var(--secondary-color);">${textoMiPrediccion}</div>
                         </div>`;
                     } else {
                         miCajonHTML = `
-                        <div style="background:var(--bg-card-alt); padding:15px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:15px;">
-                            <label style="font-weight:bold; color:var(--text-muted); font-size:0.85rem; display:block; margin-bottom:6px;">Tu predicción final:</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="number" id="pt_${eq}" class="form-control" placeholder="Ej: 45" value="${misPts}">
+                        <div style="background:var(--bg-card-alt); padding:10px; border-radius:10px; border:1px solid var(--border-color); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-weight:700; color:var(--text-muted); font-size:0.75rem; margin:0; text-transform:uppercase;">Tu predicción:</label>
+                            <div class="stepper-container-v2" style="width: 140px; background:var(--bg-input);">
+                                <button type="button" class="btn-step-v2" style="width:30px; height:30px; border-radius:6px;" onclick="document.getElementById('pt_${eq}').stepDown()">-</button>
+                                <div class="stepper-value-v2" style="flex:1; min-width:auto;">
+                                    <input type="number" id="pt_${eq}" placeholder="0" value="${misPts}" style="background:transparent; border:none; text-align:center; font-size:1.1rem; font-weight:900; color:var(--secondary-color); width:100%; outline:none; -moz-appearance:textfield; margin:0; padding:0; height:30px;">
+                                </div>
+                                <button type="button" class="btn-step-v2" style="width:30px; height:30px; border-radius:6px;" onclick="document.getElementById('pt_${eq}').stepUp()">+</button>
                             </div>
                         </div>`;
                     }
 
                     htmlTot += `
-                    <div class="vcv-card-v2" style="margin-bottom:20px; border-left:4px solid var(--vcv-dorado);">
-                        <h4 style="color:var(--vcv-morado); margin-bottom:5px; font-weight:bold;">${eq}</h4>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:4px 10px; border-radius:8px; border:1px solid rgba(16, 185, 129, 0.3); font-weight:bold; font-size:0.85rem;">Llevan: ${ptsActuales} puntos reales</span>
+                    <div class="vcv-card-v2" style="margin-bottom:10px; padding: 12px; border-left:4px solid var(--vcv-dorado);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="color:var(--text-main); margin:0; font-weight:800; font-size:1.1rem; letter-spacing:-0.5px;">${eq}</h4>
+                            <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:2px 8px; border-radius:6px; border:1px solid rgba(16, 185, 129, 0.3); font-weight:bold; font-size:0.75rem;">Llevan: ${ptsActuales} pts</span>
                         </div>
                         
                         ${miCajonHTML}
 
                         <details>
-                            <summary style="font-weight:bold; color:var(--vcv-morado); cursor:pointer; outline:none;">👀 Ver predicciones de los demás</summary>
+                            <summary style="font-weight:700; font-size:0.85rem; color:var(--text-muted); cursor:pointer; outline:none;">👀 Ver predicciones del resto</summary>
                             <div style="margin-top:10px; background:var(--bg-card-alt); padding:10px 15px; border-radius:12px; border:1px solid var(--border-color);">
                                 ${listaOtros}
                             </div>
