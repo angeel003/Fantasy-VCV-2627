@@ -2621,8 +2621,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
 
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
     let prediccionesList = {};
-    let validacionFallida = false;
-
+    
     equiposTotalesInfo.forEach(eq => {
         const elSet = document.getElementById(`e${eq.id_partido}_sets`);
         if(elSet && !elSet.disabled) {
@@ -2630,21 +2629,13 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
             let vPuntos = getVal(`e${eq.id_partido}_puntos`);
             let vSigno = getVal(`e${eq.id_partido}_signo`);
 
-            let numRellenos = (vSet !== "" ? 1 : 0) + (vPuntos !== "" ? 1 : 0) + (vSigno !== "" ? 1 : 0);
-            if (numRellenos > 0 && numRellenos < 3) {
-                validacionFallida = true;
-            }
+            
 
             prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
         }
     });
 
-    if (validacionFallida) {
-        msgBox.className = "alert-box alert-danger"; 
-        msgBox.innerText = "❌ Si predices un partido, debes rellenar sus 3 campos (Sets, Puntos y Signo). Puedes dejar partidos enteros en blanco si no quieres jugarlos hoy."; 
-        msgBox.style.display = "block";
-        return; 
-    }
+    
 
     btnSubmit.disabled = true; 
     btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
