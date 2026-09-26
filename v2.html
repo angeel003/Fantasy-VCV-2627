@@ -1621,9 +1621,9 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             isGuestMode = true;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
-            document.getElementById('h2-user-name').innerText = "Modo Invitado";
-            document.getElementById('h2-user-handle').innerText = "@lectura";
-            document.getElementById('h2-user-badges').innerHTML = "";
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = "Modo Invitado";
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@lectura";
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = "";
             document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
@@ -1821,13 +1821,27 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             
             // Populating new Header V2
-            document.getElementById('h2-user-name').innerText = data.nombre_real || usr;
-            document.getElementById('h2-user-handle').innerText = "@" + usr;
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = data.nombre_real || usr;
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@" + usr;
             
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
             let insigniasH2Html = "";
             let isAdmin = false;
+
+            // Calculate Rank
+            let allUsers = Object.keys(data.totales || {});
+            allUsers.sort((a,b) => (data.totales[b] || 0) - (data.totales[a] || 0));
+            let myRank = allUsers.indexOf(usr) + 1;
+            let rankText = myRank > 0 ? "Top " + myRank : "-";
+            
+            let myPoints = data.totales && data.totales[usr] ? data.totales[usr] : 0;
+            
+            let rankEl = document.getElementById('h2-user-rank');
+            if(rankEl) rankEl.innerText = rankText;
+            let ptsEl = document.getElementById('h2-user-pts');
+            if(ptsEl) ptsEl.innerText = myPoints + " pts";
+
             
             misInsignias.forEach(b => {
                 if (b.type === 'admin') isAdmin = true;
@@ -1838,7 +1852,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 insigniasH2Html += `<img src="${URL_BADGE_GENERIC}" class="${cssColorClass}" style="width:14px; height:14px;">`;
             });
             
-            document.getElementById('h2-user-badges').innerHTML = insigniasH2Html;
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = insigniasH2Html;
             
             // Render lucide icons in the newly injected HTML
             lucide.createIcons();
