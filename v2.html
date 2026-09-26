@@ -1999,13 +1999,13 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
                     if(pPts == 0) formStr = `(0 pts)`;
                     
-                    let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
-                    let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                    let savedLocalName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                    let savedVisitName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
                     let formattedSets = pSets.replace('-', ' - ');
                     
                     savedSummaryHtml = `<div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
                                           <i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success);"></i>
-                                          <span>Configurada: <strong style="color: var(--text-main); font-weight:800;">${localTeamName} ${formattedSets} ${visitTeamName} ${formStr}</strong></span>
+                                          <span>Configurada: <strong style="color: var(--text-main); font-weight:800;">${savedLocalName} ${formattedSets} ${savedVisitName} ${formStr}</strong></span>
                                         </div>`;
                 }
                 let valJornada = String(eq.jornada_eq || "").trim();
@@ -3059,7 +3059,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                 return;
             }
             if(window.isGuestMode) { alert("Modo invitado. No puedes guardar."); return; }
-            if(!window.currentUser) { alert("Tu sesión ha expirado."); window.location.reload(); return; }
+            if(!currentUser) { alert("Tu sesión ha expirado."); window.location.reload(); return; }
 
             // OPTIMISTIC UI UPDATE
             const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
@@ -3087,7 +3087,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 
             window.fetchSeguro(window.scriptURL, {
                 method: 'POST',
-                body: JSON.stringify({ action: 'guardar', usuario: window.currentUser, password: window.currentPassword, predicciones: singlePred }),
+                body: JSON.stringify({ action: 'guardar', usuario: currentUser, password: currentPassword, predicciones: singlePred }),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             }).then(res => res.json()).then(data => {
                 if(data.status === "success") {
