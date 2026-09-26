@@ -1,8 +1,6 @@
+import sys
 with open('v2.html', 'r', encoding='utf-8') as f:
     text = f.read()
 
-start = text.find('<div class="faq-container">')
-end = text.find('</div>\n</div>\n\n<div id="appSection"')
-
-if start != -1:
-    print(text[start:start+1500].encode('ascii', 'ignore').decode('ascii'))
+start = text.find('<div class="faq-container"')
+sys.stdout.buffer.write(text[start-50:start+2000].encode('utf-8'))

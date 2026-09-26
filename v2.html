@@ -1084,28 +1084,9 @@
                 </div>
             </div>
 
-            <div class="faq-inner-item">
-                <div class="faq-inner-title">Gestionar mi contraseña</div>
-                <p style="font-size:0.8rem; margin-bottom:10px;">Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña.</p>
-                <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnChangePwd" style="font-weight:bold; background:var(--primary-color); border:none;">Actualizar Contraseña</button>
-                <div id="msgChangePwd" class="alert-box mt-2" style="padding:10px; display:none;"></div>
-            </div>
+            
 
-            <div class="faq-inner-item">
-                <div class="faq-inner-title">Cambiar mi usuario / nombre</div>
-                <p style="font-size:0.8rem; margin-bottom:10px;">Rellena este formulario para solicitar el cambio en la base de datos.</p>
-                <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <hr style="border-color:var(--border-color);">
-                <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
-                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnReqName" style="font-weight:bold; background:var(--primary-color); border:none;">Enviar Solicitud</button>
-                <div id="msgReqName" class="alert-box mt-2" style="padding:10px; display:none;"></div>
-            </div>
+            
 
         </div>
     </details></div>
@@ -1156,40 +1137,7 @@
         <div class="form-container">
             
             
-            <!-- CAJA SECRETA DE INTRANET (SOLO ADMINS) -->
-            <div id="adminPanelWrapper" style="display: none; background: #343a40; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 2px solid var(--vcv-dorado);">
-                <details>
-                    <summary style="font-weight:bold; color:var(--vcv-dorado); font-size:1.2rem; cursor:pointer; outline:none; text-align:center;">
-                        🛠️ INTRANET ADMINISTRADOR
-                    </summary>
-                    <div style="margin-top: 20px;">
-                        
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
-                            <button id="btnForceSyncExcel" class="btn btn-info" style="flex:1; font-weight:bold; color:white;">🔄 Forzar Caché</button>
-                            <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
-                        </div>
-
-                        <!-- NUEVA SECCIÓN DE CREAR USUARIOS -->
-                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h5>
-                        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
-                            <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
-                            <div style="margin-bottom: 10px; text-align: left; font-size: 0.9rem;">
-                                <strong>Añadir a Ligas:</strong>
-                                <div id="adminLigasCheckboxes" style="display: flex; flex-direction: column; gap: 3px; max-height: 100px; overflow-y: auto; background: white; padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px;">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
-                        </div>
-                        
-                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
-                        <div id="adminListaPartidos"></div>
-                        
-                    </div>
-                </details>
-            </div>
+            
             
             <form id="prediccionForm">
                 
@@ -1217,15 +1165,86 @@
 <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Clasificación actual de nuestras ligas privadas según los puntos conseguidos.</p>
         <div id="tablasClasificacionContainer"></div>
     </section>
-    <section id="enlacesRfevbSection">
-        <h2>🔗 Enlaces Rfevb</h2>
-<p style="color:#555; margin-bottom:25px; font-weight: 500; font-size: 0.95rem;">Consulta cómo van las ligas reales de nuestros equipos en las webs oficiales de la Federación.</p>
+    <section id="enlacesRfevbSection" style="display:none; padding-bottom:30px;">
+
+<div class="vcv-card-v2" id="adminPanelWrapper" style="display:none; margin-bottom: 20px;">
+    <div class="header-eq" style="background:var(--vcv-dorado); color:#000;">
+        <h3 style="color:#000;"><i data-lucide="settings" style="color:#000;"></i> Intranet Administrador</h3>
+    </div>
+    <div style="padding:15px;">
+        
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button id="btnAdminSync" class="btn btn-warning" style="flex:1; font-weight:bold;">🔄 Auto-Permisos</button>
+                            <button id="btnForceSyncExcel" class="btn btn-info" style="flex:1; font-weight:bold; color:white;">🔄 Forzar Caché</button>
+                            <a href="https://docs.google.com/spreadsheets/" target="_blank" class="btn btn-light" style="flex:1; font-weight:bold; border: 1px solid #ccc;">🗂️ Abrir Excel</a>
+                        </div>
+
+                        <!-- NUEVA SECCIÓN DE CREAR USUARIOS -->
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h5>
+                        <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <input type="text" id="addUsrName" class="form-control form-control-sm mb-2" placeholder="Usuario nuevo (@nombre)">
+                            <input type="password" id="addUsrPwd" class="form-control form-control-sm mb-2" placeholder="Contraseña">
+                            <div style="margin-bottom: 10px; text-align: left; font-size: 0.9rem;">
+                                <strong>Añadir a Ligas:</strong>
+                                <div id="adminLigasCheckboxes" style="display: flex; flex-direction: column; gap: 3px; max-height: 100px; overflow-y: auto; background: white; padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-success btn-block" style="font-weight:bold;" onclick="crearUsuarioAdmin(event)">➕ Crear Usuario</button>
+                        </div>
+                        
+                        <h5 style="color:var(--vcv-blanco); border-bottom: 1px solid #555; padding-bottom: 5px; margin-bottom: 15px;">🏐 Subir Resultados Rápidos</h5>
+                        <div id="adminListaPartidos"></div>
+                        
+                    
+    </div>
+</div>
+
+<div class="vcv-card-v2" style="margin-bottom: 20px;">
+    <div class="header-eq">
+        <h3><i data-lucide="user-cog"></i> Gestión de Cuenta</h3>
+    </div>
+    <div style="padding:15px; display:flex; flex-direction:column; gap:15px;">
+        <div class="faq-inner-item">
+                <div class="faq-inner-title">Gestionar mi contraseña</div>
+                <p style="font-size:0.8rem; margin-bottom:10px;">Puedes cambiar tu contraseña introduciendo tus datos actuales y la nueva contraseña.</p>
+                <input type="text" id="cpUsuario" class="form-control mb-2" placeholder="Tu usuario (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpOldPwd" class="form-control mb-2" placeholder="Contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpNewPwd" class="form-control mb-2" placeholder="Nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="cpNewPwd2" class="form-control mb-2" placeholder="Repite nueva contraseña" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnChangePwd" style="font-weight:bold; background:var(--primary-color); border:none;">Actualizar Contraseña</button>
+                <div id="msgChangePwd" class="alert-box mt-2" style="padding:10px; display:none;"></div>
+            </div>
+        <div class="faq-inner-item">
+                <div class="faq-inner-title">Cambiar mi usuario / nombre</div>
+                <p style="font-size:0.8rem; margin-bottom:10px;">Rellena este formulario para solicitar el cambio en la base de datos.</p>
+                <input type="text" id="rnUsuario" class="form-control mb-2" placeholder="Tu usuario actual (@usuario)" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="password" id="rnPwd" class="form-control mb-2" placeholder="Tu contraseña actual" required style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <hr style="border-color:var(--border-color);">
+                <input type="text" id="rnNewUser" class="form-control mb-2" placeholder="Nuevo @usuario (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <input type="text" id="rnNewName" class="form-control mb-2" placeholder="Nuevo Nombre Real (opcional)" style="background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);">
+                <button class="btn btn-primary btn-sm btn-block mt-2" id="btnReqName" style="font-weight:bold; background:var(--primary-color); border:none;">Enviar Solicitud</button>
+                <div id="msgReqName" class="alert-box mt-2" style="padding:10px; display:none;"></div>
+            </div>
+    </div>
+</div>
+
+    <div class="vcv-card-v2" style="margin-bottom: 20px;">
+        <div class="header-eq">
+            <h3><i data-lucide="external-link"></i> Enlaces Oficiales</h3>
+        </div>
+        <div style="padding:15px;">
+            
         <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
             <a href="https://rfevb.com/" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 RFEVB - Real Federación Española de Voleibol</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/superliga-masculina-2/grupo-c" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Superliga Masculina 2 (Grupo C)</a>
             <a href="https://esvoley.es/voleibol/competiciones-masculinas/primera-division-masculina/grupo-a" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Masculina (Grupo A)</a>
             <a href="https://esvoley.es/voleibol/competiciones-femeninas/primera-division-femenina/grupo-d" target="_blank" class="btn btn-outline-primary" style="font-weight: bold; padding: 12px; border-radius: 8px;">🔗 EsVoley - Primera Femenina (Grupo D)</a>
         </div>
+    
+        </div>
+    </div>
     </section>
     <section class="section-alt" id="historialSection">
         <h2>✅ Mis Predicciones</h2>
