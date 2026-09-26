@@ -3090,8 +3090,10 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                 let count = Array.from(cards).filter(c => c._normalizedCat === cat).length;
                 
                 // Format category name nicely (e.g. "Superliga Masc 2")
-                let displayName = cat;
-                if(cat === "SM2") displayName = "🏆 Superliga Masc 2";
+                // Fallback title case for unknown categories
+                let displayName = cat.replace(/_/g, ' ').toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                
+                if(cat === "SM2") displayName = "Superliga Masc 2";
                 else if(cat === "1DIV_MASC") displayName = "1ª Masc";
                 else if(cat === "1DIV_FEM") displayName = "1ª Fem";
                 else if(cat === "2DIV_MASC") displayName = "2ª Masc";
