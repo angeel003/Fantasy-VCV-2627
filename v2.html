@@ -2175,9 +2175,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                             ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
                             <!-- HIDDEN INPUTS -->
-                            <input type="hidden" id="e${eq.id_partido}_sets" value="">
-                            <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
-                            <input type="hidden" id="e${eq.id_partido}_signo" value="">
+                            <input type="hidden" id="e${eq.id_partido}_sets" value="${pSets}">
+                            <input type="hidden" id="e${eq.id_partido}_puntos" value="${pPts || '14'}">
+                            <input type="hidden" id="e${eq.id_partido}_signo" value="${pSig}">
 
                             <div class="inputs-eq" id="inputs_eq_${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:none;' : 'display:block;'}">
                                 <div class="sets-grid-label-v2">
@@ -2631,9 +2631,11 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
             let vPuntos = getVal(`e${eq.id_partido}_puntos`);
             let vSigno = getVal(`e${eq.id_partido}_signo`);
 
-            
-
-            prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
+            // ONLY send this prediction if the user has actually made one (or is modifying an existing one).
+            // This prevents overwriting valid backend predictions with empty ones.
+            if (vSet !== "") {
+                prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
+            }
         }
     });
 
