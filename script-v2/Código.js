@@ -879,7 +879,7 @@ function doPost(e) {
             if (p.sets) { sheetPorras.appendRow([new Date(), usuario, idPart, p.sets, p.puntos, p.signo]); }
         }
         clearAllCache();
-        
+        return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "load") {
