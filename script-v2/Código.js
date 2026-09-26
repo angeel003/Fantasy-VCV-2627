@@ -852,7 +852,7 @@ function doPost(e) {
             if (p.sets) { sheetPorras.appendRow([new Date(), usuario, idPart, p.sets, p.puntos, p.signo]); }
         }
         clearAllCache();
-        clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Predicciones guardadas!"})).setMimeType(ContentService.MimeType.JSON);
+        SpreadsheetApp.flush(); clearAllCache(); return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "¡Predicciones guardadas!"})).setMimeType(ContentService.MimeType.JSON);
     }
 
     if (action === "load") {

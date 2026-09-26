@@ -1995,8 +1995,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                     pSets = data.predicciones_usuario[eq.id_partido].sets || "";
                     pPts = data.predicciones_usuario[eq.id_partido].puntos || "";
                     pSig = data.predicciones_usuario[eq.id_partido].signo || "";
-                    ptsText = pSig === 'A favor (+)' ? 'a favor' : (pSig === 'En contra (-)' ? 'en contra' : '');
-                    formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
+                    let winnerName = "";
+                    if (pSig.includes('A favor')) winnerName = savedLocalName;
+                    else if (pSig.includes('En contra')) winnerName = savedVisitName;
+                    formStr = winnerName ? `(+${pPts} pts para ${winnerName})` : `(${pPts} pts)`;
                     if(pPts == 0) formStr = `(0 pts)`;
                     
                     let savedLocalName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
@@ -3064,8 +3066,10 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
             if(p == 0) signText = "Empate";
             
-            let ptsText = signText === 'A favor (+)' ? 'a favor' : (signText === 'En contra (-)' ? 'en contra' : '');
-            let formStr = ptsText ? `(+${p} pts ${ptsText})` : `(${p} pts)`;
+            let winnerName = "";
+            if (sig.includes('A favor')) winnerName = localAb;
+            else if (sig.includes('En contra')) winnerName = visitAb;
+            let formStr = winnerName ? `(+${p} pts para ${winnerName})` : `(${p} pts)`;
             if(p==0) formStr = `(0 pts)`;
             let localAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[0].innerText : '';
             let visitAb = document.querySelector(`#card-v2-${idPart} .team-name-v2`) ? document.querySelectorAll(`#card-v2-${idPart} .team-name-v2`)[1].innerText : '';
