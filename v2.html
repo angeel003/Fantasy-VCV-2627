@@ -2302,8 +2302,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             document.getElementById('btnLogout').style.display = "block";
             iniciarRelojTotales();
+        } else if (data.status === "ok") {
+            msgBox.className = "alert-box alert-warning"; msgBox.innerText = "El servidor se estaba despertando (Cold Start). Vuelve a pulsar Iniciar Sesión."; msgBox.style.display = "block";
         } else {
-            msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message; msgBox.style.display = "block";
+            msgBox.className = "alert-box alert-danger"; msgBox.innerText = data.message || "Error desconocido devuelto por el servidor."; msgBox.style.display = "block";
         }
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
