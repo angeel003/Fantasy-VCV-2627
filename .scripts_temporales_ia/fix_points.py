@@ -1,43 +1,27 @@
 import re
 
-with open('script-dev/Código.js', 'r', encoding='utf-8') as f:
+with open('v2.html', 'r', encoding='utf-8') as f:
     text = f.read()
 
-# Fix 1: Parsing of direct oDiff (if user enters '15' instead of '25-20,...')
-old_diff_calc = r"""var setsParciales = oRes.parciales.split(",");
-                for(var sp=0; sp<setsParciales.length; sp++){
-                    var nums = setsParciales[sp].split("-");
-                    if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
-                }"""
-new_diff_calc = r"""var setsParciales = oRes.parciales.split(",");
-                if (setsParciales.length === 1 && !oRes.parciales.includes("-") && !isNaN(parseInt(oRes.parciales))) {
-                    oDiff = parseInt(oRes.parciales);
-                } else {
-                    for(var sp=0; sp<setsParciales.length; sp++){
-                        var nums = setsParciales[sp].split("-");
-                        if(nums.length==2) oDiff += (parseInt(nums[0]) - parseInt(nums[1]));
-                    }
-                }"""
-text = text.replace(old_diff_calc, new_diff_calc)
+# 1. Remove Points Text block
+text = re.sub(r'<!-- PUNTOS TEXT -->[\s\S]*?<!-- HIDDEN INPUTS -->', '<!-- HIDDEN INPUTS -->', text)
 
+# 2. Remove the "..." and diff points labels inside the grid labels
+text = re.sub(r'<span style="color: var\(--secondary-color\);" class="sets-points-label">.*?</span>', '', text)
+text = re.sub(r'<span style="color: var\(--secondary-color\);" class="diff-points-label".*?</span>', '', text)
 
-# Fix 2: Additive points for Sets AND Winner (first occurrence)
-old_pts_1 = r"""var ptsGanados = 0;
-                if(uPred.sets === oRes.sets) { ptsGanados += pS; }
-                else if (uLocalWin === oLocalWin) { ptsGanados += pG; }"""
-new_pts_1 = r"""var ptsGanados = 0;
-                if (uLocalWin === oLocalWin) { ptsGanados += pG; }
-                if (uPred.sets === oRes.sets) { ptsGanados += pS; }"""
-text = text.replace(old_pts_1, new_pts_1)
+# 3. Change "Club" to "Perfil" in the nav and change icon
+text = text.replace('<i data-lucide="shield"></i>\n            <span>Club</span>', '<i data-lucide="user"></i>\n            <span>Perfil</span>')
 
-# Fix 3: Additive points for Sets AND Winner (second occurrence with motivos)
-old_pts_2 = r"""if(uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }
-                    else if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Ganador acertado (+" + pG + ")"); }"""
-new_pts_2 = r"""if (uLocalWin === oLocalWin) { ptsGanados += pG; motivos.push("Ganador (+" + pG + ")"); }
-                    if (uPred.sets === oRes.sets) { ptsGanados += pS; motivos.push("Sets exactos (+" + pS + ")"); }"""
-text = text.replace(old_pts_2, new_pts_2)
+# 4. Remove the JS that updates these labels
+text = re.sub(r'document\.querySelectorAll\(\'\.sets-points-label\'\)\.forEach.*?;\n', '', text)
+text = re.sub(r'document\.querySelectorAll\(\'\.diff-points-label\'\)\.forEach.*?;\n', '', text)
 
-with open('script-dev/Código.js', 'w', encoding='utf-8') as f:
+# 5. Ensure "Diferencia de puntos" is used consistently
+# Right now it might say "Diferencia de Puntos (Opcional)"
+text = text.replace('Diferencia de Puntos (Opcional)', 'Diferencia de Puntos')
+
+with open('v2.html', 'w', encoding='utf-8') as f:
     f.write(text)
 
-print("Código.js points logic fixed!")
+print("Modifications done.")

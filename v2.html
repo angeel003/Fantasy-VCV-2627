@@ -1901,9 +1901,9 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 let ptsText = "", formStr = "";
                 if (data.predicciones_usuario && data.predicciones_usuario[eq.id_partido]) {
                     isPredicted = true;
-                    pSets = data.predicciones_usuario && data.predicciones_usuario[eq.id_partido].sets || "";
-                    pPts = data.predicciones_usuario && data.predicciones_usuario[eq.id_partido].puntos || "";
-                    pSig = data.predicciones_usuario && data.predicciones_usuario[eq.id_partido].signo || "";
+                    pSets = data.predicciones_usuario[eq.id_partido].sets || "";
+                    pPts = data.predicciones_usuario[eq.id_partido].puntos || "";
+                    pSig = data.predicciones_usuario[eq.id_partido].signo || "";
                     ptsText = pSig === 'A favor (+)' ? 'a favor' : (pSig === 'En contra (-)' ? 'en contra' : '');
                     formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
                     if(pPts == 0) formStr = `(0 pts)`;
@@ -2398,7 +2398,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
     msgBox.style.display = "none";
 
     const getVal = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
-    let data.predicciones_usuario = {};
+    let prediccionesList = {};
     let validacionFallida = false;
 
     equiposTotalesInfo.forEach(eq => {
@@ -2413,7 +2413,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
                 validacionFallida = true;
             }
 
-            data.predicciones_usuario && data.predicciones_usuario[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
+            prediccionesList[eq.id_partido] = { sets: vSet, puntos: vPuntos, signo: vSigno };
         }
     });
 
@@ -2427,7 +2427,7 @@ document.getElementById('prediccionForm').addEventListener('submit', function(e)
     btnSubmit.disabled = true; 
     btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...'; 
 
-    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: data.predicciones_usuario }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+    fetchSeguro(scriptURL, { method: 'POST', body: JSON.stringify({ action: 'save', usuario: currentUser, password: currentPassword, jornada: currentJornadaGlobal, predicciones: prediccionesList }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
     .then(res => res.json())
     .then(data => {
         msgBox.style.display = "block";

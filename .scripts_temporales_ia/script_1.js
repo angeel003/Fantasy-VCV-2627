@@ -87,23 +87,7 @@ function mostrarToast(mensaje) {
 // ------------------------------------------------------------------
 // BOTÓN DE RECARGAR
 // ------------------------------------------------------------------
-document.getElementById('btnReload').addEventListener('click', function() {
-    const btn = this;
-    if(btn.classList.contains('spin-anim')) return; 
-    btn.classList.add('spin-anim');
-    
-    if (isGuestMode) { document.getElementById('btnGuest').click(); } 
-    else { document.getElementById('btnLogin').click(); }
-    
-    let checkInterval = setInterval(() => {
-        let targetBtn = isGuestMode ? document.getElementById('btnGuest') : document.getElementById('btnLogin');
-        if (!targetBtn.disabled) {
-            btn.classList.remove('spin-anim');
-            clearInterval(checkInterval);
-            mostrarToast("✅ Datos sincronizados");
-        }
-    }, 300);
-});
+
 
 // ------------------------------------------------------------------
 // FUNCIONES INTRANET ADMINISTRADOR
@@ -114,9 +98,11 @@ function renderAdminPanel(equipos) {
     equipos.forEach(eq => {
         let ts = eq.timestamp || Infinity;
         if (now - ts < 48 * 60 * 60 * 1000) {
+            let adminLocal = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+            let adminVisit = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
             html += `
             <div class="admin-match-box">
-                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${eq.equipo_local} vs ${eq.rival} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
+                <div style="font-weight:bold; margin-bottom:8px; color: #e65100;">${adminLocal} vs ${adminVisit} <span style="color:#666; font-size:0.8rem; font-weight:normal;">(${eq.id_partido})</span></div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <div style="display:flex; gap:10px;">
                           <input type="text" id="adm_sets_${eq.id_partido}" class="form-control form-control-sm" placeholder="${now >= ts ? 'Sets (3-1)' : 'Bloqueado (No ha empezado)'}" value="${eq.oficial_sets || ''}" ${now >= ts ? '' : 'disabled'}>
@@ -351,22 +337,23 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             isGuestMode = true;
             window.appData = data;
             if(window.initCalendar) window.initCalendar();
-            document.getElementById('displayJugador').innerText = "👀 Modo Invitado";
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = "Modo Invitado";
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@lectura";
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = "";
             document.getElementById('tituloPrincipalSeccion').style.display = 'none';
             
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             document.querySelector('#prediccionForm > div').style.display = "none"; 
             document.getElementById('adminPanelWrapper').style.display = "none";
             
             document.getElementById('btnSubmit').style.display = "none";
             document.getElementById('warningPredicciones').style.display = "none";
-            document.getElementById('clasificacionesSection').style.display = "none";
-            document.getElementById('historialSection').style.display = "none";
-            document.getElementById('prediccionesTotalesSection').style.display = "none";
-            let calSec = document.getElementById('calendarioSection');
-            if (calSec) calSec.style.display = "none";
+            
+            
+            
+            
             
             // Mostrar banner promo de invitados
             let promoDiv = document.getElementById('guestPromoBanner');
@@ -501,7 +488,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "👀 Entrar como Invitado"; 
+        btn.innerText = "👀 Entrar como invitado"; 
         btn.disabled = false; 
     });
 });
@@ -525,8 +512,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
         if(data.status === "success") {
             
             currentUser = usr; currentPassword = pwd;
-            let calSec2 = document.getElementById('calendarioSection');
-            if (calSec2) calSec2.style.display = "block";
+            
             let promoDiv2 = document.getElementById('guestPromoBanner');
             if (promoDiv2) promoDiv2.style.display = "none";
             currentJornadaGlobal = data.jornada;
@@ -545,23 +531,47 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 }
                 
                 // Update match cards dynamically
-                document.querySelectorAll('.sets-points-label').forEach(el => el.innerText = `+${data.reglas.sets} pts si aciertas`);
-                document.querySelectorAll('.diff-points-label').forEach(el => el.innerText = `+${data.reglas.diff_exacta} pts exacto`);
-            }
+                                            }
 
             let displayNom = data.nombre_real && data.nombre_real !== usr ? `${data.nombre_real} <span style="font-size:0.85rem; color:#666; font-weight:normal; font-family:sans-serif;">(@${usr})</span>` : usr;
-            document.getElementById('displayJugador').innerHTML = "👤 " + displayNom;
+            
+            
+            // Populating new Header V2
+            let nameEl = document.getElementById('h2-user-name'); if(nameEl) nameEl.innerText = data.nombre_real || usr;
+            let handleEl = document.getElementById('h2-user-handle'); if(handleEl) handleEl.innerText = "@" + usr;
             
             let misInsignias = data.insignias[usr] || [];
             let insigniasHeaderHtml = "";
+            let insigniasH2Html = "";
             let isAdmin = false;
+
+            // Calculate Rank from Global Leaderboard
+            let globalRankList = data.clasificaciones && data.clasificaciones["Global"] ? data.clasificaciones["Global"] : [];
+            let myRankIndex = globalRankList.findIndex(r => r.jugador === usr);
+            let myRank = myRankIndex !== -1 ? myRankIndex + 1 : 0;
+            let rankText = myRank > 0 ? "Top " + myRank : "-";
+            
+            let myPoints = myRankIndex !== -1 ? globalRankList[myRankIndex].puntos : 0;
+            
+            let rankEl = document.getElementById('h2-user-rank');
+            if(rankEl) rankEl.innerText = rankText;
+            let ptsEl = document.getElementById('h2-user-pts');
+            if(ptsEl) ptsEl.innerText = myPoints + " pts";
+
             
             misInsignias.forEach(b => {
                 if (b.type === 'admin') isAdmin = true;
                 let cssColorClass = getBadgeCSS(b.type);
                 insigniasHeaderHtml += `<img src="${URL_BADGE_GENERIC}" class="badge-header ${cssColorClass}" title="${b.text}" onclick="showMobileTooltip(event, '${b.text}')">`;
+                
+                // NO tooltips, NO onclick for the top header badges! Just visual.
+                insigniasH2Html += `<img src="${URL_BADGE_GENERIC}" class="${cssColorClass}" style="width:14px; height:14px;">`;
             });
-            document.getElementById('displayBadges').innerHTML = insigniasHeaderHtml;
+            
+            let badgesEl = document.getElementById('h2-user-badges'); if(badgesEl) badgesEl.innerHTML = insigniasH2Html;
+            
+            // Render lucide icons in the newly injected HTML
+            lucide.createIcons();
             
             if (isAdmin) {
                 document.getElementById('adminPanelWrapper').style.display = "block";
@@ -601,7 +611,20 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.visibilidad === "MOSTRAR") {
                     equiposPermitidos++;
-                    let valJornada = String(eq.jornada_eq || "").trim();
+                    
+                let isPredicted = false;
+                let pSets = "", pPts = "", pSig = "";
+                let ptsText = "", formStr = "";
+                if (data.predicciones_usuario && data.predicciones_usuario[eq.id_partido]) {
+                    isPredicted = true;
+                    pSets = data.predicciones_usuario[eq.id_partido].sets || "";
+                    pPts = data.predicciones_usuario[eq.id_partido].puntos || "";
+                    pSig = data.predicciones_usuario[eq.id_partido].signo || "";
+                    ptsText = pSig === 'A favor (+)' ? 'a favor' : (pSig === 'En contra (-)' ? 'en contra' : '');
+                    formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
+                    if(pPts == 0) formStr = `(0 pts)`;
+                }
+                let valJornada = String(eq.jornada_eq || "").trim();
                     let infoJornadaEq = "";
                     if(valJornada) {
                         infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
@@ -618,17 +641,20 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                       let destacadoHtml = "";
                       // --- FIN LOGICA JUGADOR DESTACADO ---
 
-                    if (eq.estado === "ABIERTO") {
+                    if (eq.estado === "ABIERTO" || eq.estado === "CERRADO") {
                         let dt = new Date(eq.timestamp);
                         let fechaFormateada = isNaN(dt) ? "" : `${dt.toLocaleDateString()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
 
-                        setTimeout(() => { if(window.lucide) lucide.createIcons(); }, 100);
-
-                        let localTeamName = eq.equipo_local;
-                        let visitTeamName = eq.rival;
                         
-                        let localAbrev = (eq.abrev_local || localTeamName.substring(0,3)).toUpperCase();
-                        let visitAbrev = (eq.abrev_rival || visitTeamName.substring(0,3)).toUpperCase();
+
+                        let localTeamName = (eq.ubicacion === 'LOCAL') ? eq.equipo_local : eq.rival;
+                        let visitTeamName = (eq.ubicacion === 'LOCAL') ? eq.rival : eq.equipo_local;
+                        
+                        let abrevLocalRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_local : eq.abrev_rival;
+                        let abrevVisitRaw = (eq.ubicacion === 'LOCAL') ? eq.abrev_rival : eq.abrev_local;
+                        
+                        let localAbrev = (abrevLocalRaw || localTeamName.substring(0,3)).toUpperCase();
+                        let visitAbrev = (abrevVisitRaw || visitTeamName.substring(0,3)).toUpperCase();
 
                         let localLogo = `<span style="font-weight:900; font-size: 1.2rem;">${localAbrev}</span>`;
                         let visitLogo = `<span style="font-weight:900; font-size: 1.2rem;">${visitAbrev}</span>`;
@@ -640,7 +666,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             : `<button class="btn-streaming-v2 disabled" disabled><i data-lucide="play-square" style="width:14px;height:14px;"></i> Sin enlace</button>`;
 
                         htmlPartidos += `
-                        <div class="vcv-card-v2" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
+                        <div class="vcv-card-v2 ${isPredicted && eq.estado !== 'CERRADO' ? 'collapsed' : ''}" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
                             <div class="match-header-strip-v2">
                                 <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
                                   ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
@@ -653,7 +679,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                             <div class="teams-versus-container-v2">
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${eq.es_local ? 'vcv-local' : ''}">${localLogo}</div>
+                                  <div class="team-avatar-v2">${localLogo}</div>
                                   <span class="team-name-v2">${localTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--success)">LOCAL</span>
                                 </div>
@@ -662,23 +688,24 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                   ${btnStreaming}
                                 </div>
                                 <div class="team-box-v2">
-                                  <div class="team-avatar-v2 ${!eq.es_local ? 'vcv-local' : ''}">${visitLogo}</div>
+                                  <div class="team-avatar-v2">${visitLogo}</div>
                                   <span class="team-name-v2">${visitTeamName}</span>
                                   <span class="team-role-v2" style="color: var(--text-muted)">VISITANTE</span>
                                 </div>
                             </div>
                             
-                            <div class="reloj-partido" data-ts="${eq.timestamp}" data-eq="${eq.id_partido}" style="font-size:0.75rem; font-weight:bold; padding:4px 8px; background:rgba(212, 175, 55, 0.1); color:var(--secondary-color); border: 1px solid var(--border-glow); border-radius:4px; display:inline-block; margin-bottom:12px;">Calculando tiempo...</div>
+                            
 
+                            ${eq.estado === "CERRADO" ? `<div style="text-align:center; margin-top:15px; padding:15px; background:var(--bg-card-alt); border-radius:12px; border:1px solid var(--border-color);"><div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">RESULTADO OFICIAL</div><div style="font-size: 1.25rem; font-weight: 900; color: var(--text-main);">${eq.oficial_sets || 'Sin resultado'}</div><div style="font-size: 0.85rem; color: var(--text-muted);">${eq.oficial_parciales || ''}</div></div>` : `
                             <!-- HIDDEN INPUTS -->
                             <input type="hidden" id="e${eq.id_partido}_sets" value="">
                             <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
                             <input type="hidden" id="e${eq.id_partido}_signo" value="">
 
-                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
+                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:none;' : 'display:block;'}">
                                 <div class="sets-grid-label-v2">
-                                  <span>Pronóstico de Sets</span>
-                                  <span style="color: var(--secondary-color);" class="sets-points-label">...</span>
+                                  <span>Pronóstico de sets</span>
+                                  
                                 </div>
                                 <div class="sets-selector-grid-v2">
                                     <button type="button" class="set-option-btn-v2" onclick="seleccionarSetV2(this, '3-0', '${eq.id_partido}')">3-0</button>
@@ -691,8 +718,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                                 <div class="points-diff-container-v2">
                                   <div class="points-header-v2">
-                                    <span>PUNTOS DIFERENCIAL</span>
-                                    <span style="color: var(--text-gold);" class="diff-points-label">...</span>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; display:flex; align-items:center; justify-content:center; gap:5px;">DIFERENCIA DE PUNTOS <i data-lucide="help-circle" style="width:14px; height:14px; cursor:pointer; color:var(--primary-color);" onclick="document.getElementById(\'guiaModal\').style.display=\'flex\'"></i></span>
+                                    
                                   </div>
                                   <div class="points-controls-row-v2">
                                     <div class="stepper-container-v2">
@@ -704,10 +731,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                       <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
                                     </div>
                                     <div class="sign-selector-v2">
-                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${eq.es_local})">
+                                      <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, true)">
                                         <span style="font-size:0.7rem;">${localTeamName}</span>
                                       </button>
-                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, ${!eq.es_local})">
+                                      <button type="button" class="sign-btn-v2 sign-minus-v2" id="signo-minus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, false)">
                                         <span style="font-size:0.7rem;">${visitTeamName}</span>
                                       </button>
                                     </div>
@@ -720,22 +747,10 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
                             </div>
 
-                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
-                                Guardar Predicción
-                            </button>
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; ${isPredicted ? "background:transparent; color:var(--text-muted); font-weight:800; border:1px solid var(--border-color);" : "background:var(--secondary-color); color:#000; font-weight:800; border:none;"} cursor:pointer; transition: all 0.2s;">
+                                ${isPredicted ? "Modificar Predicción" : "Guardar Predicción"}
+                            </button>`}
                             
-                            ${destacadoHtml}
-                        </div>`;
-} else if (eq.estado === "CERRADO") {
-                        equiposCerrados++;
-                        htmlPartidos += `
-                        <div class="p-3 mb-3 card-match" style="background: var(--bg-general); border-radius: 8px; border: 1px solid #dee2e6; border-left: 5px solid #6c757d;">
-                            ${categoryHtml}
-                            <h5 style="margin-bottom: 5px; color: #495057; font-weight:bold; padding-right: 90px;">🔒 ${eq.equipo_local} vs ${eq.rival}${infoJornadaEq}</h5>
-                            ${infoLocFecha}
-                            ${infoPabellon}
-                            
-                            <small style="color:#6c757d; font-weight:bold;">El plazo para predecir este partido está cerrado.</small>
                             ${destacadoHtml}
                         </div>`;
                     }
@@ -749,6 +764,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
             iniciarRelojes();
+            if(window.lucide) setTimeout(() => lucide.createIcons(), 50);
 
             let clasifHtml = "";
             if(data.ligas.length === 0) { 
@@ -794,7 +810,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             document.getElementById('tablasClasificacionContainer').innerHTML = clasifHtml;
 
             if(data.equipos_totales && data.equipos_totales.length > 0) {
-                document.getElementById('prediccionesTotalesSection').style.display = "block";
+                
                 
                 let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
                 
@@ -894,7 +910,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
             document.getElementById('loginSection').style.display = "none";
             document.getElementById('appSection').style.display = "block";
-            document.getElementById('btnReload').style.display = "flex";
+            
             document.getElementById('btnLogout').style.display = "block";
             iniciarRelojTotales();
         } else {
@@ -903,7 +919,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
     })
     .catch(err => { msgBox.className = "alert-box alert-danger"; msgBox.innerText = "Error: " + err.message + " | " + (err.stack || ""); msgBox.style.display = "block"; })
     .finally(() => { 
-        btn.innerText = "Entrar al Fantasy"; 
+        btn.innerText = "Entrar"; 
         btn.disabled = false; 
     });
 });
@@ -942,6 +958,12 @@ function iniciarRelojes() {
                 if (diff <= 0 && diff > -14400000) {
                     applyStyle('rgba(231,76,60,0.1)', red, " Partido en curso");
                 } else if (diff <= -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let d = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -954,11 +976,18 @@ function iniciarRelojes() {
                 if (diff <= limite && diff > -14400000) {
                     const inputs = document.getElementById('inputs_eq_' + eqId);
                     if(inputs) {
-                        inputs.style.opacity = '0.5';
-                        inputs.style.pointerEvents = 'none';
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
                     }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(231,76,60,0.1)', red, " PREDICCIONES CERRADAS");
                 } else if (diff <= -14400000) {
+                    const inputs = document.getElementById('inputs_eq_' + eqId);
+                    if(inputs) {
+                        if(!inputs.querySelector('span') || inputs.querySelector('span').innerText !== 'El plazo para predecir este partido está cerrado.') { inputs.innerHTML = '<div style="text-align:center; margin-top:15px; padding:12px; background:var(--bg-input); border-radius:12px; border:1px dashed var(--border-color);"><span style="font-size: 0.85rem; color: var(--text-muted); font-weight:bold;">El plazo para predecir este partido está cerrado.</span></div>'; }
+                    }
+                    const btnSave = document.getElementById('btn-save-' + eqId);
+                    if (btnSave) btnSave.style.display = 'none';
                     applyStyle('rgba(255,255,255,0.05)', gray, " Partido Finalizado");
                 } else {
                     let diffLimit = diff - limite;
@@ -1036,10 +1065,10 @@ function cargarDatosAntiguos() {
                 if (preds[idPart].signo) {
                     const signoVal = preds[idPart].signo;
                     if (signoVal === "A favor") {
-                        const btn = document.querySelector(`button[id^="signo-"][id$="-${idPart}"][onclick*=" true)"]`);
+                        const btn = document.getElementById(`signo-plus-v2-${idPart}`);
                         if (btn) btn.classList.add('selected');
                     } else if (signoVal === "En contra") {
-                        const btn = document.querySelector(`button[id^="signo-"][id$="-${idPart}"][onclick*=" false)"]`);
+                        const btn = document.getElementById(`signo-minus-v2-${idPart}`);
                         if (btn) btn.classList.add('selected');
                     } else if (signoVal === "Empate") {
                         const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);

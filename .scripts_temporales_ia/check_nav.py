@@ -1,7 +1,4 @@
-with open('index.html', 'r', encoding='utf-8') as f:
+with open('v2.html', 'r', encoding='utf-8') as f:
     text = f.read()
-
-start = text.find('<nav')
-end = text.find('</nav>')
-if start != -1:
-    print(text[start:end+6].encode('ascii', 'ignore').decode('ascii'))
+start = text.find('id="bottomNavWrapperV2"')
+print(text[start:start+1000])
