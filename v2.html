@@ -1881,19 +1881,16 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             }
 
             let htmlPerfil = `
-            <div style="padding: 16px; border-radius: 16px; background: linear-gradient(to right, rgba(93, 23, 137, 0.4), var(--bg-card), var(--bg-card)); border: 1px solid var(--border-color); position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-bottom: 20px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; margin-bottom: 12px;">
+            <div style="padding: 14px; border-radius: 16px; background: linear-gradient(to right, rgba(93, 23, 137, 0.4), var(--bg-card), var(--bg-card)); border: 1px solid var(--border-color); position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-top: -12px; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; justify-content: flex-start; font-size: 0.75rem; margin-bottom: 12px;">
                 <span style="display: inline-flex; align-items: center; font-weight: bold; padding: 3px 10px; border-radius: 9999px; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
                   <span style="width: 6px; height: 6px; border-radius: 9999px; background: #10b981; margin-right: 6px; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span> Jornada ${data.jornada || "Activa"}
-                </span>
-                <span style="display: flex; align-items: center; color: var(--vcv-dorado); font-weight: 700;">
-                  <span style="margin-right: 4px;">🎯</span> ${predictedOpen}/${totalOpen} Predicciones
                 </span>
               </div>
               
               <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
-                  <h2 style="font-size: 1.15rem; font-weight: bold; color: var(--text-main); margin:0;">¡Hola ${data.nombre_real || currentUser}!</h2>
+                  <h2 style="font-size: 1.55rem; font-weight: 800; color: var(--text-main); margin:0; letter-spacing:-0.5px; line-height:1.1;">¡Hola ${data.nombre_real || currentUser}!</h2>
                   <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0 0;">
                     <span style="color: var(--vcv-dorado); font-weight: 700;">@${currentUser}</span> • ¡Demuestra quién sabe más!
                   </p>
