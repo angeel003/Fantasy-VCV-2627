@@ -1860,6 +1860,7 @@ document.getElementById('btnGuest').addEventListener('click', function(e) {
             if(finalHtml === "") finalHtml = `<div class="alert-box alert-info" style="display:block;">No hay partidos públicos disponibles en este momento.</div>`;
 
             document.getElementById('contenedorPartidos').innerHTML = finalHtml;
+            if(window.updateCategoryFilter) window.updateCategoryFilter();
             document.getElementById('loginSection').style.display = "none";
             if(typeof iniciarRelojes === 'function') iniciarRelojes();
         } else {
@@ -2241,6 +2242,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             } else if (equiposPermitidos === equiposCerrados) { document.getElementById('btnSubmit').style.display = "none"; }
             
             document.getElementById('contenedorPartidos').innerHTML = htmlPartidos;
+            if(window.updateCategoryFilter) window.updateCategoryFilter();
             iniciarRelojes();
             if(window.lucide) setTimeout(() => lucide.createIcons(), 50);
 
@@ -3253,12 +3255,10 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
     })();
 
     // --- CATEGORY FILTER LOGIC ---
-    (function() {
+    window.updateCategoryFilter = function() {
         const contenedor = document.getElementById('contenedorPartidos');
         const wrapper = document.getElementById('categoryFilterWrapper');
         if(!contenedor || !wrapper) return;
-
-        function updateCategoryFilter() {
             // Find all match cards (v2 and guest)
             const cards = contenedor.querySelectorAll('.vcv-card-v2, .card.mb-3');
             let categories = new Set();
@@ -3280,7 +3280,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             }
 
             // Build buttons
-            let html = `<button class="cat-filter-btn active" data-filter="all">Todos (${totalCount})</button>`;
+            let html = `<button type="button" class="cat-filter-btn active" data-filter="all">Todos (${totalCount})</button>`;
             
             Array.from(categories).sort().forEach(cat => {
                 // Count how many matches in this category
@@ -3302,7 +3302,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
                 else if(cat === "CAD_MASC") displayName = "Cad Masc";
                 else if(cat === "CAD_FEM") displayName = "Cad Fem";
                 
-                html += `<button class="cat-filter-btn" data-filter="${cat}">${displayName} (${count})</button>`;
+                html += `<button type="button" class="cat-filter-btn" data-filter="${cat}">${displayName} (${count})</button>`;
             });
 
             wrapper.innerHTML = html;
@@ -3330,12 +3330,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
         }
 
         // Observe DOM changes in contenedorPartidos
-        const observer = new MutationObserver((mutations) => {
-            updateCategoryFilter();
-        });
-        
-        observer.observe(contenedor, { childList: true, subtree: true });
-    })();
+    };
 
 </script>
 
