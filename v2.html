@@ -2100,12 +2100,12 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                   </div>
                                   <div class="points-controls-row-v2">
                                     <div class="stepper-container-v2">
-                                      <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', -1)">-</button>
+                                      <button type="button" class="btn-step-v2" id="btn-step-minus-${eq.id_partido}" onclick="cambiarPuntosV2('${eq.id_partido}', -1)">-</button>
                                       <div class="stepper-value-v2">
                                         <span id="val-v2-${eq.id_partido}">14</span>
                                         <small>PTS</small>
                                       </div>
-                                      <button type="button" class="btn-step-v2" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
+                                      <button type="button" class="btn-step-v2" id="btn-step-plus-${eq.id_partido}" onclick="cambiarPuntosV2('${eq.id_partido}', 1)">+</button>
                                     </div>
                                     <div class="sign-selector-v2">
                                       <button type="button" class="sign-btn-v2 sign-plus-v2" id="signo-plus-v2-${eq.id_partido}" onclick="cambiarSignoV2('${eq.id_partido}', this, true)">
@@ -2442,8 +2442,15 @@ function cargarDatosAntiguos() {
                     if (parseInt(preds[idPart].puntos) === 0) {
                         const btnPlus = document.getElementById(`signo-plus-v2-${idPart}`);
                         const btnMinus = document.getElementById(`signo-minus-v2-${idPart}`);
+                        const btnStepMinus = document.getElementById(`btn-step-minus-${idPart}`);
                         if(btnPlus) { btnPlus.classList.add('tied-btn'); btnPlus.disabled = true; }
                         if(btnMinus) { btnMinus.classList.add('tied-btn'); btnMinus.disabled = true; }
+                        if(btnStepMinus) {
+                            btnStepMinus.disabled = true;
+                            btnStepMinus.style.background = 'var(--secondary-color)';
+                            btnStepMinus.style.color = '#000';
+                            btnStepMinus.style.cursor = 'not-allowed';
+                        }
                     }
                 }
                 if (preds[idPart].signo) {
@@ -2902,6 +2909,14 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
           valSpan.innerText = next;
 
           if (next === 0) {
+              const minusStep = document.getElementById('btn-step-minus-' + matchId);
+              if (minusStep) {
+                  minusStep.disabled = true;
+                  minusStep.style.background = 'var(--secondary-color)';
+                  minusStep.style.color = '#000';
+                  minusStep.style.opacity = '1';
+                  minusStep.style.cursor = 'not-allowed';
+              }
               if(plusBtn) {
                   plusBtn.classList.add('tied-btn');
                   plusBtn.disabled = true;
@@ -2914,6 +2929,14 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
               }
               if(signInput) signInput.value = 'Empate';
           } else {
+              const minusStep = document.getElementById('btn-step-minus-' + matchId);
+              if (minusStep) {
+                  minusStep.disabled = false;
+                  minusStep.style.background = '';
+                  minusStep.style.color = '';
+                  minusStep.style.opacity = '1';
+                  minusStep.style.cursor = 'pointer';
+              }
               if(plusBtn) {
                   plusBtn.classList.remove('tied-btn');
                   plusBtn.disabled = false;
