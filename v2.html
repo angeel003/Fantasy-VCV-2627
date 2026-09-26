@@ -407,166 +407,6 @@
     }
 
     /* V2 HEADER */
-    .app-header-v2 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 64px;
-        background: var(--bg-card);
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 16px;
-        z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .header-brand-v2 h1 {
-        font-size: 1.25rem;
-        font-weight: 900;
-        margin: 0;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        font-family: 'Space Grotesk', sans-serif;
-    }
-    .header-user-v2 {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 2px;
-    }
-    .header-user-name {
-        font-weight: 700;
-        color: var(--text-main);
-    }
-    .header-user-handle {
-        font-family: monospace;
-        opacity: 0.8;
-    }
-    .header-badges-v2 {
-        display: flex;
-        align-items: center;
-        gap: 3px;
-    }
-    .header-badges-v2 img {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-    }
-    .header-actions-v2 {
-        display: flex;
-        align-items: center;
-    }
-    .bell-btn-v2 {
-        background: none;
-        border: none;
-        color: var(--text-main);
-        position: relative;
-        padding: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .bell-dot-v2 {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        width: 8px;
-        height: 8px;
-        background: var(--primary-color);
-        border-radius: 50%;
-        border: 2px solid var(--bg-card);
-    }
-    #appSection {
-        padding-top: 76px; /* space for header */
-    }
-</style>
-
-
-  <!-- NEW V2 STYLES PARA CARTELERA Y LOGIN (DARK MODE) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root {
-      --primary-color: #6a2c70;
-      --primary-hover: #7e3686;
-      --secondary-color: #d4af37;
-      --secondary-hover: #e5bf43;
-      --bg-surface: #140818;
-      --bg-card: #200f25;
-      --bg-card-alt: #2a1532;
-      --bg-input: #1a0b1e;
-      --border-color: #3b1d45;
-      --border-glow: rgba(212, 175, 55, 0.4);
-      --text-main: #f9f5fa;
-      --text-muted: #b7a4be;
-      --text-gold: #f3ce5e;
-      --success: #2ecc71;
-      --danger: #e74c3c;
-    }
-    
-    body { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
-    #prediccionForm button[type="submit"] { display: none !important; }
-    footer { display: none !important; }
-    .text-center.mt-4.mb-3 { display: none !important; }
-
-    /* LOGIN STYLES */
-    #loginSection {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      flex-direction: column;
-      background: var(--bg-surface);
-      min-height: 100vh;
-    }
-    .modal-card-v2 {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-      position: relative;
-      margin-bottom: 40px;
-    }
-    .club-crest-v2 {
-      background: var(--primary-color);
-      color: var(--secondary-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-gold-v2 {
-      background: linear-gradient(135deg, var(--secondary-color) 0%, #d4af37 100%);
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 800;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .btn-outline-v2 {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 12px;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    /* CARTELERA STYLES */
     .vcv-card-v2 {
       background: var(--bg-card);
       border-radius: 16px;
@@ -935,67 +775,70 @@
         z-index: 1000;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    .header-brand-v2 h1 {
-        font-size: 1.25rem;
-        font-weight: 900;
-        margin: 0;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        font-family: 'Space Grotesk', sans-serif;
-    }
-    .header-user-v2 {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 2px;
-    }
-    .header-user-name {
-        font-weight: 700;
-        color: var(--text-main);
-    }
-    .header-user-handle {
-        font-family: monospace;
-        opacity: 0.8;
-    }
+    
+    
+    
+    
     .header-badges-v2 {
         display: flex;
         align-items: center;
         gap: 3px;
     }
-    .header-badges-v2 img {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-    }
-    .header-actions-v2 {
-        display: flex;
-        align-items: center;
-    }
-    .bell-btn-v2 {
-        background: none;
-        border: none;
-        color: var(--text-main);
-        position: relative;
-        padding: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .bell-dot-v2 {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        width: 8px;
-        height: 8px;
-        background: var(--primary-color);
-        border-radius: 50%;
-        border: 2px solid var(--bg-card);
-    }
+    
+    
+    
+    
     #appSection {
         padding-top: 76px; /* space for header */
     }
+
+    /* V2 TAILWIND-MIMIC HEADER CSS */
+    .app-header-v2 {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: rgba(22, 10, 25, 0.95);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid #3e1d45;
+        padding: 12px 16px; z-index: 1000;
+    }
+    .header-container-v2 {
+        display: flex; justify-content: space-between; align-items: center;
+        max-width: 450px; margin: 0 auto;
+    }
+    .header-brand-v2 { display: flex; align-items: center; gap: 10px; }
+    .header-logo-circle {
+        width: 40px; height: 40px; border-radius: 50%;
+        background: linear-gradient(to top right, #6a2c70, #d4af37);
+        padding: 2px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .header-logo-inner {
+        width: 100%; height: 100%; background: #240f28; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; color: #d4af37;
+    }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title-text { font-family: 'Space Grotesk', sans-serif; font-weight: 900; font-size: 1.125rem; letter-spacing: 0.05em; color: #fff; margin:0; line-height:1; }
+    .header-title-badge { background: rgba(212,175,55,0.2); color: #d4af37; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); }
+    .header-subtitle { font-size: 11px; color: #a1a1aa; font-weight: 500; margin:0; margin-top:3px; letter-spacing: -0.02em; }
+    
+    .header-right-v2 { display: flex; align-items: center; gap: 8px; }
+    .header-user-chip {
+        display: flex; align-items: center; gap: 6px; background: #221127;
+        padding: 6px 10px; border-radius: 20px; border: 1px solid #3e1d45;
+    }
+    .header-rank { font-size: 12px; color: #d4af37; font-weight: 700; }
+    .header-dot { width: 4px; height: 4px; border-radius: 50%; background: #71717a; }
+    .header-pts { font-size: 12px; font-weight: 600; color: #e4e4e7; }
+    
+    .header-bell-btn {
+        width: 36px; height: 36px; border-radius: 50%; background: #221127;
+        border: 1px solid #3e1d45; color: #d4d4d8; display: flex; align-items: center; justify-content: center;
+        position: relative; cursor: pointer;
+    }
+    .header-bell-dot {
+        position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+        border-radius: 50%; background: #d4af37; border: 2px solid #160a19;
+    }
+
 </style>
 
 
@@ -1140,22 +983,38 @@
 
     
     
-    <header class="app-header-v2">
+    <header class="app-header-v2" id="tituloPrincipalSeccion" style="display:none;">
+    <div class="header-container-v2">
+      <!-- Brand Logo / Badge -->
       <div class="header-brand-v2">
-        <h1>VCV Play <span style="color:var(--primary-color);">2627</span></h1>
-        <div class="header-user-v2">
-          <span class="header-user-name" id="h2-user-name"></span>
-          <span class="header-user-handle" id="h2-user-handle"></span>
-          <div class="header-badges-v2" id="h2-user-badges"></div>
+        <div class="header-logo-circle">
+          <div class="header-logo-inner">
+            <i data-lucide="volleyball" style="width:20px; height:20px;"></i>
+          </div>
+        </div>
+        <div>
+          <div class="header-title-row">
+            <h1 class="header-title-text">VCV PLAY</h1>
+            <span class="header-title-badge">26/27</span>
+          </div>
+          <p class="header-subtitle">Club Voleibol Valencia</p>
         </div>
       </div>
-      <div class="header-actions-v2">
-        <button class="bell-btn-v2" onclick="document.getElementById('notificacionesModal').style.display='flex'">
-          <i data-lucide="bell" style="width:22px; height:22px;"></i>
-          <span class="bell-dot-v2"></span>
+
+      <!-- User Chip & Notification -->
+      <div class="header-right-v2">
+        <div class="header-user-chip" id="h2-user-chip">
+          <span class="header-rank" id="h2-user-rank">Top -</span>
+          <span class="header-dot"></span>
+          <span class="header-pts" id="h2-user-pts">0 pts</span>
+        </div>
+        <button class="header-bell-btn" onclick="document.getElementById('notificacionesModal').style.display='flex'">
+          <i data-lucide="bell" style="width:18px; height:18px;"></i>
+          <span class="header-bell-dot"></span>
         </button>
       </div>
-    </header>
+    </div>
+</header>
 
     <section id="carteleraSection">
         
@@ -1201,36 +1060,7 @@
                 
                 <h2 id="tituloPrincipalSeccion">🏐 Cartelera de Partidos</h2>
         <p style="color:#555; margin-bottom:20px; font-weight: 500; font-size: 0.95rem;">Predice los resultados de tus equipos favoritos esta jornada.</p>
-                <div style="background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; margin-bottom: 20px; text-align:left;"><details>
-                        <summary style="padding: 12px 15px; font-weight:bold; color: #1565c0; cursor:pointer; outline:none;">
-                            ❓ ¿Qué significa Puntos Dif. y Signo? (Ver Sistema de Puntos)
-                        </summary>
-                        <div style="padding: 0 15px 15px 15px; font-size: 0.9rem; color: #333; line-height: 1.5;">
-                            <p style="margin-bottom: 8px;"><b>1. Diferencia de puntos (Puntos Dif.):</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
-                            <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px dashed #90caf9; margin-bottom: 12px; font-size: 0.85rem;">
-                                <b>Ejemplo detallado:</b> Si el VCV juega y el partido termina <i>25-20, 23-25, 25-15, 25-22</i>.<br>
-                                • Set 1: VCV gana de 5<br>
-                                • Set 2: VCV pierde de 2<br>
-                                • Set 3: VCV gana de 10<br>
-                                • Set 4: VCV gana de 3<br>
-                                La diferencia total es: <code>5 - 2 + 10 + 3 = 16</code>. Tendrías que escribir <b>16</b> en la casilla numérica.
-                            </div>
-                            
-                            <p style="margin-bottom: 8px;"><b>2. Signo <span style="color:var(--vcv-rojo);">(¡VITAL!)</span>:</b> Indica si esa diferencia de puntos será a favor del VCV o del equipo rival.</p>
-                            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px dashed #ffeeba; margin-bottom: 12px; font-size: 0.85rem; color: #856404;">
-                                <b>En el ejemplo anterior:</b> Como el VCV ha ganado el partido por una diferencia global de 16 puntos, tendrías que elegir <b>"A favor (+)"</b>. <br>
-                                ⚠️ Si escribes 16 pero marcas <i>"En contra (-)"</i>, tu predicción fallará por completo, ya que el sistema entenderá que creías que el VCV iba a <b>perder</b> por 16 puntos de diferencia. ¡Asegúrate de poner el signo correcto!
-                            </div>
-                            
-                            <hr style="border-top:1px solid #bbdefb; margin: 15px 0;">
-                            
-                            <h6 style="font-weight: bold; color: var(--vcv-morado); margin-bottom: 10px;">🏆 ¿Cómo se puntúa?</h6>
-                            <ul style="padding-left: 20px; margin-bottom: 0;" id="listaReglasPuntuacion">
-                                <li>Cargando sistema de puntuación...</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
+                
                 
                 <hr>
                 <div id="contenedorPartidos"></div>
@@ -1922,7 +1752,20 @@ document.getElementById('btnLogin').addEventListener('click', function() {
             data.equipos.forEach(eq => {
                 if (eq.permitido && eq.visibilidad === "MOSTRAR") {
                     equiposPermitidos++;
-                    let valJornada = String(eq.jornada_eq || "").trim();
+                    
+                let isPredicted = false;
+                let pSets = "", pPts = "", pSig = "";
+                let ptsText = "", formStr = "";
+                if (prediccionesList[eq.id_partido]) {
+                    isPredicted = true;
+                    pSets = prediccionesList[eq.id_partido].sets || "";
+                    pPts = prediccionesList[eq.id_partido].puntos || "";
+                    pSig = prediccionesList[eq.id_partido].signo || "";
+                    ptsText = pSig === 'A favor (+)' ? 'a favor' : (pSig === 'En contra (-)' ? 'en contra' : '');
+                    formStr = ptsText ? `(+${pPts} pts ${ptsText})` : `(${pPts} pts)`;
+                    if(pPts == 0) formStr = `(0 pts)`;
+                }
+                let valJornada = String(eq.jornada_eq || "").trim();
                     let infoJornadaEq = "";
                     if(valJornada) {
                         infoJornadaEq = isNaN(valJornada) ? ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(${valJornada})</span>` : ` <span style="font-size:0.9rem; color:#666; font-weight:normal;">(Jornada ${valJornada})</span>`;
@@ -1964,7 +1807,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             : `<button class="btn-streaming-v2 disabled" disabled><i data-lucide="play-square" style="width:14px;height:14px;"></i> Sin enlace</button>`;
 
                         htmlPartidos += `
-                        <div class="vcv-card-v2" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
+                        <div class="vcv-card-v2 ${isPredicted && eq.estado !== 'CERRADO' ? 'collapsed' : ''}" id="card-v2-${eq.id_partido}" data-category="${eq.categoria}">
                             <div class="match-header-strip-v2">
                                 <span style="color: ${eq.es_derby ? 'var(--text-gold)' : 'var(--secondary-color)'}; font-weight: 800;">
                                   ${eq.categoria.toUpperCase()} ${eq.es_derby ? '🏆 DERBY' : ''}
@@ -2000,7 +1843,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                             <input type="hidden" id="e${eq.id_partido}_puntos" value="14">
                             <input type="hidden" id="e${eq.id_partido}_signo" value="">
 
-                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}">
+                            <div class="inputs-eq" id="inputs_eq_${eq.id_partido}" style="${isPredicted && eq.estado !== 'CERRADO' ? 'display:none;' : 'display:block;'}">
                                 <div class="sets-grid-label-v2">
                                   <span>Pronóstico de sets</span>
                                   
@@ -2016,7 +1859,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
 
                                 <div class="points-diff-container-v2">
                                   <div class="points-header-v2">
-                                    <span>DIFERENCIA DE PUNTOS</span>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; display:flex; align-items:center; justify-content:center; gap:5px;">DIFERENCIA DE PUNTOS <i data-lucide="help-circle" style="width:14px; height:14px; cursor:pointer; color:var(--primary-color);" onclick="document.getElementById(\'guiaModal\').style.display=\'flex\'"></i></span>
                                     
                                   </div>
                                   <div class="points-controls-row-v2">
@@ -2045,8 +1888,8 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                                 <div id="summary-text-${eq.id_partido}" style="font-size: 1.1rem; font-weight: 800; color: var(--secondary-color);"></div>
                             </div>
 
-                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; background:var(--secondary-color); color:#000; font-weight:800; border:none; cursor:pointer; transition: all 0.2s;">
-                                Guardar Predicción
+                            <button type="button" id="btn-save-${eq.id_partido}" onclick="handleSaveOrModifyV2('${eq.id_partido}')" style="width:100%; margin-top:15px; padding:12px; border-radius:10px; ${isPredicted ? "background:transparent; color:var(--text-muted); font-weight:800; border:1px solid var(--border-color);" : "background:var(--secondary-color); color:#000; font-weight:800; border:none;"} cursor:pointer; transition: all 0.2s;">
+                                ${isPredicted ? "Modificar Predicción" : "Guardar Predicción"}
                             </button>`}
                             
                             ${destacadoHtml}
@@ -2923,7 +2766,7 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             card.classList.remove('collapsed');
             summary.style.display = 'none';
             inputs.style.display = 'block';
-            btn.innerText = 'Guardar Predicción';
+            btn.innerText = '${isPredicted ? "Modificar Predicción" : "Guardar Predicción"}';
             btn.style.background = 'var(--secondary-color)';
             btn.style.color = '#000';
             btn.style.border = 'none';
@@ -2939,8 +2782,25 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
             if(window.isGuestMode) { alert("Modo invitado. No puedes guardar."); return; }
             if(!window.currentUser) { alert("Tu sesión ha expirado."); window.location.reload(); return; }
 
-            const oldText = btn.innerText;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+            // OPTIMISTIC UI UPDATE
+            const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
+            let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
+            if(p == 0) signText = "Empate";
+            
+            let ptsText = signText === 'A favor (+)' ? 'a favor' : (signText === 'En contra (-)' ? 'en contra' : '');
+            let formStr = ptsText ? `(+${p} pts ${ptsText})` : `(${p} pts)`;
+            if(p==0) formStr = `(0 pts)`;
+            document.getElementById('summary-text-' + idPart).innerHTML = `<span style="font-weight:normal; color:var(--text-muted);">Predicción configurada:</span><br><b style="font-size:1.1rem; color:var(--text-main);">${s}</b> <span style="color:var(--primary-color); font-weight:800;">${formStr}</span>`;
+
+            card.classList.add('collapsed');
+            inputs.style.display = 'none';
+            summary.style.display = 'block';
+            
+            const oldBtnHtml = btn.innerHTML;
+            btn.innerHTML = 'Guardando... <span class="spinner-border spinner-border-sm" style="width:12px;height:12px;border-width:2px;margin-left:5px;"></span>';
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-muted)';
+            btn.style.border = '1px solid var(--border-color)';
             btn.disabled = true;
 
             let singlePred = {};
@@ -2948,40 +2808,33 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
 
             window.fetchSeguro(window.scriptURL, {
                 method: 'POST',
-                body: JSON.stringify({
-                    action: 'guardar',
-                    usuario: window.currentUser,
-                    password: window.currentPassword,
-                    predicciones: singlePred
-                }),
+                body: JSON.stringify({ action: 'guardar', usuario: window.currentUser, password: window.currentPassword, predicciones: singlePred }),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                btn.disabled = false;
+            }).then(res => res.json()).then(data => {
                 if(data.status === "success") {
-                    
-                    const selectedSignBtn = document.querySelector(`#signo-plus-v2-${idPart}.selected`) || document.querySelector(`#signo-minus-v2-${idPart}.selected`);
-                    let signText = selectedSignBtn ? selectedSignBtn.innerText : (sig === 'Empate' ? 'Empate' : sig);
-                    if(p == 0) signText = "Empate";
-                    document.getElementById('summary-text-' + idPart).innerText = `${s} | ${p} pts | ${signText}`;
-
-                    card.classList.add('collapsed');
-                    inputs.style.display = 'none';
-                    summary.style.display = 'block';
+                    btn.disabled = false;
                     btn.innerText = 'Modificar Predicción';
-                    btn.style.background = 'transparent';
-                    btn.style.color = 'var(--text-muted)';
-                    btn.style.border = '1px solid var(--border-color)';
                 } else {
                     alert('Error al guardar: ' + data.message);
-                    btn.innerText = oldText;
+                    card.classList.remove('collapsed');
+                    summary.style.display = 'none';
+                    inputs.style.display = 'block';
+                    btn.innerHTML = oldBtnHtml;
+                    btn.style.background = 'var(--secondary-color)';
+                    btn.style.color = '#000';
+                    btn.style.border = 'none';
+                    btn.disabled = false;
                 }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerText = oldText;
+            }).catch(err => {
                 alert('Error de conexión.');
+                card.classList.remove('collapsed');
+                summary.style.display = 'none';
+                inputs.style.display = 'block';
+                btn.innerHTML = oldBtnHtml;
+                btn.style.background = 'var(--secondary-color)';
+                btn.style.color = '#000';
+                btn.style.border = 'none';
+                btn.disabled = false;
             });
         }
     }
@@ -3003,6 +2856,22 @@ document.getElementById('calendarSearchInput').addEventListener('input', window.
         </div>
         
         <button onclick="document.getElementById('notificacionesModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
+    </div>
+</div>
+
+<!-- MODAL GUIA -->
+<div id="guiaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+    <div style="background:var(--bg-card); width:90%; max-width:400px; border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.5); position:relative; border: 1px solid var(--border-color);">
+        <button onclick="document.getElementById('guiaModal').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
+        <h3 style="margin-top:0; margin-bottom:15px; color:var(--text-main); font-weight:800; font-family:'Space Grotesk', sans-serif; display:flex; align-items:center; gap:8px;">
+            <i data-lucide="info" style="width:20px; height:20px;"></i> Sistema de Puntos
+        </h3>
+        <div style="background:var(--bg-input); border:1px dashed var(--border-color); border-radius:12px; padding:20px 15px; font-size: 0.9rem; color:var(--text-muted); max-height:60vh; overflow-y:auto; line-height:1.5;">
+            <p style="margin-bottom: 10px;"><b>1. Pronóstico de sets:</b> Elige el resultado final del partido (ej. 3-1).</p>
+            <p style="margin-bottom: 10px;"><b>2. Diferencia de puntos:</b> Es la suma total de la ventaja de puntos que consigue un equipo sumando todos los sets.</p>
+            <p style="margin-bottom: 0;"><b>3. Signo:</b> Indica si esa diferencia de puntos será a favor del VCV (+) o del equipo rival (-).</p>
+        </div>
+        <button onclick="document.getElementById('guiaModal').style.display='none'" class="btn btn-primary btn-block mt-4" style="background:var(--primary-color); border:none; font-weight:bold; border-radius:8px;">Entendido</button>
     </div>
 </div>
 </body>
