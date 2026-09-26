@@ -2277,10 +2277,7 @@ document.getElementById('btnLogin').addEventListener('click', function() {
                 
                 let isClosed = new Date().getTime() >= new Date("2026-10-03T00:00:00").getTime();
                 
-                let htmlTot = `
-                <div id="relojTotales" style="font-size:1rem; font-weight:bold; padding:12px; background:var(--bg-card-alt); color:var(--vcv-dorado); border:1px solid var(--border-color); border-radius:12px; text-align:center; margin-bottom:20px;">
-                    Calculando tiempo...
-                </div>`;
+                let htmlTot = ``;
                 
                 data.equipos_totales.forEach(eq => {
                     let ptsActuales = data.puntos_reales[eq] || 0;
@@ -2506,15 +2503,15 @@ function iniciarRelojTotales() {
         const now = new Date().getTime();
         const diff = deadline - now;
         if(diff <= 0) {
-            el.innerHTML = "🔒 PLAZO CERRADO. Las predicciones son definitivas.";
+            el.innerHTML = "CERRADO";
             el.style.color = "var(--vcv-rojo)";
-            el.style.backgroundColor = "#fde8e8";
+            el.style.backgroundColor = "transparent";
         } else {
             let d = Math.floor(diff / (1000 * 60 * 60 * 24));
             let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             let s = Math.floor((diff % (1000 * 60)) / 1000);
-            el.innerHTML = `⏳ El plazo de predicciones finales cierra en: ${d}d ${h}h ${m}m ${s}s`;
+            el.innerHTML = `⏳ Cierra en: ${d}d ${h}h ${m}m ${s}s`;
         }
     }, 1000);
 }
