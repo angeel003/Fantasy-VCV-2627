@@ -965,7 +965,12 @@ function doPost(e) {
         return ContentService.createTextOutput(JSON.stringify({"status": "success", "history": miHistorial})).setMimeType(ContentService.MimeType.JSON);
     }
 
-  } catch (error) { return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": error.message})).setMimeType(ContentService.MimeType.JSON); }
+  } catch (error) { 
+      var errStr = "";
+      try { errStr = error.message || error.toString(); } catch(e) { errStr = "Error parseando la excepción"; }
+      if (!errStr || errStr === "undefined") errStr = "Excepción nativa sin mensaje (posible cuota excedida).";
+      return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": errStr, "raw_error": JSON.stringify(error)})).setMimeType(ContentService.MimeType.JSON); 
+  }
 }
 
 function onEdit(e) {
